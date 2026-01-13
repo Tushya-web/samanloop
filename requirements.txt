@@ -6,8 +6,4 @@ packaging==25.0
 pillow==12.1.0
 python-dotenv==1.2.1
 sqlparse==0.5.5
-<<<<<<< HEAD
 tzdata==2025.3
-=======
-tzdata==2025.3
->>>>>>> c1280742104e771dd55d2b000010aea19acc615f
