@@ -401,12 +401,173 @@
         line-height: 1.4;
     }
 
-    /* Vertical dividers for desktop */
-    @media (min-width: 768px) {
-        .trust-card:not(:last-child) {
-            border-right: 1px solid #f1f5f9;
-        }
+  @media (max-width: 768px) {
+    /* 1. Typography & Global Spacing */
+    :root {
+        --mobile-padding: 20px;
     }
+
+    body {
+        font-size: 16px; /* Optimized for mobile readability */
+        line-height: 1.6;
+    }
+
+    .container {
+        padding-left: var(--mobile-padding);
+        padding-right: var(--mobile-padding);
+    }
+
+    /* 2. Hero Section Refinement */
+    .hero-section {
+        padding: 60px 0 100px;
+        text-align: center;
+    }
+
+    .hero-section h1 {
+        font-size: 32px !important; /* Clearly hierarchical */
+        letter-spacing: -1px !important;
+        line-height: 1.2 !important;
+    }
+
+    .hero-section .lead {
+        font-size: 16px !important;
+        padding-right: 0 !important;
+        margin-bottom: 30px !important;
+    }
+
+    /* Stack CTA Buttons Vertically */
+    .hero-section .d-flex.flex-column.flex-sm-row {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .btn-intent-primary, 
+    .btn-intent-outline {
+        height: 54px; /* Optimal touch target */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        border-radius: 16px;
+        width: 100%;
+    }
+
+    /* 3. Search / Booking Card (High Visibility) */
+    .hero-search-card {
+        padding: 24px !important;
+        border-radius: 24px;
+        margin-top: 40px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .input-box {
+        height: 56px; /* Large tap area */
+        padding: 0 16px !important;
+        margin-bottom: 8px;
+    }
+
+    .input-box input {
+        font-size: 16px !important; /* Prevents iOS auto-zoom */
+    }
+
+    .input-box i {
+        width: 20px;
+        margin-right: 10px;
+    }
+
+    /* 4. Trust Section (Grid to Vertical/Compact) */
+    .trust-container {
+        padding: 16px !important;
+    }
+
+    .trust-card {
+        padding: 12px !important;
+        border-bottom: 1px solid var(--border-color);
+        border-right: none !important;
+    }
+
+    .trust-card:last-child {
+        border-bottom: none;
+    }
+
+    /* 5. Process & Categories (Single Column) */
+    .step-circle {
+        margin: 0 auto 16px;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .category-section {
+        padding: 50px 0;
+    }
+
+    .section-title {
+        font-size: 24px !important;
+    }
+
+    /* Categories: 2 per row is better for visual scanning than 1 */
+    .col-6.col-lg-3 {
+        padding: 6px !important;
+    }
+
+    .cat-card {
+        padding: 20px 10px !important;
+        border-radius: 20px;
+    }
+
+    .cat-icon-box {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 12px;
+    }
+
+    /* 6. Trending Cards */
+    .listing-card {
+        margin-bottom: 20px;
+    }
+
+    .listing-card img {
+        height: 200px !important;
+    }
+
+    /* 7. Earn Section (Income Card) */
+    #earn .p-5 {
+        padding: 40px 20px !important;
+        border-radius: 30px !important;
+    }
+
+    #earn h2 {
+        font-size: 24px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Adjusting for very small screens */
+    .hero-section h1 {
+        font-size: 28px !important;
+    }
+
+    .cat-name {
+        font-size: 0.9rem !important;
+    }
+
+    /* Testimonial adjustments */
+    .testimonial-card {
+        padding: 20px !important;
+    }
+
+    /* Effortless Section Images */
+    .col-lg-6.offset-lg-1 {
+        margin-top: 30px;
+    }
+
+    /* Badge visibility */
+    .badge {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
 
     .hero-section h1,
 .hero-section p,
@@ -418,7 +579,6 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 </style>
 <section class="hero-section">
     <div class="container position-relative" style="z-index: 3;">
