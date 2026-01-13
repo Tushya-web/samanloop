@@ -1,0 +1,4 @@
+django
+pillow 
+python-dotenv
+django-jazzmin

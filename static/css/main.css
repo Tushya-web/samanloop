@@ -1,0 +1,25 @@
+:root {
+  --brand: #14B8A6;
+  --dark: #0F172A;
+}
+
+.text-brand {
+  color: var(--brand);
+}
+
+.btn-brand {
+  background-color: var(--brand);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.hero-section {
+  padding: 90px 0;
+  background: linear-gradient(135deg, #F9FAFB, #E6FFFA);
+}
+
+.search-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+}

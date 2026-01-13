@@ -1,0 +1,66 @@
+/* SamanLoop Admin Theme */
+
+:root {
+  --primary: #0d9488;        /* Teal */
+  --secondary: #0f172a;      /* Navy */
+}
+
+.brand-link .brand-image {
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-height: 40px !important;
+    width: auto !important;
+    border-radius: 6px !important; /* soft rectangle */
+}
+
+/* Remove space reserved for text */
+.brand-link {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Hide brand text completely */
+.brand-text {
+    display: none !important;
+}
+
+/* Sidebar */
+.sidebar-dark-primary {
+  background-color: #0f172a !important;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+  background-color: #0d9488 !important;
+  color: #fff !important;
+}
+
+/* Header */
+.navbar-dark {
+  background-color: #0f172a !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #0d9488 !important;
+  border-color: #0d9488 !important;
+}
+
+.btn-primary:hover {
+  background-color: #0f766e !important;
+}
+
+/* Links */
+a {
+  color: #0d9488;
+}
+
+a:hover {
+  color: #0f766e;
+}
+
+/* Login Page */
+.login-page {
+  background: linear-gradient(135deg, #0f172a, #0d9488);
+}
