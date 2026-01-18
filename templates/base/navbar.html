@@ -27,8 +27,9 @@
     </div>
 
     <!-- Mobile Toggle -->
-    <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
-      <i class="bi bi-list fs-2 text-navy"></i>
+    <button class="navbar-toggler border-0 p-2 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+      <div class="custom-hamburger">
+        <i class="bi bi-filter-right fs-1"></i> </div>
     </button>
 
     <!-- Collapsible Content -->
@@ -61,9 +62,11 @@
         <div class="vr d-none d-lg-block mx-1 text-light"></div>
 
         <!-- Login -->
-        <li class="nav-item">
-          <a href="#" class="nav-link fw-semibold text-navy px-2">Login</a>
-        </li>
+        <li class="nav-item me-lg-2">
+        <a href="/login/" class="nav-link btn-login-outline px-4 py-2 rounded-pill fw-semibold">
+          Log In
+        </a>
+      </li>
 
         <!-- List Item CTA -->
         <li class="nav-item ms-lg-1">
@@ -137,6 +140,32 @@
 
 #mainNav:not(.scrolled) .search-input::placeholder {
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* Custom Hamburger Styling */
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.custom-hamburger i {
+  display: block;
+  transition: transform 0.3s ease, color 0.3s ease;
+  color: var(--navy-dark); /* Default color */
+}
+
+/* Color logic for transparent state */
+#mainNav:not(.scrolled) .custom-hamburger i {
+  color: #ffffff;
+}
+
+/* Subtle animation on press */
+.navbar-toggler:active .custom-hamburger i {
+  transform: scale(0.9);
+}
+
+/* If you want the icon to change when open, use this: */
+.navbar-toggler[aria-expanded="true"] .bi-filter-right::before {
+  content: "\f659"; /* This is the 'X' icon code in Bootstrap Icons */
 }
 
   /* Location Picker Styling */
@@ -336,4 +365,44 @@
       border-radius: 12px;
     }
   }
+
+  /* Enhanced Login Button */
+.btn-login-outline {
+  color: var(--primary-teal) !important;
+  border: 1.5px solid var(--primary-teal);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.btn-login-outline:hover {
+  background-color: var(--primary-teal);
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
+}
+
+/* Logic for Transparent Navbar state */
+#mainNav:not(.scrolled) .btn-login-outline {
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+#mainNav:not(.scrolled) .btn-login-outline:hover {
+  background-color: white;
+  color: var(--primary-teal) !important;
+  border-color: white;
+}
+
+/* Mobile tweak to ensure it doesn't look like a tiny link */
+@media (max-width: 991px) {
+  .btn-login-outline {
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+    border-color: var(--primary-teal) !important;
+    color: var(--primary-teal) !important;
+  }
+}
 </style>

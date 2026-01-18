@@ -1,9 +1,15 @@
 from django.contrib import admin
 from django.urls import path
-from core.views import index, terms
+from core.views import index, terms, login, register, verify, verified
 
 urlpatterns = [
-    path('', index, name='home'),
+    path('', index, name='index'),
     path('admin/', admin.site.urls),
+    
+    path('register/', register, name='register'),
+    path('login/', login, name='login'),
+    path('verify/', verify, name='verify'),
+    path('verified/', verified, name='verified'),
+    
     path('terms/', terms, name='terms'),
 ]

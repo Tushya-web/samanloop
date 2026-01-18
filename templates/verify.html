@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SamanLoop – Verify Your Email</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+:root {
+  --brand-teal: #0d9488;
+  --brand-hover: #0f766e;
+  --navy-dark: #0f172a;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-gradient: linear-gradient(-45deg, #0f172a, #134e4a, #0d9488, #0f172a);
+}
+
+body, html {
+  margin: 0; padding: 0; height: 100vh; overflow: hidden;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.verification-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  width: 90%; /* Added for better mobile responsiveness */
+  max-width: 440px;
+  padding: 3.5rem 2.5rem; /* Slightly reduced horizontal padding */
+  border-radius: 28px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  box-sizing: border-box; /* Ensures padding doesn't push children out */
+}
+
+/* Updated Buttons to be perfectly centered */
+.btn-primary {
+  width: 100%;
+  box-sizing: border-box; /* Crucial: prevents the button from being wider than the card */
+  background: linear-gradient(135deg, var(--brand-teal), var(--brand-hover));
+  color: white; 
+  border: none; 
+  padding: 16px;
+  font-weight: 700; 
+  border-radius: 14px;
+  cursor: pointer; 
+  text-decoration: none;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 10px;
+  box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.3);
+  transition: all 0.3s ease; 
+  margin: 0 auto 1.5rem auto; /* Centers the button horizontally */
+}
+
+/* Icon & Pulse */
+.icon-wrapper {
+  width: 90px; height: 90px;
+  background: rgba(13, 148, 136, 0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+
+.icon-wrapper i { font-size: 3rem; color: var(--brand-teal); z-index: 2; }
+
+.icon-wrapper::after {
+  content: ''; position: absolute; width: 100%; height: 100%;
+  border-radius: 50%; border: 2px solid var(--brand-teal);
+  animation: pulse 2s infinite; opacity: 0;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+h2 { font-weight: 800; color: var(--navy-dark); margin-bottom: 0.5rem; }
+p { color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem; }
+
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(13, 148, 136, 0.4); }
+
+/* Countdown Timer UX */
+.resend-box { font-size: 0.9rem; color: var(--text-muted); }
+
+.resend-link {
+  color: var(--brand-teal); font-weight: 700; text-decoration: none;
+  transition: all 0.2s;
+}
+
+.resend-link.disabled {
+  color: var(--text-muted); cursor: not-allowed; font-weight: 500;
+  opacity: 0.6; pointer-events: none;
+}
+
+#timer { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--navy-dark); }
+
+/* Toast Notification */
+.toast-msg {
+  position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+  background: var(--navy-dark); color: white; padding: 10px 20px;
+  border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+  opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-msg.show { top: 20px; opacity: 1; }
+
+.back-home {
+  margin-top: 2rem; display: block; font-size: 0.85rem;
+  color: var(--text-muted); text-decoration: none; font-weight: 500;
+}
+</style>
+</head>
+
+<body>
+
+<div class="verification-card">
+  <div id="toast" class="toast-msg">
+    <i class="bi bi-check-circle-fill text-teal"></i> Magic link resent!
+  </div>
+
+  <div class="icon-wrapper">
+    <i class="bi bi-envelope-paper-heart"></i>
+  </div>
+
+  <h2>Verify your email</h2>
+  <p>We've sent a magic link to your email inbox. Please click the link to activate your account.</p>
+
+  <a href="https://mail.google.com" target="_blank" class="btn-primary">
+    <i class="bi bi-box-arrow-up-right"></i> Open Gmail
+  </a>
+
+  <div class="resend-box">
+    Didn't receive it? 
+    <a href="javascript:void(0)" id="resendBtn" class="resend-link disabled" onclick="resendEmail()">
+      Resend <span id="timer-container">(Wait <span id="timer">60</span>s)</span>
+    </a>
+  </div>
+
+  <a href="/" class="back-home"><i class="bi bi-arrow-left me-1"></i> Back to SamanLoop</a>
+</div>
+
+<script>
+let timeLeft = 60;
+const timerEl = document.getElementById('timer');
+const resendBtn = document.getElementById('resendBtn');
+const timerContainer = document.getElementById('timer-container');
+const toast = document.getElementById('toast');
+
+function startCountdown() {
+    resendBtn.classList.add('disabled');
+    timerContainer.style.display = 'inline';
+    
+    let countdown = setInterval(() => {
+        timeLeft--;
+        timerEl.innerText = timeLeft;
+        
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            resendBtn.classList.remove('disabled');
+            timerContainer.style.display = 'none';
+            timeLeft = 60;
+        }
+    }, 1000);
+}
+
+function resendEmail() {
+    if (resendBtn.classList.contains('disabled')) return;
+
+    // Simulate API Call & Show Toast
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+
+    // Restart Countdown
+    startCountdown();
+}
+
+// Start timer on page load
+window.onload = startCountdown;
+</script>
+
+</body>
+</html>
