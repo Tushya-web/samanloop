@@ -25,6 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-^-e_+3qx#kn3us16q%2ajkh_tezmw))vsbjb!!jmiq3^(3fu2n'
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://samanloop.up.railway.app",
+]
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -34,6 +39,8 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
