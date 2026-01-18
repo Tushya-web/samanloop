@@ -1,8 +1,32 @@
 /* SamanLoop Admin Theme */
 
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
+
+
 :root {
   --primary: #0d9488;        /* Teal */
   --secondary: #0f172a;      /* Navy */
+}
+
+.brand-link .brand-image {
+    float: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-height: 40px !important;
+    width: auto !important;
+    border-radius: 6px !important; /* soft rectangle */
+}
+
+/* Remove space reserved for text */
+.brand-link {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Hide brand text completely */
+.brand-text {
+    display: none !important;
 }
 
 /* Sidebar */
@@ -42,26 +66,4 @@ a:hover {
 /* Login Page */
 .login-page {
   background: linear-gradient(135deg, #0f172a, #0d9488);
-}
-
-
-.brand-link .brand-image {
-    float: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    max-height: 40px !important;
-    width: auto !important;
-    border-radius: 6px !important; /* soft rectangle */
-}
-
-/* Remove space reserved for text */
-.brand-link {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-}
-
-/* Hide brand text completely */
-.brand-text {
-    display: none !important;
 }

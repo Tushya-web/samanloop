@@ -177,10 +177,10 @@ JAZZMIN_SETTINGS = {
 
     # UI Tweaks
     "icons": {
-        "auth": "bi bi-people",
-        "auth.user": "bi bi-person",
-        "auth.group": "bi bi-shield-lock",
-        "core": "bi bi-box-seam",
+        "auth": "fas fa-users",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-user-shield",
+        "core": "fas fa-box",
     },
 
     # Button styling
