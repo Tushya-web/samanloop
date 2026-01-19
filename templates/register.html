@@ -27,15 +27,25 @@ body, html {
   height: 100vh;
   overflow: hidden; /* Maintains the no-scroll requirement */
 }
-
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: linear-gradient(-45deg, #0f172a, #134e4a, #0d9488, #0f172a);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  
+  /* Applying the image with a darker overlay for better text contrast */
+  background: 
+    linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(13, 148, 136, 0.7)),
+    url("{% static 'images/login-bg.png' %}"); 
+  
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 20px;
 }
 
 @keyframes gradientBG {
@@ -49,16 +59,14 @@ body {
   backdrop-filter: blur(12px);
   width: 100%;
   max-width: 440px; /* Matched to your login card width */
-  padding: 2.5rem 2.8rem; /* Increased padding for a bigger feel */
+  padding: 1.5rem 2.8rem; /* Increased padding for a bigger feel */
   border-radius: 28px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: transform 0.3s ease;
 }
 
-.registration-card:hover {
-  transform: translateY(-5px);
-}
+
 
 .logo-container {
   text-align: center;
@@ -81,6 +89,13 @@ body {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin-top: 4px;
+}
+.title{
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin: 0;
+  margin-bottom: 0.4rem;
 }
 
 /* Form Styling - Scaled up to match login */
@@ -274,7 +289,7 @@ body {
     <a href="{% url 'index' %}">
         <img src="{% static 'images/logo.png' %}" alt="SamanLoop Logo">
     </a>
-    {% comment %} <h2>Join the Loop</h2> {% endcomment %}
+    <p class="title">Sign Up</p>
     <p>Borrow smart. Earn easy.</p>
   </div>
 

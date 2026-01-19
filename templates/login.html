@@ -26,7 +26,7 @@
     color: #ffffff;
 }
 
-body {
+{% comment %} body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   /* Animated Gradient Background */
   background: linear-gradient(-45deg, #0f172a, #134e4a, #0d9488, #0f172a);
@@ -38,15 +38,9 @@ body {
   justify-content: center;
   margin: 0;
   padding: 20px;
-}
+} {% endcomment %}
 
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.login-card {
+{% comment %} .login-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -57,7 +51,50 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+} {% endcomment %}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  
+  /* Applying the image with a darker overlay for better text contrast */
+  background: 
+    linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(13, 148, 136, 0.7)),
+    url("{% static 'images/login-bg.png' %}"); 
+  
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 20px;
 }
+
+/* Optional: Keep the card glassmorphism effect strong */
+.login-card {
+  background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for readability */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+    width: 100%;
+  max-width: 420px;
+  padding: 3rem 2.5rem;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 
 {% comment %} .login-card:hover {
     transform: translateY(-8px);
@@ -79,6 +116,13 @@ body {
   font-weight: 500;
   color: var(--text-muted);
   font-size: 0.95rem;
+}
+.title{
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin: 0;
+  margin-bottom: 0.4rem;
 }
 
 /* Modern Input Styling */
@@ -246,7 +290,8 @@ body {
   <div class="logo-container">
     <a href="{% url 'index' %}">
         <img src="{% static 'images/logo.png' %}" alt="SamanLoop Logo">
-    </a>
+    </a><br>
+    <span class="title">Sign In</span>
     <p>Borrow smart. Earn easy.</p>
   </div>
 
