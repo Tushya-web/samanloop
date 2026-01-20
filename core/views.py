@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 
 from core.forms import ItemCreateForm
-from core.models import ItemImage
+from core.models import ItemImage, Wallet, WalletTransaction
 
 def index(request):
     return render(request, "index.html")
@@ -58,3 +58,44 @@ def add_item(request):
         form = ItemCreateForm()
 
     return render(request, "add_item.html", {"form": form})
+
+def wallet(request):
+    return render(request, "wallet.html")
+    
+# @login_required
+def add_money(request):
+    if request.method == "POST":
+        amount = float(request.POST["amount"])
+        wallet = Wallet.objects.get(user=request.user)
+
+        wallet.balance += amount
+        wallet.save()
+
+        WalletTransaction.objects.create(
+            user=request.user,
+            amount=amount,
+            transaction_type="credit",
+            description="Wallet Top-up"
+        )
+
+    return redirect("wallet")
+
+
+# @login_required
+def withdraw_money(request):
+    if request.method == "POST":
+        amount = float(request.POST["amount"])
+        wallet = Wallet.objects.get(user=request.user)
+
+        if wallet.balance >= amount:
+            wallet.balance -= amount
+            wallet.save()
+
+            WalletTransaction.objects.create(
+                user=request.user,
+                amount=amount,
+                transaction_type="debit",
+                description="Withdrawal Request"
+            )
+
+    return redirect("wallet")

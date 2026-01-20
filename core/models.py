@@ -81,3 +81,32 @@ class Item(models.Model):
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="items/")
+
+
+class Wallet(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    held_deposit = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    pending_earnings = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"{self.user} Wallet"
+
+
+class WalletTransaction(models.Model):
+
+    TRANSACTION_TYPE = [
+        ("credit", "Credit"),
+        ("debit", "Debit"),
+        ("hold", "Deposit Hold"),
+        ("release", "Deposit Release"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPE)
+    description = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.transaction_type} - ₹{self.amount}"
