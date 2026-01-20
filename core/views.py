@@ -17,3 +17,21 @@ def verify(request):
 
 def verified(request):
     return render(request, "verified.html")
+
+def account_hub(request):
+    user = request.user
+
+    context = {
+        "user": user,
+        "trust_score": "High",
+        "rating": 4.8,
+        "total_rentals": 27,
+
+        # Dummy data (replace with DB queries)
+        "listed_items": [],
+        "borrowed_items": [],
+        "active_rentals": [],
+        "issues": [],
+    }
+
+    return render(request, "account_hub.html", context)
