@@ -187,7 +187,7 @@
 <nav class="navbar navbar-expand-lg navbar-custom sticky-top mb-4">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#" style="color: var(--navy-dark);">
-            <img src="{% static 'images/Group 7.png' %}" alt="SamanLoop Logo" width="180" height="40" class="d-inline-block align-text-top">
+            <img src="{% static 'images/Group 7.png' %}" alt="SamanLoop Logo" width="200" height="40" class="d-inline-block align-text-top">
         </a>
         <div class="ms-auto d-flex align-items-center gap-2">
             <a href="{% url 'index' %}" class="btn btn-light btn-sm fw-bold px-3 rounded-pill border shadow-sm" title="Home">
@@ -251,7 +251,7 @@
             
             <div class="row g-3">
                 <div class="col-6 col-md-3">
-                    <a href="#" class="action-card">
+                    <a href="{% url 'add_item'%}" class="action-card">
                         <i class="bi bi-plus-circle-dotted"></i>
                         <span class="fw-bold small">Add Listing</span>
                     </a>

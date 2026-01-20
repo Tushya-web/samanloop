@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+
+from core.forms import ItemCreateForm
+from core.models import ItemImage
 
 def index(request):
     return render(request, "index.html")
@@ -35,3 +38,23 @@ def account_hub(request):
     }
 
     return render(request, "account_hub.html", context)
+
+def add_item(request):
+    if request.method == "POST":
+        form = ItemCreateForm(request.POST)
+        images = request.FILES.getlist("images")
+
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.owner = request.user
+            item.save()
+
+            for img in images:
+                ItemImage.objects.create(item=item, image=img)
+
+            return redirect("account_hub")
+
+    else:
+        form = ItemCreateForm()
+
+    return render(request, "add_item.html", {"form": form})

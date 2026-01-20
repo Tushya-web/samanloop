@@ -633,7 +633,7 @@
                         <a href="#marketplace" class="btn-intent-primary d-flex align-items-center justify-content-center gap-2 text-decoration-none">
                             <i data-lucide="shopping-bag" size="18"></i> Explore Marketplace
                         </a>
-                        <a href="#earn" class="btn-intent-outline d-flex align-items-center justify-content-center gap-2 text-decoration-none">
+                        <a href="{% url 'add_item'%}" class="btn-intent-outline d-flex align-items-center justify-content-center gap-2 text-decoration-none">
                             <i data-lucide="banknote" size="18"></i> Start Earning
                         </a>
                     </div>
@@ -909,7 +909,7 @@
                 <h2 class="fw-bold h1 mb-3">Turn Idle Assets into Income</h2>
                 <p class="lead opacity-75 mb-5 pe-lg-5 ps-lg-5">Lenders in your area are earning up to ₹15,000 monthly.<br>Join 1,000+ lenders making a difference.</p>
                 <div class="d-flex gap-3 justify-content-center">
-                    <button class="btn btn-intent-primary px-5 py-3">Start Listing Free</button>
+                    <button onclick="{% url 'add_item'%}" class="btn btn-intent-primary px-5 py-3">Start Listing Free</button>
                     {% comment %} <button class="btn btn-intent-outline d-none d-md-block px-5 py-3">See Calculator</button> {% endcomment %}
                 </div>
             </div>

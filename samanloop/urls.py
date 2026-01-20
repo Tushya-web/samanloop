@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from core.views import index, terms, login, register, verify, verified, account_hub
+from core.views import index, terms, login, register, verify, verified, account_hub , add_item
 
 urlpatterns = [
     path('', index, name='index'),
@@ -12,6 +12,8 @@ urlpatterns = [
     path('verified/', verified, name='verified'),
     
     path("account-hub/", account_hub, name="account_hub"),
+    
+    path('add-item/', add_item, name='add_item'),
     
     path('terms/', terms, name='terms'),
 ]
