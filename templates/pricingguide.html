@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SamanLoop | Pricing Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --primary-dark: #0f172a;
+            --bg-slate: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-slate);
+            color: var(--primary-dark);
+            overflow-x: hidden;
+        }
+
+        /* Background Decor */
+        .bg-circle { position: fixed; z-index: -1; border-radius: 50%; filter: blur(80px); opacity: 0.3; }
+        .circle-1 { width: 400px; height: 400px; background: var(--primary-teal); top: -100px; right: -100px; }
+        .circle-2 { width: 300px; height: 300px; background: #99f6e4; bottom: -50px; left: -50px; }
+
+        .navbar { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .btn-back { text-decoration: none; color: var(--primary-dark); font-weight: 600; display: flex; align-items: center; transition: 0.3s; }
+        .btn-back:hover { color: var(--primary-teal); transform: translateX(-5px); }
+
+        /* Card Styles */
+        .p-card { background: #ffffff; border-radius: 24px; padding: 40px 30px; border: 1px solid #e2e8f0; transition: all 0.4s ease; }
+        .p-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(13, 148, 136, 0.1); border-color: var(--primary-teal); }
+        .icon-wrapper { width: 60px; height: 60px; background: rgba(13, 148, 136, 0.1); color: var(--primary-teal); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+
+        /* Calculation Breakdown Section */
+        .borrower-section { background: white; border-radius: 32px; padding: 3rem; border: 1px solid #e2e8f0; margin-top: 4rem; }
+        .flow-step { position: relative; padding-left: 45px; margin-bottom: 25px; }
+        .flow-step::before { content: "\F26A"; font-family: "bootstrap-icons"; position: absolute; left: 0; top: 0; color: var(--primary-teal); font-size: 1.5rem; }
+
+        /* Calculator UI */
+        .calculator-card { background: white; border-radius: 32px; box-shadow: 0 30px 60px rgba(15, 23, 42, 0.1); overflow: hidden; border: 1px solid #e2e8f0; }
+        .calc-input-section { padding: 3rem; }
+        .calc-display-section { background: var(--primary-dark); padding: 3rem; color: white; }
+        .input-group-custom { background: #f1f5f9; border-radius: 12px; padding: 5px; border: 2px solid transparent; }
+        .input-group-custom:focus-within { border-color: var(--primary-teal); background: white; }
+        .input-group-custom input { border: none; background: transparent; font-weight: 600; padding: 10px; }
+        .price-tag { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+<div class="bg-circle circle-1"></div>
+<div class="bg-circle circle-2"></div>
+
+<nav class="navbar sticky-top">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="{% url 'index' %}" class="btn-back"><i class="bi bi-arrow-left me-2"></i> Back</a>
+        <img src="{% static 'images/Group 7.png' %}" width="130" height="30" alt="SamanLoop">
+        <div style="width: 50px;"></div>
+    </div>
+</nav>
+
+<header class="text-center py-5">
+    <div class="container">
+        <h1 class="display-4 fw-800">Fair Pricing for <span style="color:var(--primary-teal)">Everyone</span></h1>
+        <p class="text-muted lead">Whether you are lending or borrowing, we keep it transparent.</p>
+    </div>
+</header>
+
+<div class="container pb-5">
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="p-card h-100 shadow-sm">
+                <div class="icon-wrapper"><i class="bi bi-wallet2"></i></div>
+                <h5 class="fw-bold">For Lenders</h5>
+                <p class="text-muted small">You receive 90% of the rent. We handle the verification and secure the deposit for you.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-card h-100 shadow-sm">
+                <div class="icon-wrapper"><i class="bi bi-person-check"></i></div>
+                <h5 class="fw-bold">For Borrowers</h5>
+                <p class="text-muted small">Pay a fraction of the retail price. Get your deposit back as soon as you return the item.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-card h-100 shadow-sm">
+                <div class="icon-wrapper"><i class="bi bi-shield-lock"></i></div>
+                <h5 class="fw-bold">Trust & Safety</h5>
+                <p class="text-muted small">A small 10% fee covers platform security, verified IDs, and 24/7 support in Mehsana.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <div class="calculator-card">
+                <div class="row g-0">
+                    <div class="col-md-6 calc-input-section">
+                        <h4 class="fw-800 mb-4">Earnings Calculator</h4>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted">DAILY RATE (₹)</label>
+                            <div class="input-group input-group-custom">
+                                <span class="input-group-text border-0 bg-transparent text-teal fw-bold">₹</span>
+                                <input type="number" id="rentalInput" class="form-control" value="500">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted">RENTAL DURATION</label>
+                            <select class="form-select border-0 bg-light p-3 rounded-3" id="durationSelect">
+                                <option value="1">1 Day</option>
+                                <option value="7">1 Week</option>
+                                <option value="30">1 Month</option>
+                            </select>
+                        </div>
+                        <p class="small text-muted"><i class="bi bi-info-circle me-1"></i> See your 90% take-home profit.</p>
+                    </div>
+                    <div class="col-md-6 calc-display-section d-flex flex-column justify-content-center">
+                        <div class="price-tag"><span>Total Gross</span><span id="grossDisplay">₹500</span></div>
+                        <div class="price-tag"><span class="text-secondary">Platform Fee (10%)</span><span id="feeDisplay" class="text-danger">- ₹50</span></div>
+                        <div class="mt-4 p-3 rounded-3" style="background: rgba(13, 148, 136, 0.1);">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold">Lender Profit:</h5>
+                                <h2 class="mb-0 fw-800" style="color:var(--primary-teal)" id="netDisplay">₹450</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="borrower-section shadow-sm">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-800 mb-4">How it works for <span style="color:var(--primary-teal)">Borrowers</span></h2>
+                <p class="text-muted mb-4">We ensure you only pay for what you use. Here is the math behind your checkout total:</p>
+                
+                <div class="flow-step">
+                    <h6 class="fw-bold mb-1">Rent + Service Fee</h6>
+                    <p class="small text-muted">The cost of using the item plus a small fee for platform safety.</p>
+                </div>
+                <div class="flow-step">
+                    <h6 class="fw-bold mb-1">Refundable Security Deposit</h6>
+                    <p class="small text-muted">Calculated based on the item's market value. This is 100% returned to you.</p>
+                </div>
+                <div class="flow-step">
+                    <h6 class="fw-bold mb-1">Instant Return</h6>
+                    <p class="small text-muted">Once the lender confirms the item is okay, the deposit hits your wallet immediately.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-4 bg-light rounded-4 border">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-calculator me-2"></i>Borrower Checkout Example</h6>
+                    <div class="d-flex justify-content-between mb-2"><span>Camera Rental (2 days)</span><span>₹600</span></div>
+                    <div class="d-flex justify-content-between mb-2"><span>SamanLoop Fee</span><span>₹60</span></div>
+                    <div class="d-flex justify-content-between mb-2"><span>Refundable Deposit</span><span class="text-primary">+ ₹2,000</span></div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold mb-0"><span>You pay upfront:</span><span>₹2,660</span></div>
+                    <div class="text-success small fw-bold mt-2 text-end"><i class="bi bi-arrow-return-left"></i> ₹2,000 will be refunded</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="py-5 text-center text-muted">
+    <p class="small">&copy; 2026 SamanLoop | Transparent Sharing</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rentalInput = document.getElementById('rentalInput');
+        const durationSelect = document.getElementById('durationSelect');
+        const grossDisplay = document.getElementById('grossDisplay');
+        const feeDisplay = document.getElementById('feeDisplay');
+        const netDisplay = document.getElementById('netDisplay');
+
+        function calculate() {
+            const price = parseFloat(rentalInput.value) || 0;
+            const days = parseInt(durationSelect.value);
+            const gross = price * days;
+            const fee = gross * 0.10;
+            const net = gross - fee;
+
+            grossDisplay.innerText = "₹" + gross.toLocaleString('en-IN');
+            feeDisplay.innerText = "- ₹" + fee.toLocaleString('en-IN');
+            netDisplay.innerText = "₹" + net.toLocaleString('en-IN');
+        }
+
+        rentalInput.addEventListener('input', calculate);
+        durationSelect.addEventListener('change', calculate);
+        calculate();
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -21,19 +21,19 @@
         <h6 class="fw-bold mb-3 text-white">Marketplace</h6>
         <ul class="list-unstyled small">
           <li class="mb-2"><a href="#" class="footer-link">Browse Items</a></li>
-          <li class="mb-2"><a href="#how-it-works" class="footer-link">How it Works</a></li>
+          <li class="mb-2"><a href="{%url 'howitworks'%}" class="footer-link">How it Works</a></li>
           <li class="mb-2"><a href="#" class="footer-link">Safety & Trust</a></li>
-          <li class="mb-2"><a href="#" class="footer-link">Pricing Guide</a></li>
+          <li class="mb-2"><a href="{%url 'pricingguide'%}" class="footer-link">Pricing Guide</a></li>
         </ul>
       </div>
 
       <div class="col-lg-2 col-md-6">
         <h6 class="fw-bold mb-3 text-white">Company</h6>
         <ul class="list-unstyled small">
-          <li class="mb-2"><a href="#" class="footer-link">About Us</a></li>
+          <li class="mb-2"><a href="{% url 'about' %}" class="footer-link">About Us</a></li>
           <li class="mb-2"><a href="#" class="footer-link">Privacy Policy</a></li>
           <li class="mb-2"><a href="{% url 'terms' %}" class="footer-link">Terms of Service</a></li>
-          <li class="mb-2"><a href="#" class="footer-link">Contact Support</a></li>
+          <li class="mb-2"><a href="{% url 'contact'%}" class="footer-link">Contact Support</a></li>
         </ul>
       </div>
 

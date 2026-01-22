@@ -6,6 +6,18 @@ from core.models import ItemImage, Wallet, WalletTransaction
 def index(request):
     return render(request, "index.html")
 
+def contact(request):
+    return render(request, "contactsupport.html")
+
+def about(request):
+    return render(request, "About.html")
+
+def pricingguide(request):
+    return render(request, "pricingguide.html")
+
+def howitworks(request):
+    return render(request, "howwork.html")
+
 def terms(request):
     return render(request, "terms.html")
 

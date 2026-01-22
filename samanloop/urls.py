@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from core.views import add_money, index, terms, login, register, verify, verified, account_hub , add_item , wallet, withdraw_money
+from core.views import about, add_money, contact, howitworks, index, pricingguide, terms, login, register, verify, verified, account_hub , add_item , wallet, withdraw_money
 
 urlpatterns = [
     path('', index, name='index'),
@@ -20,5 +20,9 @@ urlpatterns = [
     
     path('add-item/', add_item, name='add_item'),
     
+    path('about/', about, name='about'),
+    path('contact/', contact, name='contact'),
+    path('pricingguide/', pricingguide, name='pricingguide'),
+    path('howitworks/', howitworks, name='howitworks'),
     path('terms/', terms, name='terms'),
 ]
