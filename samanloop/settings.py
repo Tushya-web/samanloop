@@ -26,6 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^-e_+3qx#kn3us16q%2ajkh_tezmw))vsbjb!!jmiq3^(3fu2n'
 
 
+CSRF_FAILURE_VIEW = 'core.views.custom_csrf_failure'
+
 CSRF_TRUSTED_ORIGINS = [
     "https://samanloop.up.railway.app",
 ]
@@ -41,7 +43,6 @@ ALLOWED_HOSTS = [
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 
 # Application definition
 
@@ -142,59 +143,105 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 JAZZMIN_SETTINGS = {
-    # Branding
+
+
+    "hide_apps": ["auth"],
     "site_title": "SamanLoop Admin",
-    "site_header": "",
-    "site_brand": "",
-    "site_logo": "images/favi.png", 
+    "site_header": "SamanLoop Admin",
+    "site_brand": "SamanLoop",
+    "site_logo": "images/favi.png",
     "login_logo": "images/favi.png",
-    "site_logo_classes": "",
     "site_icon": "images/favicon.ico",
 
-    # Welcome text
     "welcome_sign": "Welcome to SamanLoop Admin Panel",
     "copyright": "SamanLoop © 2026",
 
-    # Top menu links
+
     "topmenu_links": [
         {"name": "View Site", "url": "/", "new_window": True},
-        {"model": "auth.User"},
+        {"model": "core.User"},
     ],
 
-    # User menu
+
     "usermenu_links": [
         {"name": "Visit Website", "url": "/", "new_window": True},
     ],
 
-    # Sidebar
     "show_sidebar": True,
     "navigation_expanded": True,
 
-    # UI Tweaks
+    "order_with_respect_to": [
+        "core.User" ,
+        "core.Category",
+        "core.Item",
+        "core.item_Request",
+        "core.item_usage",
+        "core.payment",
+        "core.Wallet",
+        "core.WalletTransaction",
+        "core.Review",
+        "core.query",
+    ],
+
     "icons": {
-        "auth": "fas fa-users",
-        "auth.user": "fas fa-user",
-        "auth.group": "fas fa-user-shield",
-        "core": "fas fa-box",
+        "core.User": "fas fa-users",
+        "core.Category": "fas fa-tags",
+
+        # Rentals
+        "core.Item": "fas fa-box-open",
+        "core.item_Request": "fas fa-bell",
+        "core.item_usage": "fas fa-sync-alt",
+        "core.Review": "fas fa-star",
+        "core.query": "fas fa-question-circle",
+
+        # Financial
+        "core.payment": "fas fa-credit-card",
+        "core.Wallet": "fas fa-wallet",
+        "core.WalletTransaction": "fas fa-money-bill-wave",
     },
 
-    # Button styling
+
     "custom_css": "css/admin_custom.css",
     "custom_js": None,
-
-    # Layout
     "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {
-        "auth.user": "collapsible",
-    },
 }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "core.User"
+
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "profile"
+LOGOUT_REDIRECT_URL = "login"
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7   # 7 days
+
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+
+import os
+
+FIREBASE_CONFIG = {
+    "apiKey": os.environ.get("FIREBASE_WEB_API_KEY"),
+    "authDomain": os.environ.get("FIREBASE_AUTH_DOMAIN"),
+    "projectId": os.environ.get("FIREBASE_PROJECT_ID"),
+    "storageBucket": os.environ.get("FIREBASE_STORAGE_BUCKET"),
+    "messagingSenderId": os.environ.get("FIREBASE_MESSAGING_SENDER_ID"),
+    "appId": os.environ.get("FIREBASE_APP_ID"),
+    "measurementId": os.environ.get("FIREBASE_MEASUREMENT_ID"),
+}
+
+FIREBASE_WEB_API_KEY = os.environ.get("FIREBASE_WEB_API_KEY")

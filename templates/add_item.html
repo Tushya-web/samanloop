@@ -1,4 +1,4 @@
-{% load static %}
+{% comment %} {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Item | SamanLoop</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -21,330 +21,956 @@
             --border-color: #e2e8f0;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            /* 🎨 Better Background: Gradient instead of solid gray */
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
+            line-height: 1.6;
         }
 
-        /* 🔹 Glass Navbar */
+        /* ========== NAVBAR ========== */
         .navbar-custom {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
         }
 
-        /* 🔹 Premium Form Cards */
-        .form-card {
+        .btn-back {
+            border: 2px solid var(--border-color);
             background: white;
-            border-radius: 24px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            color: var(--text-main);
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
-        .form-card:hover {
-            box-shadow: 0 15px 40px rgba(32, 201, 151, 0.08);
-            transform: translateY(-2px);
+        .btn-back:hover {
+            background: var(--brand-teal);
+            color: white;
+            border-color: var(--brand-teal);
+            transform: translateX(-3px);
         }
 
-        .section-title {
-            font-size: 0.9rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--brand-teal-dark);
-            margin-bottom: 1.5rem;
+        /* ========== PROGRESS INDICATOR ========== */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            padding: 0;
+            list-style: none;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .progress-steps .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+
+        .progress-steps .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--border-color);
+            margin: 0 auto 8px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            font-weight: 700;
+            color: #94a3b8;
+            transition: all 0.4s ease;
         }
 
-        .section-title i {
-            background: rgba(32, 201, 151, 0.1);
-            padding: 8px;
-            border-radius: 10px;
+        .progress-steps .step.active .step-circle {
+            background: var(--brand-teal);
+            border-color: var(--brand-teal);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.3);
+        }
+
+        .progress-steps .step.completed .step-circle {
+            background: var(--brand-teal-dark);
+            border-color: var(--brand-teal-dark);
+            color: white;
+        }
+
+        .progress-steps .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-steps .step.active .step-label {
+            color: var(--brand-teal);
+        }
+
+        /* ========== HERO HEADER ========== */
+        .page-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .page-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--brand-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            color: #64748b;
             font-size: 1.1rem;
         }
 
-        /* 🔹 Styled Inputs */
-        .form-control, .form-select {
-            border-radius: 14px;
-            padding: 12px 18px;
-            border: 1px solid var(--border-color);
-            background-color: #fff;
-            transition: 0.2s;
-        }
-
-        .form-control:focus {
-            border-color: var(--brand-teal);
-            box-shadow: 0 0 0 4px rgba(32, 201, 151, 0.1);
-            background-color: #fff;
-        }
-
-        /* 🔹 Visual Upload Area */
-        .photo-upload-zone {
-            border: 2px dashed var(--brand-teal);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            background: #f0fffb;
-            color: var(--brand-teal-dark);
-        }
-
-        .photo-upload-zone:hover {
+        /* ========== FORM CARDS ========== */
+        .form-card {
             background: white;
-            border-style: solid;
-        }
-
-        /* 🔹 Smart Tooltips & Banners */
-        .pricing-hint {
-            background: linear-gradient(135deg, var(--navy-dark) 0%, #1a365d 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 28px;
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .pricing-hint i {
-            font-size: 2rem;
-            opacity: 0.5;
+        .form-card::before {
+            content: '';
             position: absolute;
-            right: 20px;
-            bottom: 10px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
 
-        .btn-publish {
-            background: var(--brand-teal);
+        .form-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .form-card:hover {
+            box-shadow: 0 12px 40px rgba(32, 201, 151, 0.12);
+            transform: translateY(-4px);
+            border-color: rgba(32, 201, 151, 0.3);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--navy-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-title .icon-wrapper {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 1.2rem;
             color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(32, 201, 151, 0.25);
+        }
+
+        /* ========== INPUT FIELDS ========== */
+        .form-label {
             font-weight: 700;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(32, 201, 151, 0.2);
+            font-size: 0.875rem;
+            color: var(--navy-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .btn-publish:hover {
-            background: var(--brand-teal-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(32, 201, 151, 0.3);
-            color: white;
+        .form-label i {
+            color: var(--brand-teal);
+            font-size: 1rem;
         }
-        
+
+        .form-control, .form-select {
+            border-radius: 16px;
+            padding: 14px 20px;
+            border: 2px solid var(--border-color);
+            background-color: #fafbfc;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .form-control:hover, .form-select:hover {
+            border-color: rgba(32, 201, 151, 0.3);
+            background-color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand-teal);
+            box-shadow: 0 0 0 5px rgba(32, 201, 151, 0.08);
+            background-color: white;
+            outline: none;
+        }
+
+        .input-group-text {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 14px 18px;
+        }
+
+        /* ========== PHOTO UPLOAD ========== */
+        .photo-upload-zone {
+            border: 3px dashed var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, #f0fffb 0%, #ffffff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-upload-zone::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(32, 201, 151, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .photo-upload-zone:hover::before {
+            opacity: 1;
+        }
+
+        .photo-upload-zone:hover {
+            border-color: var(--brand-teal);
+            border-style: solid;
+            background: white;
+            transform: scale(1.02);
+        }
+
+        .photo-upload-zone .upload-icon {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .photo-upload-zone h6 {
+            font-weight: 800;
+            color: var(--navy-dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-upload-zone p {
+            color: #64748b;
+            margin-bottom: 0;
+        }
+
+        #imagePreview {
+            margin-top: 1.5rem;
+        }
+
         #imagePreview img {
             width: 100%;
-            height: 110px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            border: 3px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        #imagePreview img:hover {
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 0 12px 30px rgba(32, 201, 151, 0.2);
+        }
+
+        .image-wrapper {
+            position: relative;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(220, 38, 38, 0.95);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .image-wrapper:hover .remove-image {
+            opacity: 1;
+        }
+
+        .remove-image:hover {
+            background: rgb(185, 28, 28);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ========== SMART PRICING BOX ========== */
+        .pricing-hint {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, #1e3a5f 100%);
+            color: white;
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(32, 201, 151, 0.2);
+        }
+
+        .pricing-hint::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(32, 201, 151, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .pricing-hint .icon-badge {
+            background: var(--brand-yellow);
+            padding: 14px;
+            border-radius: 16px;
+            display: inline-flex;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .pricing-hint .icon-badge i {
+            font-size: 1.5rem;
+            color: var(--navy-dark);
+        }
+
+        #smartPriceBox {
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+            border: 2px solid var(--brand-teal);
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #smartPriceBox::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-teal) 0%, var(--brand-yellow) 100%);
         }
 
         .badge-suggested {
-            background: var(--brand-yellow);
+            background: linear-gradient(135deg, var(--brand-yellow) 0%, #ffd700 100%);
             color: var(--navy-dark);
-            font-weight: 700;
-            padding: 5px 12px;
+            font-weight: 800;
+            padding: 8px 18px;
             border-radius: 50px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .price-display {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .price-display h4 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========== CHECKBOX BUTTONS ========== */
+        .btn-check:checked + .btn-outline-secondary {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            border-color: var(--brand-teal);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(32, 201, 151, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: rgba(32, 201, 151, 0.05);
+            border-color: var(--brand-teal);
+            color: var(--brand-teal);
+            transform: translateY(-2px);
+        }
+
+        /* ========== TERMS CHECKBOX ========== */
+        .terms-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .terms-box:hover {
+            border-color: var(--brand-teal);
+            background: white;
+        }
+
+        .form-check-input {
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--brand-teal);
+            border-color: var(--brand-teal);
+        }
+
+        .form-check-label a {
+            color: var(--brand-teal);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SUBMIT BUTTON ========== */
+        .btn-publish {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            color: white;
+            border: none;
+            padding: 1.25rem 3rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(32, 201, 151, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-publish::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-publish:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(32, 201, 151, 0.4);
+            color: white;
+        }
+
+        .btn-publish:active {
+            transform: translateY(-2px);
+        }
+
+        /* ========== HELPER TEXT ========== */
+        .helper-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .helper-text i {
+            color: var(--brand-teal);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .form-card:nth-child(1) { animation-delay: 0.1s; }
+        .form-card:nth-child(2) { animation-delay: 0.2s; }
+        .form-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 0.85rem;
+            }
+
+            .progress-steps {
+                font-size: 0.7rem;
+            }
+
+            .btn-publish {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ========== TOOLTIP ========== */
+        .info-tooltip {
+            position: relative;
+            display: inline-flex;
+            cursor: help;
+        }
+
+        .info-tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--navy-dark);
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
             font-size: 0.75rem;
+        }
+
+        .info-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
 
 <body>
 
+<!-- ========== NAVBAR ========== -->
 <nav class="navbar navbar-custom sticky-top mb-4">
     <div class="container">
-        <a class="btn btn-light btn-sm rounded-pill px-3 border shadow-sm" href="{% url 'index' %}">
-            <i class="bi bi-arrow-left me-1"></i> Hub
+        <a class="btn btn-back btn-sm rounded-pill px-4" href="{% url 'index' %}">
+            <i class="bi bi-arrow-left me-2"></i> Back to Hub
         </a>
         <a class="navbar-brand fw-bold mx-auto" href="#">
-            <img src="{% static 'images/Group 7.png' %}" alt="SamanLoop" height="40">
+            <img src="{% static 'images/Group 7.png' %}" alt="SamanLoop" height="45">
         </a>
-        <div style="width: 70px;"></div> 
+        <div style="width: 120px;"></div> 
     </div>
 </nav>
 
-<div class="container py-4" style="max-width: 850px;">
+<!-- ========== MAIN CONTAINER ========== -->
+<div class="container py-5" style="max-width: 900px;">
     
-    <div class="text-center mb-5">
-        <h1 class="fw-bold h2">List Your Item</h1>
-        <p class="text-muted">Fill in the details below to start earning.</p>
+    <!-- Hero Header -->
+    <div class="page-hero">
+        <h1>List Your Item</h1>
+        <p>Transform your idle items into income streams</p>
     </div>
+
+    <!-- Progress Steps -->
+    <ul class="progress-steps">
+        <li class="step active">
+            <div class="step-circle">
+                <i class="bi bi-camera-fill"></i>
+            </div>
+            <div class="step-label">Photos</div>
+        </li>
+        <li class="step">
+            <div class="step-circle">
+                <i class="bi bi-info-circle-fill"></i>
+            </div>
+            <div class="step-label">Details</div>
+        </li>
+        <li class="step">
+            <div class="step-circle">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+            <div class="step-label">Pricing</div>
+        </li>
+        <li class="step">
+            <div class="step-circle">
+                <i class="bi bi-check-lg"></i>
+            </div>
+            <div class="step-label">Publish</div>
+        </li>
+    </ul>
 
     <form method="POST" enctype="multipart/form-data" id="listingForm">
         {% csrf_token %}
 
-        <div class="form-card p-4 mb-4">
-            <h6 class="section-title"><i class="bi bi-camera"></i> Photos & Media</h6>
+        <!-- ========== PHOTOS SECTION ========== -->
+        <div class="form-card">
+            <h6 class="section-title">
+                <span class="icon-wrapper">
+                    <i class="bi bi-images"></i>
+                </span>
+                Photos & Media
+            </h6>
+            
             <div class="photo-upload-zone" onclick="document.getElementById('fileInput').click()">
-                <i class="bi bi-images fs-1 d-block mb-2"></i>
-                <h6 class="fw-bold">Upload Item Images</h6>
-                <p class="small mb-0">Drag and drop or click to browse (Max 5)</p>
+                <i class="bi bi-cloud-upload upload-icon"></i>
+                <h6>Upload Your Item Images</h6>
+                <p class="mb-2">Drag & drop or click to browse</p>
+                <small class="text-muted">PNG, JPG up to 10MB each • Maximum 5 images</small>
                 <input type="file" id="fileInput" name="images" style="display: none;" multiple required accept="image/*">
             </div>
-            <div class="row mt-3 g-3" id="imagePreview"></div>
+            
+            <div class="row g-3" id="imagePreview"></div>
+            
+            <div class="helper-text mt-3">
+                <i class="bi bi-lightbulb-fill"></i>
+                <span>Tip: Use natural lighting and multiple angles for better visibility</span>
+            </div>
         </div>
 
-        <div class="form-card p-4 mb-4">
-            <h6 class="section-title"><i class="bi bi-info-square"></i> General Details</h6>
+        <!-- ========== GENERAL DETAILS ========== -->
+        <div class="form-card">
+            <h6 class="section-title">
+                <span class="icon-wrapper">
+                    <i class="bi bi-info-circle"></i>
+                </span>
+                General Details
+            </h6>
             
             <div class="mb-4">
-                <label class="form-label fw-bold small">Item Title</label>
-                <input type="text" name="name" class="form-control" placeholder="e.g. Nikon Z6 Mirrorless Camera" required>
+                <label class="form-label">
+                    <i class="bi bi-tag"></i> Item Title
+                </label>
+                <input type="text" name="name" class="form-control" placeholder="e.g., Nikon Z6 Mirrorless Camera" required>
+                <div class="helper-text">
+                    <i class="bi bi-info-circle"></i>
+                    <span>Be specific and descriptive</span>
+                </div>
             </div>
 
-            <div class="row g-3 mb-4">
+            <div class="row g-4 mb-4">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold small">Category</label>
+                    <label class="form-label">
+                        <i class="bi bi-grid"></i> Category
+                    </label>
                     <select class="form-select" name="category" id="category" required>
                         <option value="" selected disabled>Select Category</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Camping Gear">Camping Gear</option>
-                        <option value="Tools">Tools</option>
-                        <option value="Appliances">Appliances</option>
+                        <option value="Electronics">📱 Electronics</option>
+                        <option value="Camping Gear">⛺ Camping Gear</option>
+                        <option value="Tools">🔧 Tools</option>
+                        <option value="Appliances">🏠 Appliances</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold small">Brand</label>
-                    <input type="text" name="brand" id="brand" class="form-control" placeholder="e.g. Apple, Nikon, Bosch">
+                    <label class="form-label">
+                        <i class="bi bi-award"></i> Brand
+                    </label>
+                    <input type="text" name="brand" id="brand" class="form-control" placeholder="e.g., Apple, Nikon, Bosch">
                 </div>
             </div>
 
-            <div class="row g-3 mb-4">
+            <div class="row g-4 mb-4">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold small">Original Purchase Price (₹)</label>
-                    <input type="number" id="purchasePrice" name="purchase_price" class="form-control" placeholder="e.g. 80000" required>
+                    <label class="form-label">
+                        <i class="bi bi-receipt"></i> Original Purchase Price (₹)
+                    </label>
+                    <input type="number" id="purchasePrice" name="purchase_price" class="form-control" placeholder="e.g., 80000" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold small">Purchase Year</label>
-                    <input type="number" id="purchaseYear" name="purchase_year" class="form-control" placeholder="e.g. 2023" required>
+                    <label class="form-label">
+                        <i class="bi bi-calendar"></i> Purchase Year
+                    </label>
+                    <input type="number" id="purchaseYear" name="purchase_year" class="form-control" placeholder="e.g., 2023" required>
                 </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label fw-bold small">Overall Quality</label>
+                <label class="form-label">
+                    <i class="bi bi-star"></i> Overall Quality
+                </label>
                 <select class="form-select" name="quality" id="quality" required>
-                    <option value="Brand New">Brand New (Unopened)</option>
-                    <option value="Like New">Like New (Barely Used)</option>
-                    <option value="Gently Used" selected>Gently Used (Minor scratches)</option>
+                    <option value="Brand New">✨ Brand New (Unopened)</option>
+                    <option value="Like New">🌟 Like New (Barely Used)</option>
+                    <option value="Gently Used" selected>👍 Gently Used (Minor scratches)</option>
                 </select>
             </div>
             
             <div>
-                <label class="form-label fw-bold small">Item Description</label>
-                <textarea class="form-control" name="description" rows="5" placeholder="Mention what's included (cables, bags, etc.) and any defects..."></textarea>
+                <label class="form-label">
+                    <i class="bi bi-file-text"></i> Item Description
+                </label>
+                <textarea class="form-control" name="description" rows="5" placeholder="Describe what's included (cables, bags, manuals), condition details, and any known issues..."></textarea>
+                <div class="helper-text">
+                    <i class="bi bi-check-circle"></i>
+                    <span>Detailed descriptions build trust with renters</span>
+                </div>
             </div>
         </div>
 
-        <div class="form-card p-4 mb-4">
-            <h6 class="section-title"><i class="bi bi-wallet2"></i> Pricing & Safety</h6>
+        <!-- ========== PRICING SECTION ========== -->
+        <div class="form-card">
+            <h6 class="section-title">
+                <span class="icon-wrapper">
+                    <i class="bi bi-wallet2"></i>
+                </span>
+                Pricing & Safety
+            </h6>
             
-            <div class="pricing-hint mb-4 shadow-sm">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-warning p-2 rounded-circle">
-                        <i class="bi bi-lightning-charge-fill text-dark fs-5"></i>
+            <!-- Smart Pricing Info -->
+            <div class="pricing-hint mb-4">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="icon-badge">
+                        <i class="bi bi-lightning-charge-fill"></i>
                     </div>
-                    <div>
-                        <span class="fw-bold d-block">Dynamic Pricing Help</span>
-                        <small class="opacity-75">We help you set a fair price based on market trends and item age.</small>
-                    </div>
-                </div>
-                <i class="bi bi-currency-exchange"></i>
-            </div>
-
-            <div id="smartPriceBox" class="alert alert-success d-none mb-4 rounded-4 border-0 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        Smart Calculations Ready!
-                    </div>
-                    <span class="badge-suggested">AI SUGGESTION</span>
-                </div>
-                <hr class="my-2">
-                <div class="row text-center mt-3">
-                    <div class="col-6 border-end">
-                        <small class="d-block text-muted">Daily Rent</small>
-                        <h4 class="fw-bold mb-0">₹<span id="suggestedPrice">0</span></h4>
-                    </div>
-                    <div class="col-6">
-                        <small class="d-block text-muted">Security Deposit</small>
-                        <h4 class="fw-bold mb-0">₹<span id="suggestedDeposit">0</span></h4>
+                    <div style="position: relative; z-index: 1;">
+                        <span class="fw-bold d-block fs-5 mb-1">AI-Powered Smart Pricing</span>
+                        <small class="opacity-90">Our algorithm analyzes market trends, item age, and condition to suggest optimal pricing that maximizes your earnings.</small>
                     </div>
                 </div>
             </div>
 
-            <div class="row g-3">
+            <!-- Smart Price Display -->
+            <div id="smartPriceBox" class="d-none mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <span class="fw-bold text-success">Smart Calculations Ready!</span>
+                    </div>
+                    <span class="badge-suggested">AI POWERED</span>
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="price-display">
+                            <small class="d-block text-muted mb-2 fw-semibold">
+                                <i class="bi bi-calendar-day me-1"></i> Suggested Daily Rent
+                            </small>
+                            <h4 class="mb-0">₹<span id="suggestedPrice">0</span></h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="price-display">
+                            <small class="d-block text-muted mb-2 fw-semibold">
+                                <i class="bi bi-shield-check me-1"></i> Security Deposit
+                            </small>
+                            <h4 class="mb-0">₹<span id="suggestedDeposit">0</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manual Price Input -->
+            <div class="row g-4 mb-4">
                 <div class="col-md-6">
-                    <label class="form-label fw-bold small">Your Rent Price (Per Day)</label>
+                    <label class="form-label">
+                        <i class="bi bi-cash-coin"></i> Daily Rent Price
+                        <span class="info-tooltip ms-1">
+                            <i class="bi bi-question-circle text-muted"></i>
+                            <span class="tooltip-text">Amount renters pay per day</span>
+                        </span>
+                    </label>
                     <div class="input-group">
-                        <span class="input-group-text border-end-0 rounded-start-4">₹</span>
-                        <input type="number" id="rent_per_day" name="rent_per_day" class="form-control rounded-end-4" min="50" max="10000" required>
+                        <span class="input-group-text">₹</span>
+                        <input type="number" id="rent_per_day" name="rent_per_day" class="form-control" min="50" max="10000" placeholder="100" required>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold small">Security Deposit (₹)</label>
+                    <label class="form-label">
+                        <i class="bi bi-shield-lock"></i> Security Deposit
+                        <span class="info-tooltip ms-1">
+                            <i class="bi bi-question-circle text-muted"></i>
+                            <span class="tooltip-text">Refundable amount held for damages</span>
+                        </span>
+                    </label>
                     <div class="input-group">
-                        <span class="input-group-text border-end-0 rounded-start-4">₹</span>
-                        <input type="number" id="deposit_amount" name="deposit_amount" class="form-control rounded-end-4" required>
+                        <span class="input-group-text">₹</span>
+                        <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" placeholder="300" required>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-4">
-                <label class="form-label fw-bold small">Logistics Preference</label>
-                <div class="row g-2">
-                    <div class="col-6">
+            <!-- Logistics Options -->
+            <div>
+                <label class="form-label mb-3">
+                    <i class="bi bi-truck"></i> Delivery Options
+                </label>
+                <div class="row g-3">
+                    <div class="col-md-6">
                         <input type="checkbox" class="btn-check" id="delivery" name="allow_delivery">
                         <label class="btn btn-outline-secondary w-100 py-3 rounded-4" for="delivery">
-                            <i class="bi bi-truck me-2"></i> Doorstep
+                            <i class="bi bi-box-seam me-2 fs-5"></i>
+                            <div>
+                                <strong class="d-block">Doorstep Delivery</strong>
+                                <small class="text-muted">I'll deliver to renter</small>
+                            </div>
                         </label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         <input type="checkbox" class="btn-check" id="pickup" name="self_pickup" checked>
                         <label class="btn btn-outline-secondary w-100 py-3 rounded-4" for="pickup">
-                            <i class="bi bi-person-walking me-2"></i> Self-Pickup
+                            <i class="bi bi-shop me-2 fs-5"></i>
+                            <div>
+                                <strong class="d-block">Self-Pickup</strong>
+                                <small class="text-muted">Renter collects item</small>
+                            </div>
                         </label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="p-3 mb-4 rounded-4 bg-white border small shadow-sm">
+        <!-- ========== TERMS & CONDITIONS ========== -->
+        <div class="terms-box mb-4">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="terms" required>
-                <label class="form-check-label text-muted" for="terms">
-                    I confirm that the item is clean, functional, and matches the description. I agree to SamanLoop's <a href="#" class="text-teal">Terms of Service</a>.
+                <label class="form-check-label" for="terms">
+                    I confirm that the item is clean, functional, and accurately described. I agree to SamanLoop's 
+                    <a href="#" class="text-decoration-none">Terms of Service</a> and 
+                    <a href="#" class="text-decoration-none">Privacy Policy</a>.
                 </label>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-publish w-100 mb-5">
-            Publish Your Listing <i class="bi bi-arrow-right-short ms-2"></i>
+        <!-- ========== SUBMIT BUTTON ========== -->
+        <button type="submit" class="btn btn-publish w-100">
+            <span style="position: relative; z-index: 1;">
+                Publish Your Listing
+                <i class="bi bi-rocket-takeoff ms-2"></i>
+            </span>
         </button>
 
     </form>
 </div>
 
-
-
+<!-- ========== JAVASCRIPT ========== -->
 <script>
-    // 1. SMART DEPOSIT CALCULATION
+    // ========== PROGRESS TRACKING ==========
+    const steps = document.querySelectorAll('.progress-steps .step');
+    let currentStep = 0;
+
+    function updateProgress(stepIndex) {
+        steps.forEach((step, index) => {
+            if (index < stepIndex) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === stepIndex) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    // ========== SMART PRICING CALCULATION ==========
     function calculateDeposit(rent, purchasePrice) {
         let deposit = rent * 3; 
         let maxDeposit = purchasePrice * 0.45; // Capped at 45% of value
         return Math.min(deposit, maxDeposit);
     }
 
-    // 2. SMART RENT CALCULATION ENGINE
     function calculateSmartPricing() {
         const price = parseFloat(document.getElementById("purchasePrice").value);
         const year = parseInt(document.getElementById("purchaseYear").value);
@@ -356,7 +982,7 @@
         const age = Math.max(0, new Date().getFullYear() - year);
         let baseRent = price * 0.012; // Base 1.2% per day
 
-        // Factors
+        // Depreciation Factors
         let ageFactor = age >= 4 ? 0.7 : (age >= 2 ? 0.85 : 1.0);
         const qualityFactor = {"Brand New": 1.0, "Like New": 0.95, "Gently Used": 0.8}[quality] || 0.7;
         const categoryFactor = {"Electronics": 1.1, "Tools": 1.0, "Camping Gear": 0.9, "Appliances": 0.85}[category] || 1.0;
@@ -364,42 +990,1330 @@
         const finalRent = Math.round(baseRent * ageFactor * qualityFactor * categoryFactor);
         const finalDeposit = Math.round(calculateDeposit(finalRent, price));
 
-        // UI Updates
+        // Update UI
         document.getElementById("smartPriceBox").classList.remove("d-none");
         document.getElementById("suggestedPrice").innerText = finalRent;
         document.getElementById("suggestedDeposit").innerText = finalDeposit;
 
-        // Auto-fill
+        // Auto-fill if empty
         const rentInput = document.getElementById("rent_per_day");
         const depositInput = document.getElementById("deposit_amount");
         if (!rentInput.value) rentInput.value = finalRent;
         if (!depositInput.value) depositInput.value = finalDeposit;
+
+        // Update progress
+        updateProgress(2);
     }
 
-    // 3. IMAGE PREVIEW
+    // ========== IMAGE PREVIEW WITH REMOVE ==========
     document.getElementById("fileInput").addEventListener("change", function () {
         const preview = document.getElementById("imagePreview");
         preview.innerHTML = "";
-        [...this.files].slice(0, 5).forEach(file => {
+        
+        const files = [...this.files].slice(0, 5);
+        
+        if (files.length > 0) {
+            updateProgress(1);
+        }
+        
+        files.forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = e => {
                 const col = document.createElement("div");
-                col.className = "col-4 col-md-2 mb-2";
-                col.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded shadow-sm">`;
+                col.className = "col-6 col-md-4";
+                col.innerHTML = `
+                    <div class="image-wrapper">
+                        <img src="${e.target.result}" class="img-fluid">
+                        <button type="button" class="remove-image" onclick="removeImage(${index})">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                `;
                 preview.appendChild(col);
             };
             reader.readAsDataURL(file);
         });
     });
 
-    // LISTENERS
+    // Remove image function
+    function removeImage(index) {
+        const fileInput = document.getElementById("fileInput");
+        const dt = new DataTransfer();
+        const files = fileInput.files;
+
+        for (let i = 0; i < files.length; i++) {
+            if (i !== index) dt.items.add(files[i]);
+        }
+
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change'));
+    }
+
+    // ========== EVENT LISTENERS ==========
     ["purchasePrice", "purchaseYear"].forEach(id => {
         document.getElementById(id).addEventListener("input", calculateSmartPricing);
     });
+
     ["quality", "category"].forEach(id => {
         document.getElementById(id).addEventListener("change", calculateSmartPricing);
     });
+
+    // Form field tracking for progress
+    document.getElementById("name").addEventListener("input", () => updateProgress(1));
+    document.getElementById("rent_per_day").addEventListener("input", () => updateProgress(2));
+
+    // Final step on terms check
+    document.getElementById("terms").addEventListener("change", function() {
+        if (this.checked) {
+            updateProgress(3);
+        }
+    });
+
+    // ========== FORM VALIDATION ==========
+    document.getElementById("listingForm").addEventListener("submit", function(e) {
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length === 0) {
+            e.preventDefault();
+            alert("Please upload at least one image of your item.");
+            updateProgress(0);
+            return false;
+        }
+    });
 </script>
+
+</body>
+</html> {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Item | SamanLoop</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-teal: #20c997;
+            --brand-teal-dark: #1ba87e;
+            --navy-dark: #0a192f;
+            --brand-yellow: #ffc107;
+            --bg-gradient: radial-gradient(circle at top right, #f0fffb 0%, #f8fafc 100%);
+            --text-main: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+            z-index: 1000;
+        }
+
+        .btn-back {
+            border: 2px solid var(--border-color);
+            background: white;
+            color: var(--text-main);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--brand-teal);
+            color: white;
+            border-color: var(--brand-teal);
+            transform: translateX(-3px);
+        }
+
+        /* ========== PROGRESS INDICATOR ========== */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            padding: 0;
+            list-style: none;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .progress-steps .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+
+        .progress-steps .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--border-color);
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #94a3b8;
+            transition: all 0.4s ease;
+        }
+
+        .progress-steps .step.active .step-circle {
+            background: var(--brand-teal);
+            border-color: var(--brand-teal);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.3);
+        }
+
+        .progress-steps .step.completed .step-circle {
+            background: var(--brand-teal-dark);
+            border-color: var(--brand-teal-dark);
+            color: white;
+        }
+
+        .progress-steps .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-steps .step.active .step-label {
+            color: var(--brand-teal);
+        }
+
+        /* ========== HERO HEADER ========== */
+        .page-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .page-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--brand-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* ========== FORM CARDS ========== */
+        .form-card {
+            background: white;
+            border-radius: 28px;
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            height: fit-content; /* Important for grid alignment */
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .form-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .form-card:hover {
+            box-shadow: 0 12px 40px rgba(32, 201, 151, 0.12);
+            transform: translateY(-4px);
+            border-color: rgba(32, 201, 151, 0.3);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--navy-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-title .icon-wrapper {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(32, 201, 151, 0.25);
+        }
+
+        /* ========== INPUT FIELDS ========== */
+        .form-label {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--navy-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-label i {
+            color: var(--brand-teal);
+            font-size: 1rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 16px;
+            padding: 14px 20px;
+            border: 2px solid var(--border-color);
+            background-color: #fafbfc;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .form-control:hover, .form-select:hover {
+            border-color: rgba(32, 201, 151, 0.3);
+            background-color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand-teal);
+            box-shadow: 0 0 0 5px rgba(32, 201, 151, 0.08);
+            background-color: white;
+            outline: none;
+        }
+
+        .input-group-text {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 14px 18px;
+        }
+
+        /* ========== PHOTO UPLOAD ========== */
+        .photo-upload-zone {
+            border: 3px dashed var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, #f0fffb 0%, #ffffff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-upload-zone::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(32, 201, 151, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .photo-upload-zone:hover::before {
+            opacity: 1;
+        }
+
+        .photo-upload-zone:hover {
+            border-color: var(--brand-teal);
+            border-style: solid;
+            background: white;
+            transform: scale(1.02);
+        }
+
+        .photo-upload-zone .upload-icon {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .photo-upload-zone h6 {
+            font-weight: 800;
+            color: var(--navy-dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-upload-zone p {
+            color: #64748b;
+            margin-bottom: 0;
+        }
+
+        #imagePreview {
+            margin-top: 1.5rem;
+        }
+
+        #imagePreview img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 3px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        #imagePreview img:hover {
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 0 12px 30px rgba(32, 201, 151, 0.2);
+        }
+
+        .image-wrapper {
+            position: relative;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(220, 38, 38, 0.95);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .image-wrapper:hover .remove-image {
+            opacity: 1;
+        }
+
+        .remove-image:hover {
+            background: rgb(185, 28, 28);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ========== SMART PRICING BOX ========== */
+        .pricing-hint {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, #1e3a5f 100%);
+            color: white;
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(32, 201, 151, 0.2);
+        }
+
+        .pricing-hint::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(32, 201, 151, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .pricing-hint .icon-badge {
+            background: var(--brand-yellow);
+            padding: 14px;
+            border-radius: 16px;
+            display: inline-flex;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .pricing-hint .icon-badge i {
+            font-size: 1.5rem;
+            color: var(--navy-dark);
+        }
+
+        #smartPriceBox {
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+            border: 2px solid var(--brand-teal);
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #smartPriceBox::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-teal) 0%, var(--brand-yellow) 100%);
+        }
+
+        .badge-suggested {
+            background: linear-gradient(135deg, var(--brand-yellow) 0%, #ffd700 100%);
+            color: var(--navy-dark);
+            font-weight: 800;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .price-display {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .price-display h4 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========== CHECKBOX BUTTONS ========== */
+        .btn-check:checked + .btn-outline-secondary {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            border-color: var(--brand-teal);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(32, 201, 151, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: rgba(32, 201, 151, 0.05);
+            border-color: var(--brand-teal);
+            color: var(--brand-teal);
+            transform: translateY(-2px);
+        }
+
+        /* ========== TERMS CHECKBOX ========== */
+        .terms-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .terms-box:hover {
+            border-color: var(--brand-teal);
+            background: white;
+        }
+
+        .form-check-input {
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--brand-teal);
+            border-color: var(--brand-teal);
+        }
+
+        .form-check-label a {
+            color: var(--brand-teal);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== SUBMIT BUTTON ========== */
+        .btn-publish {
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+            color: white;
+            border: none;
+            padding: 1.25rem 3rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(32, 201, 151, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-publish::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-publish:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-publish:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(32, 201, 151, 0.4);
+            color: white;
+        }
+
+        .btn-publish:active {
+            transform: translateY(-2px);
+        }
+
+        /* ========== HELPER TEXT ========== */
+        .helper-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .helper-text i {
+            color: var(--brand-teal);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* ========== GRID LAYOUT (NEW) ========== */
+        .form-grid-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Desktop Specific: Turn on Grid */
+        @media (min-width: 992px) {
+            .container {
+                max-width: 1200px !important; /* Increase width for desktop grid */
+            }
+
+            .form-grid-layout {
+                display: grid;
+                grid-template-columns: 1.8fr 1fr; /* 2:1 Ratio */
+                gap: 2rem;
+                align-items: start;
+            }
+
+            .sticky-sidebar {
+                position: sticky;
+                top: 100px; /* Stick below navbar */
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 0.85rem;
+            }
+
+            .progress-steps {
+                font-size: 0.7rem;
+            }
+
+            .btn-publish {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ========== TOOLTIP ========== */
+        .info-tooltip {
+            position: relative;
+            display: inline-flex;
+            cursor: help;
+        }
+
+        .info-tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--navy-dark);
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+        }
+
+        .info-tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* ========== PICKUP LOCATION / MAP ========== */
+#map {
+    height: 350px !important;
+    width: 100%;
+    height: 300px;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+    margin-top: 1rem;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.location-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding: 10px 15px;
+    background: #f0fffb;
+    border-radius: 12px;
+    border: 1px solid rgba(32, 201, 151, 0.2);
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--brand-teal);
+    border-radius: 50%;
+    position: relative;
+}
+
+.pulse-dot::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--brand-teal);
+    border-radius: 50%;
+    animation: locationPulse 2s infinite;
+}
+
+@keyframes locationPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; }
+}
+/* Update #map for Leaflet */
+#map {
+    width: 100%;
+    height: 350px;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+    margin-top: 1rem;
+    z-index: 1; /* Ensures dropdowns don't go behind the map */
+}
+
+/* Customizing the Leaflet marker to match your teal brand */
+.leaflet-marker-icon {
+    filter: hue-rotate(110deg) brightness(0.9);
+}
+
+/* Fix for Leaflet search overlay if you decide to add it later */
+.leaflet-container {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-custom sticky-top mb-4">
+    <div class="container">
+        <a class="btn btn-back btn-sm rounded-pill px-4" href="{% url 'index' %}">
+            <i class="bi bi-arrow-left me-2"></i> Back to Hub
+        </a>
+        <a class="navbar-brand fw-bold mx-auto" href="#">
+            <img src="{% static 'images/Group 7.png' %}" alt="SamanLoop" height="45">
+        </a>
+        <div style="width: 120px;"></div> 
+    </div>
+</nav>
+
+<div class="container py-5">
+    
+    <div class="page-hero">
+        <h1>List Your Item</h1>
+        <p>Transform your idle items into income streams</p>
+    </div>
+
+    <ul class="progress-steps">
+        <li class="step active">
+            <div class="step-circle">
+                <i class="bi bi-camera-fill"></i>
+            </div>
+            <div class="step-label">Photos</div>
+        </li>
+        <li class="step">
+            <div class="step-circle">
+                <i class="bi bi-info-circle-fill"></i>
+            </div>
+            <div class="step-label">Details</div>
+        </li>
+        <li class="step">
+            <div class="step-circle">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+            <div class="step-label">Pricing</div>
+        </li>
+        <li class="step">
+            <div class="step-circle">
+                <i class="bi bi-check-lg"></i>
+            </div>
+            <div class="step-label">Publish</div>
+        </li>
+    </ul>
+
+    <form method="POST" enctype="multipart/form-data" id="listingForm" action="{% url 'preview_item' %}">
+
+        {% csrf_token %}
+
+        <div class="form-grid-layout">
+            
+            <div class="content-column">
+                <div class="form-card">
+                    <h6 class="section-title">
+                        <span class="icon-wrapper">
+                            <i class="bi bi-images"></i>
+                        </span>
+                        Photos & Media
+                    </h6>
+                    
+                    <div class="photo-upload-zone" onclick="document.getElementById('fileInput').click()">
+                        <i class="bi bi-cloud-upload upload-icon"></i>
+                        <h6>Upload Your Item Images</h6>
+                        <p class="mb-2">Drag & drop or click to browse</p>
+                        <small class="text-muted">PNG, JPG up to 10MB each • Maximum 5 images</small>
+                        <input type="file" id="fileInput" name="images" style="display: none;" multiple required accept="image/*">
+                    </div>
+                    
+                    <div class="row g-3" id="imagePreview"></div>
+                    
+                    <div class="helper-text mt-3">
+                        <i class="bi bi-lightbulb-fill"></i>
+                        <span>Tip: Use natural lighting and multiple angles for better visibility</span>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h6 class="section-title">
+                        <span class="icon-wrapper">
+                            <i class="bi bi-info-circle"></i>
+                        </span>
+                        General Details
+                    </h6>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-tag"></i> Item Title
+                        </label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="e.g., Nikon Z6 Mirrorless Camera" required>
+                        <div class="helper-text">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Be specific and descriptive</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-grid"></i> Category
+                            </label>
+                            <select name="category" id="category" class="form-select" required>
+                                <option value="">Select Category</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}" data-cut="{{ cat.percentage_cut }}">
+                                        {{ cat.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-award"></i> Brand
+                            </label>
+                            <input type="text" name="brand" id="brand" class="form-control" placeholder="e.g., Apple, Nikon, Bosch">
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-receipt"></i> Original Purchase Price (₹)
+                            </label>
+                            <input type="number" id="purchasePrice" name="purchase_price" class="form-control" placeholder="e.g., 80000" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-calendar"></i> Purchase Year
+                            </label>
+                            <input type="number" id="purchaseYear" name="purchase_year" class="form-control" placeholder="e.g., 2023" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="bi bi-star"></i> Overall Quality
+                        </label>
+                        <select class="form-select" name="quality" id="quality" required>
+                            <option value="Brand New">✨ Brand New (Unopened)</option>
+                            <option value="Like New">🌟 Like New (Barely Used)</option>
+                            <option value="Gently Used" selected>👍 Gently Used (Minor scratches)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">
+                            <i class="bi bi-file-text"></i> Item Description
+                        </label>
+                        <textarea class="form-control" name="description" rows="5" placeholder="Describe what's included (cables, bags, manuals), condition details, and any known issues..."></textarea>
+                        <div class="helper-text">
+                            <i class="bi bi-check-circle"></i>
+                            <span>Detailed descriptions build trust with renters</span>
+                        </div>
+                    </div>
+                </div>
+            </div> <div class="sidebar-column sticky-sidebar">
+                <div class="form-card">
+                    <h6 class="section-title">
+                        <span class="icon-wrapper">
+                            <i class="bi bi-wallet2"></i>
+                        </span>
+                        Pricing & Safety
+                    </h6>
+                    
+                    <div class="pricing-hint mb-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="icon-badge">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                            </div>
+                            <div>
+                                <span class="fw-bold d-block fs-6 mb-1">AI Smart Pricing</span>
+                                <small class="opacity-90" style="font-size: 0.8rem; display: block;">Our algorithm suggests optimal rates.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="smartPriceBox" class="d-none mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                <span class="fw-bold text-success" style="font-size: 0.8rem;">Calculated!</span>
+                            </div>
+                            <span class="badge-suggested">AI</span>
+                        </div>
+                        
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="price-display p-3 text-center">
+                                    <small class="d-block text-muted mb-1 fw-semibold" style="font-size: 0.7rem;">Daily Rent</small>
+                                    <h5 class="mb-0">₹<span id="suggestedPrice">0</span></h5>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="price-display p-3 text-center">
+                                    <small class="d-block text-muted mb-1 fw-semibold" style="font-size: 0.7rem;">Deposit</small>
+                                    <h5 class="mb-0">₹<span id="suggestedDeposit">0</span></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <label class="form-label">
+                                <i class="bi bi-cash-coin"></i> Daily Rent Price
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" id="rent_per_day" name="rent_per_day" class="form-control" min="50" max="10000" placeholder="100" required>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">
+                                <i class="bi bi-shield-lock"></i> Security Deposit
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" id="deposit_amount" name="deposit_amount" class="form-control" placeholder="300" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label mb-3">
+                            <i class="bi bi-truck"></i> Delivery Options
+                        </label>
+                        <div class="d-flex flex-column gap-2">
+                            <div>
+                                <input type="checkbox" class="btn-check" id="delivery" name="allow_delivery">
+                                <label class="btn btn-outline-secondary w-100 py-2 rounded-4 text-start" for="delivery">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-box-seam me-3 fs-5"></i>
+                                        <div>
+                                            <strong class="d-block text-dark">Doorstep Delivery</strong>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="checkbox" class="btn-check" id="pickup" name="self_pickup" checked>
+                                <label class="btn btn-outline-secondary w-100 py-2 rounded-4 text-start" for="pickup">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-shop me-3 fs-5"></i>
+                                        <div>
+                                            <strong class="d-block text-dark">Self-Pickup</strong>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h6 class="section-title">
+                        <span class="icon-wrapper">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+                        Pickup Location
+                    </h6>
+                
+                    <div class="location-status">
+                        <div class="pulse-dot"></div>
+                        <span class="small fw-bold text-dark" id="locationText">Click on map to set pickup point</span>
+                    </div>
+                
+                    <div class="map-search-container">
+                        <i class="bi bi-search map-search-icon"></i>
+                        <input type="text" id="mapSearch" class="form-control map-search-input" placeholder="Search neighborhood or landmark...">
+                    </div>
+
+                    <div id="map"></div>
+
+
+                    <input type="hidden" name="latitude" id="lat">
+                    <input type="hidden" name="longitude" id="lng">
+
+                    <div class="helper-text mt-3">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Your exact house number is never shown publicly</span>
+                    </div>
+                </div>
+
+                <div class="terms-box mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="terms" required>
+                        <label class="form-check-label small" for="terms">
+                            I confirm item is clean & working. I agree to <a href={% url "error404" %}>Terms</a> & <a href={% url "error404" %}>Privacy</a>.
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-publish w-100">
+                    <span style="position: relative; z-index: 1;">
+                        Publish Listing
+                        <i class="bi bi-rocket-takeoff ms-2"></i>
+                    </span>
+                </button>
+            </div> </div> </form>
+</div>
+
+<script>
+    // ========== PROGRESS TRACKING ==========
+    const steps = document.querySelectorAll('.progress-steps .step');
+    let currentStep = 0;
+
+    function updateProgress(stepIndex) {
+        steps.forEach((step, index) => {
+            if (index < stepIndex) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === stepIndex) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+    // ========== SMART PRICING CALCULATION ==========
+    function calculateDeposit(rent, purchasePrice) {
+        let deposit = rent * 3; 
+        let maxDeposit = purchasePrice * 0.45; // Capped at 45% of value
+        return Math.min(deposit, maxDeposit);
+    }
+
+    function calculateSmartPricing() {
+        const price = parseFloat(document.getElementById("purchasePrice").value);
+        const year = parseInt(document.getElementById("purchaseYear").value);
+        const quality = document.getElementById("quality").value;
+        const categorySelect = document.getElementById("category");
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        const categoryCut = parseFloat(selectedOption.getAttribute("data-cut")) || 0;
+
+
+        if (!price || !year || !quality || !category) return;
+
+        const age = Math.max(0, new Date().getFullYear() - year);
+        let baseRent = price * 0.012; // Base 1.2% per day
+
+        // Depreciation Factors
+        let ageFactor = age >= 4 ? 0.7 : (age >= 2 ? 0.85 : 1.0);
+        const qualityFactor = {"Brand New": 1.0, "Like New": 0.95, "Gently Used": 0.8}[quality] || 0.7;
+        const categoryFactor = 1 + (categoryCut / 100);
+
+        const finalRent = Math.round(baseRent * ageFactor * qualityFactor * categoryFactor);
+        const finalDeposit = Math.round(calculateDeposit(finalRent, price));
+
+        // Update UI
+        document.getElementById("smartPriceBox").classList.remove("d-none");
+        document.getElementById("suggestedPrice").innerText = finalRent;
+        document.getElementById("suggestedDeposit").innerText = finalDeposit;
+
+        // Auto-fill if empty
+        const rentInput = document.getElementById("rent_per_day");
+        const depositInput = document.getElementById("deposit_amount");
+        if (!rentInput.value) rentInput.value = finalRent;
+        if (!depositInput.value) depositInput.value = finalDeposit;
+
+        // Update progress
+        updateProgress(2);
+    }
+
+    // ========== IMAGE PREVIEW WITH REMOVE ==========
+    document.getElementById("fileInput").addEventListener("change", function () {
+        const preview = document.getElementById("imagePreview");
+        preview.innerHTML = "";
+        
+        const files = [...this.files].slice(0, 5);
+        
+        if (files.length > 0) {
+            updateProgress(1);
+        }
+        
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const col = document.createElement("div");
+                col.className = "col-6 col-md-4";
+                col.innerHTML = `
+                    <div class="image-wrapper">
+                        <img src="${e.target.result}" class="img-fluid">
+                        <button type="button" class="remove-image" onclick="removeImage(${index})">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                `;
+                preview.appendChild(col);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    // Remove image function
+    function removeImage(index) {
+        const fileInput = document.getElementById("fileInput");
+        const dt = new DataTransfer();
+        const files = fileInput.files;
+
+        for (let i = 0; i < files.length; i++) {
+            if (i !== index) dt.items.add(files[i]);
+        }
+
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change'));
+    }
+
+    // ========== EVENT LISTENERS ==========
+    ["purchasePrice", "purchaseYear"].forEach(id => {
+        document.getElementById(id).addEventListener("input", calculateSmartPricing);
+    });
+
+    ["quality", "category"].forEach(id => {
+        document.getElementById(id).addEventListener("change", calculateSmartPricing);
+    });
+
+    // Form field tracking for progress
+    document.getElementById("name").addEventListener("input", () => updateProgress(1));
+    document.getElementById("rent_per_day").addEventListener("input", () => updateProgress(2));
+
+    // Final step on terms check
+    document.getElementById("terms").addEventListener("change", function() {
+        if (this.checked) {
+            updateProgress(3);
+        }
+    });
+
+    // ========== FORM VALIDATION ==========
+    document.getElementById("listingForm").addEventListener("submit", function(e) {
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length === 0) {
+            e.preventDefault();
+            alert("Please upload at least one image of your item.");
+            updateProgress(0);
+            return false;
+        }
+    });
+let map;
+let marker;
+function initFreeMap() {
+    const defaultLat = 23.0225;
+    const defaultLng = 72.5714;
+
+    map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 300);
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            map.setView([userLat, userLng], 15);
+        });
+    }
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+
+        document.getElementById("lat").value = lat;
+        document.getElementById("lng").value = lng;
+
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+
+        updateProgress(3);
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    initFreeMap();
+});
+</script>
+
+
+
 
 </body>
 </html>

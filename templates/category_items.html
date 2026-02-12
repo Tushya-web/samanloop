@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} | SamanLoop Marketplace</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-teal: #0d9488;
+            --brand-teal-dark: #1ba87e;
+            --navy-dark: #0a192f;
+            --soft-blue: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body { background-color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--navy-dark); overflow-x: hidden; }
+
+        /* ========== 1. SMOOTH PAGE LOADER ========== */
+        #page-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #page-loader.active { visibility: visible; opacity: 1; }
+        .loader-spinner {
+            width: 50px; height: 50px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--brand-teal);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ========== 2. CENTERED CIRCULAR CATEGORY NAV ========== */
+        .category-nav-wrapper {
+            padding: 20px 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1050;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .category-scroll {
+            display: flex;
+            justify-content: center; /* Centers items on desktop */
+            gap: 25px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 5px 15px;
+            scroll-behavior: smooth;
+        }
+        /* Mobile handling for scrolling when categories overflow */
+        @media (max-width: 992px) {
+            .category-scroll { justify-content: flex-start; }
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .cat-circle-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            min-width: 75px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .cat-img-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid transparent;
+            padding: 2px;
+            transition: 0.3s;
+            margin-bottom: 8px;
+            background: #f8fafc;
+        }
+        .cat-img-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .cat-circle-item span { font-size: 0.7rem; font-weight: 700; color: #94a3b8; transition: 0.3s; white-space: nowrap; }
+        .cat-circle-item:hover .cat-img-box { transform: translateY(-3px); border-color: var(--brand-teal); }
+        .cat-circle-item.active .cat-img-box { border-color: var(--brand-teal); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2); }
+        .cat-circle-item.active span { color: var(--brand-teal); }
+
+        /* ========== 3. HERO & CARDS ========== */
+        .category-hero {
+            background: linear-gradient(rgba(10, 25, 47, 0.65), rgba(10, 25, 47, 0.65)), 
+                        url('{% if category.image %}{{ category.image.url }}{% else %}https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80{% endif %}');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            color: white;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+        }
+        .category-title { font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+
+        .item-card { border: 1px solid transparent; border-radius: 20px; background: white; transition: 0.4s ease; height: 100%; }
+        .item-card:hover { border-color: var(--border-color); box-shadow: 0 15px 35px rgba(0,0,0,0.06); transform: translateY(-8px); }
+        .img-box { position: relative; border-radius: 16px; overflow: hidden; height: 220px; background: #f1f5f9; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        
+        .price-badge {
+            position: absolute; top: 12px; left: 12px;
+            background: #fff; color: var(--navy-dark);
+            padding: 4px 12px; border-radius: 10px; font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-size: 0.9rem;
+        }
+
+        .filter-header { font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 20px; display: block; }
+        .form-range::-webkit-slider-thumb { background: var(--brand-teal); }
+        .cond-badge { font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
+        .cond-excellent { background: #ecfdf5; color: #065f46; }
+        .cond-good { background: #fffbeb; color: #92400e; }
+
+        @media (max-width: 576px) {
+            .category-title { font-size: 2rem; }
+            .cat-img-box { width: 50px; height: 50px; }
+            .img-box { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="page-loader">
+        <div class="text-center">
+            <div class="loader-spinner mb-3"></div>
+            <p class="fw-bold text-teal mb-0">Finding Best Deals...</p>
+        </div>
+    </div>
+
+    {% include 'base/navbar.html' %}
+    <div style="margin-top: 80px;"></div>
+
+    <div class="category-nav-wrapper shadow-sm">
+        <div class="container">
+            <div class="category-scroll">
+                {% for cat in all_categories %}
+                <a href="{% url 'category_items' cat.id %}" class="cat-circle-item loader-trigger {% if cat.id == category.id %}active{% endif %}">
+                    <div class="cat-img-box">
+                        {% if cat.image %}
+                            <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                        {% else %}
+                            <img src="https://ui-avatars.com/api/?name={{ cat.name }}&background=0d9488&color=fff">
+                        {% endif %}
+                    </div>
+                    <span>{{ cat.name }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <header class="category-hero">
+        <div class="container text-center px-4">
+            <h1 class="category-title mb-0">{{ category.name }}</h1>
+            <p class="opacity-75 small mt-2">Verified loop gear in the marketplace</p>
+        </div>
+    </header>
+
+    <div class="container py-2">
+        <div class="row g-4">
+            <aside class="col-lg-3 d-none d-lg-block">
+                <div class="sticky-top" style="top: 130px;">
+                    <form method="GET" action="{% url 'category_items' category.id %}" id="filter-form">
+                        <div class="mb-5">
+                            <span class="filter-header">Max Daily Budget</span>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small fw-bold">₹0</span>
+                                <span class="fw-bold text-teal fs-5" id="priceValue">₹{{ current_max }}</span>
+                            </div>
+                            <input type="range" class="form-range" name="max_price" min="0" max="10000" step="100" id="priceSlider" value="{{ current_max }}">
+                        </div>
+
+                        <div class="mb-5">
+                            <span class="filter-header">Asset Condition</span>
+                            {% for value, label in quality_choices %}
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="quality" value="{{ value }}" id="q_{{ value }}" 
+                                       {% if value in selected_quality %}checked{% endif %}>
+                                <label class="form-check-label small fw-bold" for="q_{{ value }}">{{ label }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-3 shadow-lg">Update Results</button>
+                    </form>
+                </div>
+            </aside>
+
+            <main class="col-lg-9">
+                <div class="row g-3">
+                    {% for item in items %}
+                    <div class="col-6 col-md-4">
+                        <a href="{% url 'item_detail' item.id %}" class="text-decoration-none loader-trigger">
+                            <article class="item-card shadow-sm">
+                                <div class="img-box">
+                                    {% if item.images.all %}
+                                        <img src="{{ item.images.first.image.url }}" alt="{{ item.name }}" loading="lazy">
+                                    {% endif %}
+                                    <div class="price-badge">₹{{ item.rent_per_day }}</div>
+                                </div>
+                                <div class="p-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="cond-badge {% if item.quality == 'excellent' %}cond-excellent{% else %}cond-good{% endif %}">{{ item.get_quality_display }}</span>
+                                    </div>
+                                    <h6 class="fw-bold text-dark m-0 text-truncate" style="font-size: 0.95rem;">{{ item.name }}</h6>
+                                    <small class="text-muted">{{ item.city }}</small>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-search display-4 text-muted opacity-25"></i>
+                        <p class="text-muted mt-3">No matching gear found.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    {% include 'base/footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Loader Logic
+        const loader = document.getElementById('page-loader');
+        document.querySelectorAll('.loader-trigger').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!e.ctrlKey && !e.shiftKey && !e.metaKey && e.button !== 1) {
+                    loader.classList.add('active');
+                }
+            });
+        });
+        document.getElementById('filter-form').addEventListener('submit', () => loader.classList.add('active'));
+
+        // Slider Logic
+        const slider = document.getElementById('priceSlider');
+        const display = document.getElementById('priceValue');
+        slider.oninput = function() { display.innerHTML = `₹${this.value}`; }
+    </script>
+</body>
+</html>

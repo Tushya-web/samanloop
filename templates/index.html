@@ -1,4 +1,5 @@
     {% extends 'base/base.html' %}
+     {% comment %}
     {% load static %}
 
     {% block content %}
@@ -71,7 +72,7 @@
             fill: #ffffff;
         }
 
-    {% comment %} .hero-divider {
+  .hero-divider {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -91,8 +92,7 @@
     /* Color the SVG to match your teal theme */
     .hero-divider path {
         fill: var(--primary-teal);
-    } {% endcomment %}
-
+    } 
         /* Role Intent Buttons */
         .btn-intent-primary {
             background: var(--brand-teal);
@@ -579,8 +579,11 @@
 
     @media (max-width: 480px) {
         /* Adjusting for very small screens */
+        h1 {
+            font-size: 18px !important;
+        }
         .hero-section h1 {
-            font-size: 28px !important;
+            font-size: 30px !important;
         }
 
         .cat-name {
@@ -610,11 +613,71 @@
         animation: fadeUp 0.8s ease forwards;
     }
 
+    .category-section {
+  background: #f8fafc;
+}
+
+.cat-card {
+  position: relative;
+  height: 190px;
+  border-radius: 18px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.cat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 40px rgba(15,23,42,0.18);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.15)
+  );
+}
+
+.content {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  color: #fff;
+}
+
+.content i {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: linear-gradient(
+    100deg,
+    #e5e7eb 40%,
+    #f3f4f6 50%,
+    #e5e7eb 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton 1.2s infinite;
+}
+
+@keyframes skeleton {
+  to { background-position: -200% 0; }
+}
+
+
     {% comment %} @keyframes fadeUp {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     } {% endcomment %}
-    </style>
+    {% comment %} </style>
     <section class="hero-section">
         <div class="container position-relative" style="z-index: 3;">
             <div class="row align-items-center g-5">
@@ -697,7 +760,7 @@
         {% comment %} <div class="hero-divider">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path d="M1200 120L0 10V0h1200v120z" fill="#0d9488"></path>
-        </svg> {% endcomment %}
+        </svg>
     </div>
     </div>
     </section>
@@ -770,97 +833,111 @@
         </div>
     </section>
 
-    <section class="container py-4 my-4 " id="how-it-works">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold h1">The Loop Process</h2>
-            <p class="text-muted">Rent what you need in 3 simple steps</p>
+   <section class="category-section py-5" id="marketplace">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-5 gap-3">
+      <div>
+        <span class="badge rounded-pill px-3 py-2 mb-2"
+              style="background:#ccfbf1;color:#0d9488;font-weight:600;">
+          Marketplace
+        </span>
+        <h2 class="h1 fw-bold mb-2">Browse by Category</h2>
+        <p class="text-muted fs-5">Find the right item for your need.</p>
+      </div>
+
+      <a href="#" class="btn btn-outline-dark rounded-pill fw-semibold px-4">
+        View All →
+      </a>
+    </div>
+
+    <!-- Categories -->
+    <div class="row g-4">
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1519183071298-a2962eadcdb2?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="camera"></i>
+            <h6>Photography</h6>
+          </div>
         </div>
-        <div class="row g-5">
-            <div class="col-md-4">
-                <div class="step-circle">01</div>
-                <h5 class="fw-bold">Discover Local Gear</h5>
-                <p class="text-muted small">Search through thousands of items listed by verified neighbors in your city.</p>
-            </div>
-            <div class="col-md-4">
-                <div class="step-circle">02</div>
-                <h5 class="fw-bold">Safe Booking</h5>
-                <p class="text-muted small">Choose your dates and pay securely. We hold the payment until you receive the item.</p>
-            </div>
-            <div class="col-md-4">
-                <div class="step-circle">03</div>
-                <h5 class="fw-bold">Meet & Use</h5>
-                <p class="text-muted small">Pickup the item, finish your project, and return it. It's that easy!</p>
-            </div>
+      </div>
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1581092334391-8f7c4b52f36f?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="wrench"></i>
+            <h6>Power Tools</h6>
+          </div>
         </div>
-    </section>
-    <section class="category-section" id="marketplace">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-5 gap-3">
-                <div>
-                    <span class="badge bg-teal-subtle text-teal fw-bold mb-2 px-3 py-2 rounded-pill" style="background: #ccfbf1; color: #0d9488;">Marketplace</span>
-                    <h2 class="section-title h1 m-0">Browse by Category</h2>
-                    <p class="text-muted fs-5 mt-2">Find the right tools for your next big project.</p>
-                </div>
-                <a href="#" class="btn btn-view-all rounded-pill fw-bold px-4 py-2 d-flex align-items-center gap-2">
-                    View All Categories <i data-lucide="chevron-right" size="18"></i>
-                </a>
-            </div>
+      </div>
 
-            <div class="row g-4">
-                <div class="col-6 col-lg-3">
-                    <a href="#" class="cat-card-wrapper">
-                        <div class="cat-card shadow-sm">
-                            <div class="cat-icon-box">
-                                <i data-lucide="camera" size="32"></i>
-                            </div>
-                            <h6 class="cat-name">Photography</h6>
-                            {% comment %} <span class="cat-count">124+ Items</span> {% endcomment %}
-                            <i data-lucide="move-right" class="cat-arrow"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-6 col-lg-3">
-                    <a href="#" class="cat-card-wrapper">
-                        <div class="cat-card shadow-sm">
-                            <div class="cat-icon-box">
-                                <i data-lucide="wrench" size="32"></i>
-                            </div>
-                            <h6 class="cat-name">Power Tools</h6>
-                            {% comment %} <span class="cat-count">86+ Items</span> {% endcomment %}
-                            <i data-lucide="move-right" class="cat-arrow"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-6 col-lg-3">
-                    <a href="#" class="cat-card-wrapper">
-                        <div class="cat-card shadow-sm">
-                            <div class="cat-icon-box">
-                                <i data-lucide="tent" size="32"></i>
-                            </div>
-                            <h6 class="cat-name">Camping</h6>
-                            {% comment %} <span class="cat-count">42+ Items</span> {% endcomment %}
-                            <i data-lucide="move-right" class="cat-arrow"></i>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-6 col-lg-3">
-                    <a href="#" class="cat-card-wrapper">
-                        <div class="cat-card shadow-sm">
-                            <div class="cat-icon-box">
-                                <i data-lucide="monitor" size="32"></i>
-                            </div>
-                            <h6 class="cat-name">Electronics</h6>
-                            {% comment %} <span class="cat-count">95+ Items</span> {% endcomment %}
-                            <i data-lucide="move-right" class="cat-arrow"></i>
-                        </div>
-                    </a>
-                </div>
-            </div>
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="tent"></i>
+            <h6>Camping & Travel</h6>
+          </div>
         </div>
-    </section>
+      </div>
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="monitor"></i>
+            <h6>Electronics</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="party-popper"></i>
+            <h6>Event & Party</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="sofa"></i>
+            <h6>Furniture</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="dumbbell"></i>
+            <h6>Sports & Fitness</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-3">
+        <div class="cat-card skeleton" data-bg="https://images.unsplash.com/photo-1595433707802-cc6b82e9b7d6?auto=format&fit=crop&w=800&q=80">
+          <div class="overlay"></div>
+          <div class="content">
+            <i data-lucide="home"></i>
+            <h6>Home Appliances</h6>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 
     <section class="py-5" style="background-color: var(--soft-blue);">
@@ -903,6 +980,31 @@
         </div>
     </section>
 
+     <section class="container py-4 my-4 " id="how-it-works">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold h1">The Loop Process</h2>
+            <p class="text-muted">Rent what you need in 3 simple steps</p>
+        </div>
+        <div class="row g-5">
+            <div class="col-md-4">
+                <div class="step-circle">01</div>
+                <h5 class="fw-bold">Discover Local Gear</h5>
+                <p class="text-muted small">Search through thousands of items listed by verified neighbors in your city.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-circle">02</div>
+                <h5 class="fw-bold">Safe Booking</h5>
+                <p class="text-muted small">Choose your dates and pay securely. We hold the payment until you receive the item.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="step-circle">03</div>
+                <h5 class="fw-bold">Meet & Use</h5>
+                <p class="text-muted small">Pickup the item, finish your project, and return it. It's that easy!</p>
+            </div>
+        </div>
+    </section>
+
+
     <section class="container py-3 my-3" id="earn">
         <div class="p-5 rounded-5 border-0 shadow-lg text-center position-relative overflow-hidden" style="background: var(--navy-dark); color: white;">
             <div class="position-relative" style="z-index: 2;">
@@ -910,7 +1012,7 @@
                 <p class="lead opacity-75 mb-5 pe-lg-5 ps-lg-5">Lenders in your area are earning up to ₹15,000 monthly.<br>Join 1,000+ lenders making a difference.</p>
                 <div class="d-flex gap-3 justify-content-center">
                     <button onclick="{% url 'add_item'%}" class="btn btn-intent-primary px-5 py-3">Start Listing Free</button>
-                    {% comment %} <button class="btn btn-intent-outline d-none d-md-block px-5 py-3">See Calculator</button> {% endcomment %}
+                    <button class="btn btn-intent-outline d-none d-md-block px-5 py-3">See Calculator</button> 
                 </div>
             </div>
             <div class="hero-bg-shape" style="width: 400px; height: 400px; bottom: -200px; left: -100px; background: var(--brand-teal);"></div>
@@ -1100,6 +1202,1255 @@
                 }
             });
         }
+
     </script>
 
-    {% endblock %}
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".cat-card").forEach(card => {
+    const img = new Image();
+    img.src = card.dataset.bg;
+    img.onload = () => {
+      card.style.backgroundImage = `url('${img.src}')`;
+      card.classList.remove("skeleton");
+    };
+  });
+});
+</script>  {% endcomment %}
+ 
+
+{% comment %} 
+    {% endblock %} {% endcomment %}
+    
+
+
+{% load static %}
+
+{% block content %}
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+    :root {
+        --brand-teal: #20c997;
+        --brand-teal-dark: #1ba87e;
+        --navy-dark: #0a192f;
+        --brand-yellow: #ffc107;
+        --soft-blue: #f8fafc;
+        --text-main: #1e293b;
+        --glass-white: rgba(255, 255, 255, 0.98);
+        --border-color: #e2e8f0;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+        --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================
+       CUSTOM TEXT SELECTION
+    ============================================ */
+    ::selection {
+        background-color: var(--brand-teal);
+        color: #ffffff;
+    }
+    
+    ::-moz-selection {
+        background-color: var(--brand-teal);
+        color: #ffffff;
+    }
+    
+    /* ============================================
+       GLOBAL STYLES
+    ============================================ */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body { 
+        background-color: #ffffff; 
+        color: var(--text-main); 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        /* Ensure no margin on body itself */
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Smooth Scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* ============================================
+       HERO SECTION - Adjusted Padding
+    ============================================ */
+    .hero-section {
+        background: radial-gradient(circle at 70% 30%, #1a3a5f, var(--navy-dark));
+        position: relative;
+        /* Reduced top/bottom padding to remove gap */
+        padding: 147px 0 147px; 
+        color: white;
+        overflow: hidden;
+        margin-top: -1px; /* Fix for potential navbar gap */
+    }
+
+    /* Animated Background Particles */
+    .hero-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .particle {
+        position: absolute;
+        background: var(--brand-teal);
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: float 20s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 70%; animation-delay: 2s; }
+    .particle:nth-child(3) { width: 60px; height: 60px; top: 40%; left: 80%; animation-delay: 4s; }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -30px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Hero Wave Divider */
+    .hero-divider {
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        line-height: 0;
+        z-index: 2;
+    }
+
+    .hero-divider svg {
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 80px; /* Reduced height slightly */
+        fill: #ffffff;
+    }
+
+    /* Badge with Pulse Animation */
+    .hero-badge {
+        background: rgba(32, 201, 151, 0.15);
+        color: #4ade80;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        animation: pulse 2s infinite;
+        margin-bottom: 1rem;
+    }
+
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+        50% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+    }
+
+    /* Hero Title with Gradient */
+    .hero-title {
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+
+    .text-brand {
+        background: linear-gradient(135deg, var(--brand-teal) 0%, #4ade80 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* CTA Buttons - Enhanced */
+    .btn-intent-primary {
+        background: var(--brand-teal);
+        color: white;
+        padding: 16px 32px;
+        font-weight: 700;
+        border-radius: 14px;
+        transition: var(--transition-smooth);
+        border: none;
+        box-shadow: 0 10px 30px rgba(32, 201, 151, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-intent-primary::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-intent-primary:hover::before { left: 100%; }
+
+    .btn-intent-primary:hover {
+        transform: translateY(-3px) scale(1.02);
+        background: var(--brand-teal-dark);
+        box-shadow: 0 15px 40px rgba(32, 201, 151, 0.4);
+        color: white;
+    }
+
+    .btn-intent-outline {
+        background: rgba(255,255,255,0.08);
+        color: white;
+        border: 2px solid rgba(255,255,255,0.3);
+        padding: 16px 32px;
+        font-weight: 700;
+        border-radius: 14px;
+        backdrop-filter: blur(10px);
+        transition: var(--transition-smooth);
+    }
+
+    .btn-intent-outline:hover {
+        background: white;
+        color: var(--navy-dark);
+        border-color: white;
+        transform: translateY(-3px);
+    }
+
+    /* Search Card - Enhanced Glassmorphism */
+    .hero-search-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(30px);
+        padding: 32px;
+        border-radius: 28px;
+        color: var(--navy-dark);
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255,255,255,0.6);
+        transform: translateY(0);
+        transition: var(--transition-smooth);
+        margin-top: 1rem;
+    }
+
+    .hero-search-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 50px 120px -20px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Input Box - Enhanced */
+    .input-box {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 4px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 2px solid transparent;
+        transition: var(--transition-smooth);
+    }
+
+    .input-box:focus-within {
+        border-color: var(--brand-teal);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(32, 201, 151, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .input-box input {
+        border: none;
+        background: transparent;
+        width: 100%;
+        padding: 12px 8px;
+        outline: none;
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    .input-box input::placeholder { color: #94a3b8; }
+
+    /* Popular Tags */
+    .popular-tag {
+        background: #f1f5f9;
+        color: var(--text-main);
+        padding: 6px 14px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: var(--transition-smooth);
+        cursor: pointer;
+        border: 1px solid #e2e8f0;
+    }
+
+    .popular-tag:hover {
+        background: var(--brand-teal);
+        color: white;
+        transform: translateY(-2px);
+        border-color: var(--brand-teal);
+    }
+
+    /* ============================================
+       TRUST SECTION - Compact Padding
+    ============================================ */
+    .trust-section {
+        padding: 40px 0; /* Reduced from 50px */
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .trust-container {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 15px;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .trust-container::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--brand-teal), #4ade80, var(--brand-teal));
+        background-size: 200% 100%;
+        animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -100% 0; }
+        100% { background-position: 100% 0; }
+    }
+
+    .trust-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        transition: var(--transition-smooth);
+        border-radius: 16px;
+        position: relative;
+    }
+
+    .trust-card:hover {
+        background: #f8fafc;
+        transform: translateY(-2px);
+    }
+
+    .trust-card::after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        width: 1px;
+        height: 60%;
+        background: var(--border-color);
+    }
+
+    .trust-card:last-child::after { display: none; }
+
+    .icon-box {
+        width: 48px; height: 48px;
+        display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, #ccfbf1, #f0fdfa);
+        color: var(--brand-teal);
+        border-radius: 12px;
+        flex-shrink: 0;
+        transition: var(--transition-smooth);
+    }
+
+    .trust-card:hover .icon-box {
+        background: var(--brand-teal);
+        color: white;
+        transform: rotate(-5deg) scale(1.1);
+    }
+
+    .trust-content h6 { font-weight: 700; font-size: 0.95rem; margin: 0; color: var(--text-main); }
+    .trust-content p { font-size: 0.8rem; margin: 0; color: #64748b; line-height: 1.4; }
+
+    /* ============================================
+       GENERIC SECTION STYLES - Optimized Spacing
+    ============================================ */
+    .category-section,
+    .trending-section,
+    .process-section,
+    .earn-section,
+    .testimonial-section {
+        padding: 60px 0; /* Reduced from 100px */
+    }
+
+    .category-section, .process-section {
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px; /* Reduced from 60px */
+    }
+
+    .section-badge {
+        background: #ccfbf1;
+        color: var(--brand-teal);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 12px;
+    }
+
+    .section-title {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
+    }
+
+    .section-subtitle { color: #64748b; font-size: 1rem; }
+.category-section {
+        padding: 80px 0;
+        background-color: #fff;
+    }
+
+    /* Modern Grid Card */
+    .cat-card {
+        position: relative;
+        height: 200px;
+        border-radius: 20px;
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* Dynamic Overlay: Darker at bottom for text readability */
+    .cat-card .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10, 25, 47, 0.8) 0%, rgba(10, 25, 47, 0.2) 60%, transparent 100%);
+        transition: opacity 0.4s ease;
+    }
+
+    /* Text Content */
+    .cat-card .content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .cat-card .content h6 {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 1.1rem;
+        margin: 0;
+        letter-spacing: 0.5px;
+        transition: transform 0.4s ease;
+    }
+
+    /* HOVER INTERACTIONS (The "Amazon" Feel) */
+    .cat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(10, 25, 47, 0.15);
+    }
+
+    .cat-card:hover .overlay {
+        background: linear-gradient(to top, rgba(13, 148, 136, 0.9) 0%, rgba(10, 25, 47, 0.4) 100%);
+    }
+
+    .cat-card:hover .content h6 {
+        transform: scale(1.1);
+    }
+
+    /* Skeleton Loading Placeholder */
+    .skeleton {
+        background-color: #f1f5f9;
+        position: relative;
+    }
+
+    /* View All Button */
+    .btn-view-all {
+        border: 2px solid var(--navy-dark);
+        color: var(--navy-dark);
+        transition: all 0.3s;
+    }
+    .btn-view-all:hover {
+        background-color: var(--navy-dark);
+        color: #fff;
+    }
+    /* ============================================
+       TRENDING SECTION - Enhanced Cards
+    ============================================ */
+    .listing-card {
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        transition: var(--transition-smooth);
+        background: white;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .listing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        border-color: var(--brand-teal);
+    }
+
+    .listing-card img { transition: var(--transition-smooth); }
+    .listing-card:hover img { transform: scale(1.05); }
+
+    .verified-badge {
+        background: white;
+        color: var(--text-main);
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        box-shadow: var(--shadow-sm);
+        display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    .card-meta-tag {
+        font-size: 0.7rem;
+        background: #f1f5f9;
+        padding: 4px 10px;
+        border-radius: 8px;
+        color: #64748b;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-brand {
+        background: var(--brand-teal);
+        color: white;
+        border: none;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-brand:hover {
+        background: var(--brand-teal-dark);
+        transform: scale(1.05);
+        color: white;
+    }
+
+    /* ============================================
+       PROCESS SECTION
+    ============================================ */
+    .step-circle {
+        width: 70px; height: 70px;
+        background: linear-gradient(135deg, var(--soft-blue), #e0f2fe);
+        color: var(--brand-teal);
+        border-radius: 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem; font-weight: 800;
+        margin-bottom: 20px;
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-sm);
+        border: 2px solid var(--border-color);
+    }
+
+    .step-card:hover .step-circle {
+        background: var(--brand-teal);
+        color: white;
+        transform: rotate(-10deg) scale(1.15);
+        box-shadow: 0 10px 30px rgba(32, 201, 151, 0.3);
+    }
+
+    .step-card {
+        text-align: center;
+        padding: 24px;
+        border-radius: 20px;
+        transition: var(--transition-smooth);
+    }
+
+    .step-card:hover {
+        background: white;
+        box-shadow: var(--shadow-md);
+    }
+
+    /* ============================================
+       EARN SECTION
+    ============================================ */
+    .earn-card {
+        padding: 60px 40px;
+        border-radius: 36px;
+        background: linear-gradient(135deg, var(--navy-dark) 0%, #0f2744 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(10, 25, 47, 0.3);
+    }
+
+    .earn-card::before {
+        content: ''; position: absolute; width: 400px; height: 400px;
+        background: radial-gradient(circle, var(--brand-teal) 0%, transparent 70%);
+        bottom: -200px; right: -100px; opacity: 0.15;
+        animation: float 15s infinite ease-in-out;
+    }
+
+    .earn-card::after {
+        content: ''; position: absolute; width: 300px; height: 300px;
+        background: radial-gradient(circle, var(--brand-yellow) 0%, transparent 70%);
+        top: -150px; left: -100px; opacity: 0.1;
+        animation: float 20s infinite ease-in-out reverse;
+    }
+
+    /* ============================================
+       TESTIMONIALS
+    ============================================ */
+    .testimonial-toggle-pill {
+        background: white;
+        padding: 6px;
+        border-radius: 100px;
+        display: inline-flex;
+        gap: 8px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .toggle-btn {
+        border: none;
+        padding: 10px 24px;
+        border-radius: 100px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: var(--transition-smooth);
+        background: transparent;
+        color: #64748b;
+        cursor: pointer;
+    }
+
+    .toggle-btn.active {
+        background: var(--brand-teal);
+        color: white;
+        box-shadow: 0 4px 12px rgba(32, 201, 151, 0.3);
+    }
+
+    .testimonial-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 30px;
+        transition: var(--transition-smooth);
+        height: 100%;
+        position: relative;
+    }
+
+    .testimonial-card:hover {
+        border-color: var(--brand-teal);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .quote-icon {
+        position: absolute; top: 20px; right: 30px;
+        opacity: 0.08; color: var(--brand-teal);
+    }
+
+    .user-avatar {
+        width: 50px; height: 50px;
+        border-radius: 16px; object-fit: cover;
+        border: 3px solid var(--border-color);
+    }
+
+    /* ============================================
+       RESPONSIVE DESIGN - Adjusted Paddings
+    ============================================ */
+    @media (max-width: 992px) {
+        .hero-section { padding: 80px 0 80px; }
+        .hero-search-card { margin-top: 30px; }
+        
+        .trust-card::after { display: none; }
+        .trust-card { border-bottom: 1px solid var(--border-color); }
+        .trust-card:last-child { border-bottom: none; }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section { padding: 60px 0 80px; text-align: center; }
+        .hero-title { font-size: 2rem; }
+        .hero-search-card { padding: 24px 20px; }
+        
+        .btn-intent-primary, .btn-intent-outline { width: 100%; justify-content: center; }
+        
+        .category-section, .trending-section, .process-section, 
+        .earn-section, .testimonial-section { padding: 40px 0; }
+        
+        .section-title { font-size: 1.6rem; }
+        .cat-card { height: 180px; }
+        .earn-card { padding: 40px 24px; border-radius: 28px; }
+        .step-circle { margin: 0 auto 16px; }
+    }
+
+    /* Utility */
+    .fade-in { animation: fadeIn 0.6s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hidden-testimonial { display: none; }
+    
+    /* Utility to remove top margin if navbar exists */
+    .mt-neg-1 { margin-top: -1px; }
+</style>
+
+<section class="hero-section">
+    <div class="hero-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container position-relative" style="z-index: 3;">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6 text-center text-lg-start fade-in">
+                <span class="hero-badge">
+                    ✨ India's Trusted Rental Community
+                </span>
+                <h1 class="hero-title">
+                    Borrow Smart.<br><span class="text-brand">Earn Easy.</span>
+                </h1>
+                <p class="lead mb-4 text-white-50 pe-lg-5" style="font-size: 1.1rem;">
+                    India's first sharing marketplace. Rent high-quality gear from verified neighbors or earn by lending your idle assets.
+                </p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start mb-4">
+                    <a href="#marketplace" class="btn-intent-primary d-flex align-items-center justify-content-center gap-2 text-decoration-none">
+                        <i data-lucide="shopping-bag" size="20"></i> Explore Marketplace
+                    </a>
+                    <a href="{% url 'add_item'%}" class="btn-intent-outline d-flex align-items-center justify-content-center gap-2 text-decoration-none">
+                        <i data-lucide="banknote" size="20"></i> Start Earning
+                    </a>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4 opacity-50 small fw-medium">
+                    <span class="d-flex align-items-center gap-2">
+                        <i data-lucide="search" size="16"></i> Find local gear
+                    </span>
+                    <span class="d-flex align-items-center gap-2">
+                        <i data-lucide="calendar" size="16"></i> Book dates
+                    </span>
+                    <span class="d-flex align-items-center gap-2">
+                        <i data-lucide="refresh-cw" size="16"></i> Use & Return
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-lg-5 offset-lg-1 fade-in" id="how-it-works">
+                <div class="hero-search-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold m-0">Start Looping</h5>
+                        <div class="small text-muted fw-bold d-flex align-items-center gap-2">
+                            <i data-lucide="zap" size="16" class="text-warning"></i> Instant Book
+                        </div>
+                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted mb-2 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">What do you need?</label>
+                            <div class="input-box">
+                                <i data-lucide="search" size="18" class="text-muted"></i>
+                                <input type="text" placeholder="Projector, DSLR, Camping Tent...">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="small fw-bold text-muted mb-2 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">Location</label>
+                            <div class="input-box">
+                                <i data-lucide="map-pin" size="18" class="text-muted"></i>
+                                <input type="text" placeholder="Your City..." value="Mehsana, Gujarat">
+                                <span class="badge bg-success-subtle text-success small">Near You</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-intent-primary w-100 py-3">
+                            <i data-lucide="arrow-right" size="18" class="me-2"></i>
+                            Browse Marketplace
+                        </button>
+                        <div class="d-flex gap-2 flex-wrap mt-4 justify-content-center">
+                            <span class="text-muted small fw-600">Popular:</span>
+                            <span class="popular-tag">📷 DSLR Camera</span>
+                            <span class="popular-tag">📽️ Projector</span>
+                            <span class="popular-tag">🔧 Power Drill</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C49.49,23.11,101.18,44.57,155.13,54.66,209.08,64.75,265,67.23,321.39,56.44Z"></path>
+        </svg>
+    </div>
+</section>
+
+<section class="trust-section">
+    <div class="container">
+        <div class="trust-container">
+            <div class="row g-0">
+                <div class="col-6 col-md-3">
+                    <div class="trust-card">
+                        <div class="icon-box">
+                            <i data-lucide="user-check" size="24"></i>
+                        </div>
+                        <div class="trust-content d-none d-lg-block">
+                            <h6>Verified Users</h6>
+                            <p>100% ID checked</p>
+                        </div>
+                        <div class="trust-content d-lg-none">
+                            <h6>Verified</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="trust-card">
+                        <div class="icon-box">
+                            <i data-lucide="shield-check" size="24"></i>
+                        </div>
+                        <div class="trust-content d-none d-lg-block">
+                            <h6>Safe Lending</h6>
+                            <p>Damage protection</p>
+                        </div>
+                        <div class="trust-content d-lg-none">
+                            <h6>Insured</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="trust-card">
+                        <div class="icon-box">
+                            <i data-lucide="lock" size="24"></i>
+                        </div>
+                        <div class="trust-content d-none d-lg-block">
+                            <h6>Secure Pay</h6>
+                            <p>Escrow protection</p>
+                        </div>
+                        <div class="trust-content d-lg-none">
+                            <h6>Secure</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="trust-card">
+                        <div class="icon-box">
+                            <i data-lucide="star" size="24"></i>
+                        </div>
+                        <div class="trust-content d-none d-lg-block">
+                            <h6>Top Rated</h6>
+                            <p>Peer reviews</p>
+                        </div>
+                        <div class="trust-content d-lg-none">
+                            <h6>Rated</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="category-section" id="marketplace">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title fw-bold" style="font-size: 2.5rem; color: var(--navy-dark);">Browse by Category</h2>
+            <p class="section-subtitle text-muted">Quality assets, verified lenders, one simple loop.</p>
+        </div>
+
+        <div class="row g-3 g-lg-4 mb-5">
+            {% for category in categories %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{% url 'category_items' category.id %}" class="d-block" style="text-decoration:none;">
+                    <div class="cat-card shadow-sm"
+                         style="background-image: url('{% if category.image %}{{ category.image.url }}{% else %}{% static 'images/default-category.jpg' %}{% endif %}');">
+                        
+                        <div class="overlay"></div>
+
+                        <div class="content">
+                            <h6>{{ category.name }}</h6>
+                            <small class="text-white-50 fw-bold uppercase" style="font-size: 9px; letter-spacing: 1px;">Explore Gear</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No categories found in the warehouse.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'browse_items' %}" class="btn btn-view-all rounded-pill fw-bold px-5 py-3 shadow-sm">
+                View All Categories <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+<section class="trending-section">
+    <div class="container">
+        <div class="section-header mb-5">
+            <h2 class="section-title">Trending in Gujarat</h2>
+            <p class="section-subtitle">Most popular rentals in your area this week</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            {% for item in items %}
+            <div class="col-sm-6 col-lg-3">
+                <div class="listing-card h-100 shadow-sm border-0" style="border-radius: 20px; overflow: hidden; background: #fff;">
+                    <div class="position-relative overflow-hidden">
+                        {% with item.images.all|first as first_image %}
+                            {% if first_image %}
+                                <img src="{{ first_image.image.url }}" class="w-100" style="height: 220px; object-fit: cover;" alt="{{ item.name }}">
+                            {% else %}
+                                <img src="{% static 'images/default-item.jpg' %}" class="w-100" style="height: 220px; object-fit: cover;" alt="No image available">
+                            {% endif %}
+                        {% endwith %}
+                        
+                        <span class="verified-badge position-absolute top-0 end-0 m-3 bg-white px-2 py-1 rounded-pill shadow-sm" style="font-size: 10px; font-weight: 700;">
+                            <i class="bi bi-patch-check-fill text-success"></i> Verified
+                        </span>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold m-0 text-truncate" title="{{ item.name }}">{{ item.name }}</h6>
+                            <span class="small fw-bold text-nowrap">
+                                <i class="bi bi-star-fill text-warning"></i> 4.9
+                            </span>
+                        </div>
+                        
+                        <div class="text-muted small mb-3">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ item.city|default:"Mehsana" }}
+                        </div>
+
+                        <div class="d-flex gap-2 mb-3">
+                            {% if item.deposit_amount == 0 %}
+                                <span class="badge bg-success bg-opacity-10 text-success fw-bold" style="font-size: 10px;">₹0 Deposit</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark border fw-bold" style="font-size: 10px;">Deposit: ₹{{ item.deposit_amount }}</span>
+                            {% endif %}
+                            <span class="badge bg-info bg-opacity-10 text-info fw-bold" style="font-size: 10px;">Instant</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span class="h5 fw-bold mb-0" style="color: var(--brand-teal);">₹{{ item.rent_per_day }}</span>
+                                <small class="text-muted fw-bold">/day</small>
+                            </div>
+                            <a href="{% url 'item_detail' item.id %}" class="btn btn-brand btn-sm rounded-pill px-3 py-2 fw-bold text-white" style="background-color: var(--brand-teal); border: none;">Rent Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No items available in Gujarat right now. Why not list one?</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'browse_items' %}" class="btn btn-outline-dark rounded-pill fw-semibold px-4 py-2" style="border-width: 2px;">
+                View All Items <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="earn-section" id="earn">
+    <div class="container">
+        <div class="earn-card text-center">
+            <div class="position-relative" style="z-index: 2;">
+                <h2 class="display-6 fw-bold mb-3">Turn Idle Assets into Income</h2>
+                <p class="lead opacity-75 mb-4 px-lg-5">
+                    Lenders in your area are earning up to ₹15,000 monthly.<br>
+                    Join 1,000+ lenders making a difference.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{% url 'add_item'%}" class="btn-intent-primary px-4 py-3">
+                        <i data-lucide="plus-circle" size="18" class="me-2"></i>
+                        Start Listing Free
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-5 align-items-center">
+        <div class="col-lg-5">
+            <h2 class="display-6 fw-800 mb-4">
+                Sharing made<br>
+                <span style="color: var(--brand-teal);">effortless.</span>
+            </h2>
+            <p class="text-muted lead mb-4" style="font-size: 1.1rem;">We've built a secure environment where neighbors can support neighbors.</p>
+            
+            <div class="d-flex flex-column gap-4">
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="icon-box">
+                            <i data-lucide="search" size="20"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 mb-1">Search & Book</h6>
+                        <p class="text-muted mb-0 small">Browse verified listings and book dates instantly with secure payments.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="icon-box">
+                            <i data-lucide="handshake" size="20"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 mb-1">Meet & Collect</h6>
+                        <p class="text-muted mb-0 small">Meet your neighbor at a convenient location to pick up the item.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="icon-box">
+                            <i data-lucide="refresh-ccw" size="20"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 mb-1">Use & Return</h6>
+                        <p class="text-muted mb-0 small">Finish your project and return the item. Rate your experience!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 offset-lg-1">
+            <div class="position-relative">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-5 shadow-lg" style="border-radius: 24px !important;">
+                <div class="bg-white p-3 rounded-4 shadow-lg position-absolute bottom-0 start-0 m-4 d-none d-md-block" style="max-width: 260px; border-radius: 20px !important;">
+                    <div class="d-flex gap-3 align-items-center mb-2">
+                        <img src="https://i.pravatar.cc/150?u=9" class="rounded-circle" width="40" height="40">
+                        <div>
+                            <h6 class="fw-700 mb-0" style="font-size: 0.95rem;">Tony Shark</h6>
+                            <p class="text-muted small m-0" style="font-size: 0.75rem;">Lender since 2026</p>
+                        </div>
+                    </div>
+                    <p class="small text-muted m-0" style="font-size: 0.8rem;">"Loop helped me earn ₹12k last month just from my drill and camera!"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonial-section">
+    <div class="container">
+        <div class="section-header mb-5">
+            <h2 class="section-title">Community Voice</h2>
+            <p class="section-subtitle mb-4">Join thousands of happy Loopers across India</p>
+            
+            <div class="testimonial-toggle-pill">
+                <button class="toggle-btn active" onclick="filterTestimonials('borrower', this)">
+                    <i data-lucide="shopping-bag" size="16"></i> Borrowers
+                </button>
+                <button class="toggle-btn" onclick="filterTestimonials('lender', this)">
+                    <i data-lucide="banknote" size="16"></i> Lenders
+                </button>
+            </div>
+        </div>
+
+        <div class="row g-4" id="testimonial-container">
+            <div class="col-md-4 testimonial-item" data-type="borrower">
+                <div class="testimonial-card">
+                    <i data-lucide="quote" class="quote-icon" size="40"></i>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="https://i.pravatar.cc/150?u=1" class="user-avatar" alt="User">
+                        <div class="text-start">
+                            <h6 class="fw-bold m-0">Arjun Mehta</h6>
+                            <small class="text-muted">Ahmedabad</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                    </div>
+                    <p class="text-secondary small">"Needed a Sony A7III for a weekend wedding shoot. Found one 2km away at a fraction of the rental store cost. Super smooth experience!"</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 testimonial-item" data-type="borrower">
+                <div class="testimonial-card">
+                    <i data-lucide="quote" class="quote-icon" size="40"></i>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="https://i.pravatar.cc/150?u=2" class="user-avatar" alt="User">
+                        <div class="text-start">
+                            <h6 class="fw-bold m-0">Rahul V.</h6>
+                            <small class="text-muted">Surat</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                        <i data-lucide="star" class="text-warning fill-current" size="14"></i>
+                    </div>
+                    <p class="text-secondary small">"Rented a high-end projector for a home movie night. The lender was very helpful in setting it up. Definitely doing this again!"</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 testimonial-item" data-type="borrower">
+                <div class="testimonial-card">
+                    <i data-lucide="quote" class="quote-icon" size="40"></i>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="https://i.pravatar.cc/150?u=3" class="user-avatar" alt="User">
+                        <div class="text-start">
+                            <h6 class="fw-bold m-0">Ananya R.</h6>
+                            <small class="text-muted">Vadodara</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge" style="background: #ccfbf1; color: var(--brand-teal); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.7rem;">
+                            <i data-lucide="check-circle" size="12"></i> Verified Borrower
+                        </span>
+                    </div>
+                    <p class="text-secondary small">"Better for the planet and my wallet. Why buy a pressure washer for a one-time use? Loop is a game changer for urban living."</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 testimonial-item hidden-testimonial" data-type="lender">
+                <div class="testimonial-card">
+                    <i data-lucide="quote" class="quote-icon" size="40"></i>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="https://i.pravatar.cc/150?u=4" class="user-avatar" alt="User">
+                        <div class="text-start">
+                            <h6 class="fw-bold m-0">Priya Sharma</h6>
+                            <small class="text-muted">Mehsana</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge" style="background: #d1fae5; color: #059669; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.7rem;">
+                            <i data-lucide="trending-up" size="12"></i> Earned ₹8,400 last month
+                        </span>
+                    </div>
+                    <p class="text-secondary small">"My camping gear used to collect dust. Now it pays for my weekend trips! The damage protection gives me total peace of mind."</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 testimonial-item hidden-testimonial" data-type="lender">
+                <div class="testimonial-card">
+                    <i data-lucide="quote" class="quote-icon" size="40"></i>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="https://i.pravatar.cc/150?u=5" class="user-avatar" alt="User">
+                        <div class="text-start">
+                            <h6 class="fw-bold m-0">Suresh K.</h6>
+                            <small class="text-muted">Gandhinagar</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <span class="badge" style="background: #d1fae5; color: #059669; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.7rem;">
+                            <i data-lucide="award" size="12"></i> Power User
+                        </span>
+                    </div>
+                    <p class="text-secondary small">"The platform is intuitive. Listing my drills and saws took 5 minutes. The escrow payment system makes everything professional."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Testimonial Filter Function
+    function filterTestimonials(type, btn) {
+        // Update Active Button
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter Testimonial Items with Animation
+        const items = document.querySelectorAll('.testimonial-item');
+        items.forEach(item => {
+            if (item.getAttribute('data-type') === type) {
+                item.style.display = 'block';
+                item.style.opacity = '0';
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.4s ease';
+                    item.style.opacity = '1';
+                }, 50);
+            } else {
+                item.style.opacity = '0';
+                setTimeout(() => {
+                    item.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        // Re-initialize Lucide icons after DOM changes
+        setTimeout(() => lucide.createIcons(), 100);
+    }
+
+    // Category Image Lazy Loading
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".cat-card").forEach(card => {
+            const img = new Image();
+            img.src = card.dataset.bg;
+            img.onload = () => {
+                card.style.backgroundImage = `url('${img.src}')`;
+                card.classList.remove("skeleton");
+            };
+        });
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    });
+
+    // Smooth Scroll for Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add fade-in animation on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all major sections
+    document.querySelectorAll('.category-section, .trending-section, .process-section, .earn-section, .testimonial-section').forEach(section => {
+        observer.observe(section);
+    });
+</script>
+
+{% endblock %}

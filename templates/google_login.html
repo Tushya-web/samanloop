@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login with Google</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+  <script>
+  const firebaseConfig = {
+      apiKey: "YOUR_WEB_API_KEY",
+      authDomain: "YOUR.firebaseapp.com",
+      projectId: "YOUR_ID",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase.auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+            result.user.getIdToken().then(function(idToken) {
+
+                fetch("/google-callback/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ token: idToken })
+                }).then(() => {
+                    window.location = "/dashboard/";
+                });
+
+            });
+        });
+  }
+  </script>
+</head>
+
+<body>
+  <button onclick="googleLogin()">
+    Continue with Google
+  </button>
+</body>
+</html>

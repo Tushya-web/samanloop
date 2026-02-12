@@ -1,0 +1,303 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard | SamanLoop</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-teal: #0d9488;
+            --brand-teal-light: #14b8a6;
+            --navy-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--navy-dark);
+            overflow-x: hidden; /* Prevent horizontal scroll on small devices */
+        }
+
+        /* ========== HERO & NAV PROTECTION ========== */
+        .dashboard-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #115e59 100%);
+            padding: 140px 0 100px 0;
+            margin-bottom: -60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-shape {
+            position: absolute; top: -10%; right: -5%; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
+            filter: blur(60px); z-index: 0;
+        }
+
+        /* ========== STAT CARDS ========== */
+        .stat-card {
+            transform: translateY(-7px);
+            background: white; border-radius: 24px; padding: 20px;
+            border: 1px solid white; box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+        .stat-card:hover { transform: translateY(-11px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .stat-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; margin-bottom: 12px;
+        }
+
+        /* ========== INVENTORY CARDS ========== */
+        .card-item {
+            border-radius: 30px; border: none; background: white;
+            box-shadow: var(--card-shadow); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%; overflow: hidden; display: flex; flex-direction: column;
+        }
+        .card-item:hover { transform: translateY(-12px); box-shadow: 0 30px 60px rgba(0,0,0,0.12); }
+
+        .img-container { position: relative; height: 220px; overflow: hidden; }
+        .img-box { width: 100%; height: 100%; object-fit: cover; transition: 0.8s ease; }
+        .card-item:hover .img-box { transform: scale(1.1); }
+
+        .price-tag {
+            position: absolute; bottom: 12px; left: 12px;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            padding: 6px 14px; border-radius: 14px; font-weight: 800;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+
+        .action-overlay {
+            position: absolute; top: 12px; right: 12px;
+            display: flex; flex-direction: column; gap: 8px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+        }
+        
+        .btn-action {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: white; border: none; color: var(--navy-dark);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .status-pulse {
+            width: 8px; height: 8px; background: #22c55e;
+            border-radius: 50%; display: inline-block; margin-right: 6px;
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .uppercase-tracking { text-transform: uppercase; letter-spacing: 1.2px; font-size: 10px; font-weight: 800; color: #64748b; }
+
+        /* ========== MOBILE RESPONSIVE QUERIES ========== */
+        @media (max-width: 991px) {
+            .dashboard-hero { padding: 120px 0 80px 0; text-align: center; }
+            .hero-content p { margin: 0 auto; }
+            .action-overlay { right: 12px; opacity: 1; } /* Always show actions on mobile */
+        }
+
+        @media (max-width: 767px) {
+            .stat-card { padding: 15px; }
+            .stat-card h2 { font-size: 1.5rem; }
+            .img-container { height: 180px; }
+            .inventory-header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
+            .btn-group { width: 100%; }
+            .btn-group .btn { flex: 1; }
+        }
+
+        @media (max-width: 575px) {
+            .dashboard-hero h1 { font-size: 2rem; }
+            .dashboard-hero .btn-lg { width: 100%; padding: 12px; font-size: 1rem; }
+            .col-6.col-lg-3 { width: 100%; } /* Stack stats on very small screens or keep 2x2 */
+            .row.g-4.mb-5 .col-6 { width: 50%; } /* Keeps 2 cards per row on mobile */
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'base/navbar.html' %}
+
+    <section class="dashboard-hero">
+        <div class="hero-shape"></div>
+        <div class="container position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <span class="badge bg-teal bg-opacity-20 text-white border border-white border-opacity-20 mb-3 px-3 py-2 rounded-pill uppercase-tracking" style="color: #5eead4 !important">
+                        <i class="bi bi-shield-check me-1"></i> Pro Owner
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3">Your Storefront</h1>
+                    <p class="opacity-75 fs-5 mb-0 max-w-md">Real-time tracking of your gear, performance, and monthly payouts.</p>
+                </div>
+                <div class="col-lg-5 text-lg-end mt-4 mt-lg-0">
+                    <a href="{% url 'add_item' %}" class="btn btn-white btn-lg px-4 py-3 rounded-pill fw-bold shadow-lg bg-white border-0 transition-all">
+                        <i class="bi bi-plus-lg me-2 text-teal"></i> List New Item
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mt-2">
+        <div class="row g-3 g-md-4 mb-5">
+            <div class="col-6 col-lg-3">
+                <div class="stat-card text-center text-md-start">
+                    <div class="stat-icon bg-teal bg-opacity-10 text-teal mx-auto mx-md-0"><i class="bi bi-bag-check-fill"></i></div>
+                    <p class="uppercase-tracking mb-1">Active Gear</p>
+                    <h2 class="fw-bold m-0">{{ items.count }}</h2>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-card text-center text-md-start">
+                    <div class="stat-icon bg-success bg-opacity-10 text-success mx-auto mx-md-0"><i class="bi bi-currency-rupee"></i></div>
+                    <p class="uppercase-tracking mb-1">Feb Earnings</p>
+                    <h2 class="fw-bold m-0">₹8,450</h2>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-card text-center text-md-start">
+                    <div class="stat-icon bg-warning bg-opacity-10 text-warning mx-auto mx-md-0"><i class="bi bi-star-fill"></i></div>
+                    <p class="uppercase-tracking mb-1">Rating</p>
+                    <h2 class="fw-bold m-0">4.9</h2>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-card text-center text-md-start">
+                    <div class="stat-icon bg-primary bg-opacity-10 text-primary mx-auto mx-md-0"><i class="bi bi-eye-fill"></i></div>
+                    <p class="uppercase-tracking mb-1">Views</p>
+                    <h2 class="fw-bold m-0">1.2k</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 inventory-header">
+            <div>
+                <h3 class="fw-bold m-0">Manage Inventory</h3>
+                <p class="text-muted small m-0">Edit or update your live rental items</p>
+            </div>
+            <div class="btn-group shadow-sm rounded-pill p-1 bg-white border">
+                <button class="btn btn-sm btn-teal rounded-pill px-3 fw-bold">Grid</button>
+                <button class="btn btn-sm btn-light rounded-pill px-3 fw-bold">List</button>
+            </div>
+        </div>
+
+        {% if items %}
+        <div class="row g-4">
+                {% for item in items %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card card-item">
+            <div class="img-container">
+                {% with item.images.all|first as first_image %}
+                    {% if first_image %}
+                        <img src="{{ first_image.image.url }}" class="img-box" alt="{{ item.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-item.jpg' %}" class="img-box" alt="Default Image">
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="price-tag">
+                    <span class="fs-4">₹{{ item.rent_per_day }}</span><small class="text-muted fw-normal">/day</small>
+                </div>
+
+                <div class="action-overlay">
+                    <a href="#" class="btn-action shadow" data-bs-toggle="tooltip" title="Edit Listing"><i class="bi bi-pencil-fill"></i></a>
+                    <a href="{% url 'delete_item' item.id %}" class="btn-action shadow text-danger" data-bs-toggle="tooltip" title="Delete Listing"><i class="bi bi-trash3-fill"></i></a>
+                </div>
+            </div>
+
+            <div class="p-4 d-flex flex-column flex-grow-1">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-light text-dark rounded-pill px-3 py-2 border small fw-bold">
+                        {% if item.availability_status == 'available' %}
+                            <span class="status-pulse"></span> Available
+                        {% else %}
+                            <span class="status-pulse" style="background: #f59e0b; box-shadow: none; animation: none;"></span> In Use
+                        {% endif %}
+                    </span>
+                    <small class="text-muted fw-bold uppercase-tracking" style="font-size: 10px;">
+                        <i class="bi bi-geo-alt-fill me-1 text-danger"></i> {{ item.city|default:"Location Hidden" }}
+                    </small>
+                </div>
+
+                <h4 class="fw-bold mb-1 text-dark">{{ item.name }}</h4>
+                <p class="text-teal small fw-bold mb-2">{{ item.brand }} • {{ item.get_quality_display }} Condition</p>
+                
+                <p class="text-muted small line-clamp-2 mb-3">{{ item.description|truncatechars:100 }}</p>
+
+                <div class="d-flex gap-2 mb-3">
+                    {% if item.allow_delivery %}
+                        <span class="badge border text-dark fw-normal small"><i class="bi bi-truck me-1 text-teal"></i> Delivery</span>
+                    {% endif %}
+                    {% if item.self_pickup %}
+                        <span class="badge border text-dark fw-normal small"><i class="bi bi-hand-index-thumb me-1 text-teal"></i> Pickup</span>
+                    {% endif %}
+                </div>
+
+                <div class="bg-light p-2 rounded-3 mb-4 border-start border-teal border-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted fw-bold" style="font-size: 10px;">AI SUGGESTED RENT</small>
+                        <span class="fw-bold text-teal" style="font-size: 12px;">₹{{ item.calculate_rent }}</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="uppercase-tracking mb-0">Security Deposit</p>
+                        <span class="fw-bold fs-5">₹{{ item.deposit_amount }}</span>
+                    </div>
+                    <div class="text-end">
+                        <p class="uppercase-tracking mb-0">Purchased</p>
+                        <span class="fw-bold text-muted small">{{ item.purchase_year }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <img src="https://illustrations.popsy.co/teal/work-from-home.svg" class="mb-4" width="200">
+            <h3 class="fw-bold">No active listings</h3>
+            <p class="text-muted mb-4 px-4 mx-auto" style="max-width: 500px;">Ready to earn? List your gear today.</p>
+            <a href="{% url 'add_item' %}" class="btn btn-teal btn-lg rounded-pill px-5 shadow-lg">Start Listing</a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% include 'base/footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Initialize tooltips (Hidden on mobile automatically by Bootstrap logic)
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    :root { 
+        --brand-teal-dark: #1ba87e;
+        --navy-dark: #0a192f;
+        --soft-blue: #f1f5f9;
+        --text-main: #1e293b;
+        --border-color: #e2e8f0;
+        --white: #ffffff;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--soft-blue);
+        color: var(--text-main);
+    }
+
+    /* Logo & Header Styling */
+    .admin-logo-container { display: flex; align-items: center; gap: 15px; }
+    .admin-logo { height: 45px; width: auto; object-fit: contain; }
+    .brand-text { font-size: 1.5rem; font-weight: 800; color: var(--navy-dark); margin: 0; }
+
+    /* Stat Cards */
+    .stat-card {
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        background: var(--white);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1); }
+    
+    .icon-box {
+        width: 52px; height: 52px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+    }
+
+    /* Operations Grid - Responsive 3-Column Layout */
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .quick-action-btn {
+        background: #ffffff; border: 1px solid var(--border-color); border-radius: 14px;
+        padding: 18px; display: flex; align-items: center; gap: 15px;
+        text-decoration: none !important; color: var(--navy-dark); 
+        transition: all 0.2s ease-in-out;
+    }
+    .quick-action-btn:hover { 
+        border-color: var(--brand-teal-dark); 
+        background: #fdfdfd;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+    }
+
+    .user-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 0; border-bottom: 1px solid var(--soft-blue);
+    }
+    .user-avatar { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; }
+
+    .revenue-hero {
+        background: var(--navy-dark);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 6px solid var(--brand-teal-dark);
+    }
+
+    .status-pulse {
+        height: 10px; width: 10px; background: #10b981; border-radius: 50%;
+        display: inline-block; animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .uppercase { text-transform: uppercase; letter-spacing: 1.5px; }
+</style>
+
+<div class="container-fluid py-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="admin-logo-container">
+            <img src="{% static 'images/logo.png' %}" alt="SamanLoop Logo" class="admin-logo">
+            <h4 class="brand-text">Command Center</h4>
+        </div>
+        <div class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-sm d-flex align-items-center">
+            <span class="status-pulse me-2"></span>
+            <span class="small fw-bold">Live Fleet Status</span>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-3">
+            <div class="stat-card p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-box" style="background: rgba(10, 25, 47, 0.05); color: var(--navy-dark);"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <h3 class="mb-0 fw-bold">{{ total_users }}</h3>
+                        <small class="text-muted fw-bold uppercase" style="font-size: 10px;">Lender Base</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-box" style="background: rgba(27, 168, 126, 0.05); color: var(--brand-teal-dark);"><i class="bi bi-arrow-repeat"></i></div>
+                    <div>
+                        <h3 class="mb-0 fw-bold">{{ total_items }}</h3>
+                        <small class="text-muted fw-bold uppercase" style="font-size: 10px;">Assets in Loop</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="revenue-hero shadow-sm">
+                <div>
+                    <small class="opacity-75 fw-bold uppercase" style="font-size: 11px; letter-spacing: 2px;">Gross Loop Value (GLV)</small>
+                    <h1 class="display-6 fw-bold mb-0">₹{{ total_revenue }}</h1>
+                </div>
+                <div class="text-end d-none d-md-block opacity-25">
+                    <i class="bi bi-currency-exchange fs-1 text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h6 class="fw-bold mb-3 text-navy-dark uppercase" style="letter-spacing: 1px; font-size: 11px; opacity: 0.6;">Management Desk</h6>
+    <div class="action-grid">
+        <a href="/admin/core/user/" class="quick-action-btn">
+            <i class="bi bi-person-plus-fill text-dark fs-4"></i>
+            <div><span class="fw-bold d-block">View Users</span><small class="text-muted">Register Verified Owner</small></div>
+        </a>
+        <a href="/admin/core/item_request/?status__exact=pending" class="quick-action-btn">
+            <i class="bi bi-lightning-charge-fill text-warning fs-4"></i>
+            <div><span class="fw-bold d-block">item Requests</span><small class="text-muted">{{ pending_requests }} new requests</small></div>
+        </a>
+        <a href="/admin/core/payment/?deposit_status__exact=0" class="quick-action-btn">
+            <i class="bi bi-shield-lock-fill text-danger fs-4"></i>
+            <div><span class="fw-bold d-block">Escrow Vault</span><small class="text-muted">Security Deposits</small></div>
+        </a>
+        <a href="/admin/core/wallet/" class="quick-action-btn">
+            <i class="bi bi-wallet2 text-success fs-4"></i>
+            <div><span class="fw-bold d-block">Settlements</span><small class="text-muted">Payout Pipeline</small></div>
+        </a>
+        <a href="/admin/core/query/" class="quick-action-btn">
+            <i class="bi bi-chat-left-dots-fill text-primary fs-4"></i>
+            <div><span class="fw-bold d-block">Support Desk</span><small class="text-muted">Unresolved Queries</small></div>
+        </a>
+        <a href="/admin/core/item/" class="quick-action-btn">
+            <i class="bi bi-box-seam text-secondary fs-4"></i>
+            <div><span class="fw-bold d-block">Inventory</span><small class="text-muted">Item Catalog</small></div>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-bold m-0 text-navy-dark">High-Active Lenders</h6>
+                    <a href="/admin/core/user/" class="btn btn-sm btn-link text-decoration-none text-teal fw-bold" style="color: var(--brand-teal-dark);">View All</a>
+                </div>
+                {% for user in recent_users %}
+                <div class="user-row">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=0a192f&color=fff" class="user-avatar">
+                        <div>
+                            <span class="fw-bold d-block" style="font-size: 14px;">{{ user.name }}</span>
+                            <small class="text-muted" style="font-size: 11px;"><i class="bi bi-geo-alt"></i> {{ user.city|default:"Gujarat Hub" }}</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <span class="fw-bold text-navy-dark d-block" style="font-size: 14px;">₹{{ user.wallet_balance }}</span>
+                        {% if user.email_verified %}
+                            <small style="color: var(--brand-teal-dark); font-weight: 800; font-size: 10px;"><i class="bi bi-check-circle-fill"></i> VERIFIED</small>
+                        {% else %}
+                            <small class="text-muted fw-bold" style="font-size: 10px;">KYC PENDING</small>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 p-4 rounded-4 shadow-sm h-100" style="background-color: #ffffff; border: 1px solid var(--border-color) !important;">
+                <h6 class="fw-bold text-navy-dark mb-4 uppercase" style="font-size: 11px; opacity: 0.7;">Inventory Health</h6>
+                
+                <div class="text-center mb-4">
+                    <div class="display-4 fw-bold" style="color: var(--brand-teal-dark);">{{ availability_rate }}%</div>
+                    <small class="text-muted uppercase fw-bold" style="font-size: 10px;">Utilization Rate</small>
+                </div>
+
+                <div class="progress mb-3" style="height: 10px; border-radius: 10px; background: #f1f5f9;">
+                    <div class="progress-bar" style="width: {{ availability_rate }}%; border-radius: 10px;"></div>
+                </div>
+                
+                <ul class="list-unstyled mt-4">
+                    <li class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <small class="text-muted">Asset Catalog</small>
+                        <small class="fw-bold">{{ total_items }} Items</small>
+                    </li>
+                    <li class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <small class="text-muted">In-Stock</small>
+                        <small class="fw-bold text-success">{{ active_items_count }}</small>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                        <small class="text-muted">Currently Out</small>
+                        <small class="fw-bold text-warning">{{ pending_requests }}</small>
+                    </li>
+                </ul>
+
+                <div class="mt-auto pt-4 text-center border-top">
+                    <small class="text-muted" style="font-size: 9px;">System Hub: Mehsana • {{ now }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

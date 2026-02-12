@@ -57,7 +57,7 @@ function runLoader(callback) {
     // 2. Wait for 2 seconds (2000ms)
     setTimeout(() => {
         if (callback) {
-            callback(); // Proceed to next page or action
+            callback();
         } else {
             // If just a page-load effect, hide it
             loader.classList.remove('active');

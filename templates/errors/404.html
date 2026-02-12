@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | SamanLoop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Brand Colors */
+            --brand-teal: #0d9488;
+            --brand-teal-dark: #0f766e;
+            /* New Dark Background Color */
+            --bg-dark: #0b1120; 
+            
+            /* Error Colors */
+            --brand-red: #ef4444;
+            --brand-red-glow: rgba(239, 68, 68, 0.2);
+            
+            /* UI Colors - DARK MODE */
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.8); /* Dark glass */
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html { 
+            height: 100%; 
+            background-color: var(--bg-dark); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        .error-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            position: relative;
+            background-color: var(--bg-dark);
+            overflow: hidden;
+        }
+
+        /* ========== BACKGROUND EFFECTS ========== */
+        
+        /* 1. Technical Grid Pattern (LIGHT LINES) */
+        .bg-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 2. Red Vignette Overlay (Stronger for dark mode) */
+        .bg-vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 20%, rgba(239, 68, 68, 0.05) 60%, rgba(239, 68, 68, 0.15) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 3. Animated Blobs */
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+        }
+
+        /* The Main Red Glow behind the card */
+        .blob-red {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--brand-red-glow) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulseRed 8s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        /* Secondary Teal blob */
+        .blob-teal {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%);
+            bottom: -150px; left: -150px;
+            animation: float 12s infinite ease-in-out;
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.4; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        /* ========== CARD DESIGN ========== */
+        .error-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            max-width: 460px;
+            width: 100%;
+            padding: 60px 40px;
+            border-radius: 32px;
+            border: 1px solid var(--border-color); /* Subtle light border */
+            box-shadow: 
+                var(--shadow-soft),
+                0 -15px 40px -15px rgba(239, 68, 68, 0.3); 
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            /* Red Top Border Accent */
+            border-top: 4px solid var(--brand-red);
+            
+            transform: translateY(20px);
+            opacity: 0;
+            animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes cardEntrance {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .brand-logo-img { height: 32px; margin-bottom: 2.5rem; opacity: 1; /* Full opacity on dark */ }
+
+        /* ========== GLITCH 404 ========== */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-code {
+            font-size: 7rem;
+            font-weight: 900;
+            line-height: 1;
+            color: white; /* White text for dark mode */
+            letter-spacing: -4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .error-code::before,
+        .error-code::after {
+            content: "404";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--card-bg);
+        }
+
+        .error-code::before {
+            color: var(--brand-red);
+            z-index: -1;
+            animation: glitch-effect 2.5s infinite linear alternate-reverse;
+            opacity: 0.8;
+        }
+
+        .error-code::after {
+            color: var(--brand-teal);
+            z-index: -2;
+            animation: glitch-effect 3s infinite linear alternate-reverse;
+            opacity: 0.8;
+        }
+
+        @keyframes glitch-effect {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-3px, 1px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(3px, -1px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-3px, 2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(3px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 1px); }
+            100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -1px); }
+        }
+
+        .error-title { 
+            font-size: 1.75rem; 
+            font-weight: 800; 
+            color: white;
+            margin-bottom: 12px; 
+            letter-spacing: -0.5px;
+        }
+
+        .error-text { 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+            font-size: 1rem;
+            margin-bottom: 40px; 
+            padding: 0 10px;
+        }
+
+        /* ========== STAGGERED REVEAL ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--brand-teal);
+            color: white;
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-teal-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--brand-red);
+            color: var(--brand-red);
+            background: var(--brand-red-glow);
+            transform: translateY(-2px);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 576px) {
+            .error-card { padding: 40px 24px; }
+            .error-code { font-size: 6rem; }
+            .btn-group { flex-direction: column; gap: 12px; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="error-wrapper">
+    <div class="bg-grid"></div>
+    
+    <div class="bg-vignette"></div>
+
+    <div class="bg-blob blob-red"></div>
+    <div class="bg-blob blob-teal"></div>
+
+    <div class="error-card">
+        <a href="{% url 'index' %}" class="d-inline-block reveal">
+            <img src="{% static 'images/logo.png' %}" alt="SamanLoop" class="brand-logo-img">
+        </a>
+        
+        <br> <div class="glitch-wrapper reveal delay-1">
+            <div class="error-code">404</div>
+        </div>
+
+        <h1 class="error-title reveal delay-1">Page not found</h1>
+        <p class="error-text reveal delay-2">
+            The page you are looking for doesn't exist or has been moved.
+        </p>
+
+        <div class="btn-group reveal delay-2">
+            <a href="{% url 'index' %}" class="btn btn-primary">
+                Back Home
+            </a>
+            <button onclick="history.back()" class="btn btn-secondary">
+                Go Back
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

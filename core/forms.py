@@ -1,12 +1,21 @@
 from django import forms
 from .models import Item
 
+from django import forms
+from .models import User
+
+class RegisterForm(forms.Form):
+    name = forms.CharField(max_length=60)
+    email = forms.EmailField()
+    phone = forms.CharField(max_length=10)
+    password = forms.CharField(widget=forms.PasswordInput)
+
 class ItemCreateForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = [
             "name",
-            "category",
+            # "category",
             "brand",
             "purchase_price",
             "purchase_year",
