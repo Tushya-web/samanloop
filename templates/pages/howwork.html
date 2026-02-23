@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SamanLoop | How It Works</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --primary-teal: #0d9488;
+            --primary-dark: #0f172a;
+            --bg-slate: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-slate);
+            color: var(--primary-dark);
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Background Blobs */
+        .bg-circle {
+            position: fixed;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+        }
+        .circle-1 { width: 400px; height: 400px; background: var(--primary-teal); top: -100px; right: -100px; }
+        .circle-2 { width: 300px; height: 300px; background: #99f6e4; bottom: -50px; left: -50px; }
+
+        /* Navbar Styling */
+        .navbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .btn-back {
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 600;
+            display: flex; align-items: center;
+            transition: 0.3s;
+        }
+        .btn-back:hover { color: var(--primary-teal); transform: translateX(-5px); }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 80px 0 40px;
+            background: linear-gradient(180deg, rgba(13, 148, 136, 0.05) 0%, transparent 100%);
+        }
+
+        /* Modern Tabs */
+        .nav-pills {
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            display: inline-flex;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .nav-pills .nav-link {
+            border-radius: 50px;
+            padding: 12px 35px;
+            color: var(--primary-dark);
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
+        /* Step Cards */
+        .step-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            position: relative;
+        }
+        .step-card:hover {
+            transform: translateY(-12px);
+            border-color: var(--primary-teal);
+            box-shadow: 0 25px 50px -12px rgba(13, 148, 136, 0.15);
+        }
+
+        .step-number {
+            width: 45px; height: 45px;
+            background: var(--primary-teal);
+            color: white;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 15px rgba(13, 148, 136, 0.2);
+        }
+
+        .icon-box {
+            font-size: 2.5rem;
+            color: var(--primary-teal);
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        /* Trust Banner (Dark) */
+        .trust-banner {
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 40px;
+            padding: 60px 40px;
+            margin-top: 80px;
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.2);
+        }
+        .trust-icon {
+            font-size: 2.5rem;
+            color: var(--primary-teal);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .cta-section {
+            margin-top: 80px;
+            padding: 60px;
+            background: var(--primary-teal);
+            border-radius: 30px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-circle circle-1"></div>
+<div class="bg-circle circle-2"></div>
+
+<nav class="navbar sticky-top">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div style="flex: 1;">
+            <a href="{% url 'index' %}" class="btn-back">
+                <i class="bi bi-arrow-left me-2"></i> <span class="d-none d-md-inline">Back</span>
+            </a>
+        </div>
+        <div class="text-center">
+            <img src="{% static 'images/Group 7.png' %}" width="130" height="30" alt="SamanLoop">
+        </div>
+        <div style="flex: 1;"></div>
+    </div>
+</nav>
+
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-800">Smart sharing, <span style="color:var(--primary-teal)">simple steps.</span></h1>
+        <p class="text-muted lead mx-auto mb-5" style="max-width: 600px;">Experience the easiest way to rent items in Mehsana. Whether you're earning or saving, we've got you covered.</p>
+        
+        <ul class="nav nav-pills" id="workTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="borrow-tab" data-bs-toggle="pill" data-bs-target="#borrow" type="button">I want to Borrow</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="lend-tab" data-bs-toggle="pill" data-bs-target="#lend" type="button">I want to Lend</button>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<div class="container pb-5">
+    
+    <div class="tab-content" id="workTabContent" style="margin-top: 40px;">
+        
+        <div class="tab-pane fade show active" id="borrow" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <div class="icon-box"><i class="bi bi-search-heart"></i></div>
+                        <h5 class="fw-bold">Find Gear</h5>
+                        <p class="text-muted small">Browse verified listings near you. Filter by category, price, or distance.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <div class="icon-box"><i class="bi bi-shield-check"></i></div>
+                        <h5 class="fw-bold">Book Instantly</h5>
+                        <p class="text-muted small">Choose your dates and pay securely. Your deposit is held safely in escrow.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <div class="icon-box"><i class="bi bi-geo-fill"></i></div>
+                        <h5 class="fw-bold">Local Pickup</h5>
+                        <p class="text-muted small">Meet your neighbor at a safe location to collect your item and start using it.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">04</div>
+                        <div class="icon-box"><i class="bi bi-arrow-repeat"></i></div>
+                        <h5 class="fw-bold">Easy Return</h5>
+                        <p class="text-muted small">Return the item and get your deposit back immediately once confirmed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="lend" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <div class="icon-box"><i class="bi bi-camera"></i></div>
+                        <h5 class="fw-bold">List for Free</h5>
+                        <p class="text-muted small">Upload photos, set your price, and describe your item. It takes 2 minutes.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <div class="icon-box"><i class="bi bi-bell"></i></div>
+                        <h5 class="fw-bold">Get Requests</h5>
+                        <p class="text-muted small">Receive rental requests and chat with verified borrowers before accepting.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <div class="icon-box"><i class="bi bi-hand-index-thumb"></i></div>
+                        <h5 class="fw-bold">Handover</h5>
+                        <p class="text-muted small">Hand over the item and confirm the start of the rental in the app.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">04</div>
+                        <div class="icon-box"><i class="bi bi-wallet2"></i></div>
+                        <h5 class="fw-bold">Earn Profit</h5>
+                        <p class="text-muted small">Receive 90% of the rent directly into your SamanLoop wallet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="trust-banner text-center">
+        <h2 class="fw-800 mb-5">Why our community trusts us</h2>
+        <div class="row g-5">
+            <div class="col-md-4">
+                <i class="bi bi-fingerprint trust-icon"></i>
+                <h5 class="fw-bold">Verified Profiles</h5>
+                <p class="text-secondary small">Every user undergoes ID verification to ensure a safe neighborhood environment.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-safe2 trust-icon"></i>
+                <h5 class="fw-bold">Escrow Protection</h5>
+                <p class="text-secondary small">Deposits and payments are held securely until both parties are satisfied.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-stars trust-icon"></i>
+                <h5 class="fw-bold">Rating System</h5>
+                <p class="text-secondary small">Transparent reviews help you choose the best lenders and borrowers.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section text-center">
+        <h2 class="fw-800 mb-3">Ready to join the loop?</h2>
+        <p class="mb-4 opacity-75">Start saving money and earning extra income today.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'index' %}" class="btn btn-light btn-lg rounded-pill fw-bold px-5 py-3">Get Started</a>
+        </div>
+    </div>
+</div>
+
+<footer class="py-5 text-center text-muted">
+    <p class="small">&copy; 2026 SamanLoop | Transparent Local Sharing in Mehsana</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1956,50 +1956,33 @@ document.addEventListener("DOMContentLoaded", () => {
                             <i data-lucide="zap" size="16" class="text-warning"></i> Instant Book
                         </div>
                     </div>
-                    <form method="GET" action="{% url 'browse_items' %}">
+                    <form>
                         <div class="mb-3">
-                            <label class="small fw-bold text-muted mb-2 text-uppercase"
-                                   style="letter-spacing: 0.5px; font-size: 0.75rem;">
-                                What do you need?
-                            </label>
+                            <label class="small fw-bold text-muted mb-2 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">What do you need?</label>
                             <div class="input-box">
                                 <i data-lucide="search" size="18" class="text-muted"></i>
-                                <input type="text"
-                                       name="q"
-                                       placeholder="Projector, DSLR, Camping Tent..."
-                                       value="{{ request.GET.q }}">
+                                <input type="text" placeholder="Projector, DSLR, Camping Tent...">
                             </div>
                         </div>
-                    
                         <div class="mb-4">
-                            <label class="small fw-bold text-muted mb-2 text-uppercase"
-                                   style="letter-spacing: 0.5px; font-size: 0.75rem;">
-                                Location
-                            </label>
+                            <label class="small fw-bold text-muted mb-2 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">Location</label>
                             <div class="input-box">
                                 <i data-lucide="map-pin" size="18" class="text-muted"></i>
-                                <input type="text"
-                                       value="{{ selected_city }}"
-                                       readonly>
-                                <span class="badge bg-success-subtle text-success small">
-                                    Near You
-                                </span>
+                                <input type="text" placeholder="Your City..." value="Mehsana, Gujarat">
+                                <span class="badge bg-success-subtle text-success small">Near You</span>
                             </div>
                         </div>
-                    
-                        <button type="submit" class="btn-intent-primary w-100 py-3">
+                        <button type="button" class="btn-intent-primary w-100 py-3">
                             <i data-lucide="arrow-right" size="18" class="me-2"></i>
                             Browse Marketplace
                         </button>
-                    
-                    </form>
                         <div class="d-flex gap-2 flex-wrap mt-4 justify-content-center">
                             <span class="text-muted small fw-600">Popular:</span>
                             <span class="popular-tag">📷 DSLR Camera</span>
                             <span class="popular-tag">📽️ Projector</span>
                             <span class="popular-tag">🔧 Power Drill</span>
                         </div>
-                
+                    </form>
                 </div>
             </div>
         </div>
@@ -2110,7 +2093,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <div class="text-center">
-            <a href="{% url 'category_items' 1 %}" class="btn btn-view-all rounded-pill fw-bold px-5 py-3 shadow-sm">
+            <a href="{% url 'browse_items' %}" class="btn btn-view-all rounded-pill fw-bold px-5 py-3 shadow-sm">
                 View All Categories <i class="bi bi-arrow-right ms-2"></i>
             </a>
         </div>
@@ -2119,7 +2102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <section class="trending-section">
     <div class="container">
         <div class="section-header mb-5">
-            <h2 class="section-title">Trending in {{ selected_city }}</h2>
+            <h2 class="section-title">Trending in Gujarat</h2>
             <p class="section-subtitle">Most popular rentals in your area this week</p>
         </div>
 
@@ -2174,7 +2157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             {% empty %}
             <div class="col-12 text-center py-5">
-                <p class="text-muted">No items available in {{ selected_city }} right now. Why not list one?</p>
+                <p class="text-muted">No items available in Gujarat right now. Why not list one?</p>
             </div>
             {% endfor %}
         </div>

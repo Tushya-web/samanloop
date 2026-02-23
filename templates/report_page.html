@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SamanLoop Help Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-teal: #0d9488;
+            --brand-teal-light: #f0fdfa;
+            --navy-dark: #0f172a;
+            --status-pending: #f59e0b;
+            --status-resolved: #22c55e;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: var(--navy-dark); }
+        
+        /* Layout Elements */
+        .report-card, .history-card { border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.04); overflow: hidden; }
+        .teal-header { background: linear-gradient(135deg, var(--navy-dark) 0%, #115e59 100%); color: white; padding: 2rem; position: relative; }
+        
+        /* Status Badges */
+        .status-badge { font-size: 0.65rem; padding: 6px 14px; border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-open { background: #fef3c7; color: #92400e; }
+        .status-in_progress { background: #dbeafe; color: #1e40af; }
+        .status-resolved { background: #dcfce7; color: #166534; }
+
+        /* Timeline Items */
+        .history-item { transition: all 0.3s ease; padding: 1.5rem; border-bottom: 1px solid #f1f5f9; }
+        .history-item:hover { background: #ffffff; transform: scale(1.01); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .admin-reply { background: var(--brand-teal-light); border-radius: 12px; border-left: 4px solid var(--brand-teal); padding: 1rem; margin-top: 1rem; }
+
+        /* Form Inputs */
+        .form-control, .form-select { border-radius: 12px; padding: 12px 16px; border: 1.5px solid #e2e8f0; }
+        .form-control:focus, .form-select:focus { border-color: var(--brand-teal); box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1); }
+        
+        .sticky-column { position: sticky; top: 100px; }
+    </style>
+</head>
+<body>
+
+{% include 'base/navbar.html' %}
+
+<div class="container py-5" style="margin-top: 50px;">
+    <div class="row g-4">
+        
+        <div class="col-lg-5">
+            <div class="card report-card sticky-column">
+                <div class="teal-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi bi-patch-question fs-1"></i>
+                        <div>
+                            <h4 class="fw-bold mb-0">Help Center</h4>
+                            <p class="mb-0 opacity-75 small">Submit your query to SamanLoop Admin</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4 bg-white">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Related Rental Item</label>
+                            {% if item %}
+                                <div class="p-3 bg-light border rounded-3 d-flex align-items-center gap-3">
+                                    <i class="bi bi-camera-fill text-teal"></i>
+                                    <span class="fw-bold">{{ item.name }}</span>
+                                    <input type="hidden" name="selected_item" value="{{ item.id }}">
+                                </div>
+                            {% else %}
+                                <select name="selected_item" class="form-select">
+                                    <option value="">General Query (No specific item)</option>
+                                    {% for user_item in user_items %}
+                                        <option value="{{ user_item.id }}">{{ user_item.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted" style="font-size: 11px;">Select from items you are currently renting</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Issue Subject</label>
+                            <input type="text" name="subject" class="form-control" placeholder="e.g. Broken part, Payment delay" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small">Message Details</label>
+                            <textarea name="message" rows="5" class="form-control" placeholder="Describe the issue in detail..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold shadow-sm">
+                            Submit Support Ticket <i class="bi bi-send-fill ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card history-card">
+                <div class="bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-teal"></i> Ticket History</h5>
+                    <span class="badge bg-light text-dark border px-3 rounded-pill">{{ history.count }} Reports</span>
+                </div>
+                <div class="card-body p-0 bg-white">
+                    {% if history %}
+                        {% for report in history %}
+                        <div class="history-item">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="status-badge status-{{ report.status }}">
+                                        {{ report.get_status_display }}
+                                    </span>
+                                    <h6 class="fw-bold mt-2 mb-1 text-navy">{{ report.subject }}</h6>
+                                    <div class="d-flex align-items-center gap-2 text-muted x-small">
+                                        <i class="bi bi-calendar3"></i> {{ report.created_at|date:"M d, Y" }}
+                                        {% if report.item %}
+                                            <span class="ms-2 badge bg-light text-dark border-0"><i class="bi bi-link-45deg"></i> {{ report.item.name }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-secondary small mb-0">{{ report.message }}</p>
+
+                            {% if report.admin_reply %}
+                            <div class="admin-reply animate__animated animate__fadeIn">
+                                <small class="fw-extrabold text-teal d-block mb-1"><i class="bi bi-person-badge-fill"></i> ADMIN RESPONSE</small>
+                                <span class="small text-dark">{{ report.admin_reply }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <img src="https://illustrations.popsy.co/teal/customer-support.svg" width="200" class="mb-4">
+                            <h6 class="text-muted">No active support tickets.</h6>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Rentals | SamanLoop</title>
+    <title>Borrower Hub | SamanLoop</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,91 +13,174 @@
     <style>
         :root {
             --brand-teal: #0d9488;
-            --brand-teal-dark: #1ba87e;
+            --brand-teal-dark: #0f766e;
+            --brand-teal-light: #f0fdfa;
             --navy-dark: #0a192f;
             --soft-blue: #f8fafc;
             --border-color: #e2e8f0;
         }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--soft-blue); color: var(--navy-dark); }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #fcfcfd; 
+            color: var(--navy-dark); 
+        }
+
+        /* Hero Section */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #115e59 100%);
+            padding: 100px 0 60px;
+            color: white;
+            border-radius: 0 0 40px 40px;
+            margin-bottom: -40px;
+        }
+
+        /* Stats Cards */
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
 
         /* Tabs Styling */
-        .nav-pills .nav-link {
-            color: var(--navy-dark);
+        .nav-pills-custom {
+            background: white;
+            padding: 8px;
+            border-radius: 16px;
+            display: inline-flex;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-pills-custom .nav-link {
+            color: #64748b;
             font-weight: 700;
             border-radius: 12px;
-            padding: 12px 24px;
+            padding: 10px 24px;
             transition: 0.3s;
-        }
-        .nav-pills .nav-link.active {
-            background-color: var(--navy-dark);
-            color: white;
+            border: none;
         }
 
-        /* Asset Card */
+        .nav-pills-custom .nav-link.active {
+            background-color: var(--brand-teal);
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+
+        /* Asset Card Improvements */
         .asset-card {
             background: white;
-            border-radius: 20px;
+            border-radius: 24px;
             border: 1px solid var(--border-color);
-            padding: 20px;
-            transition: 0.3s;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
-        .asset-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        .asset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border-color: var(--brand-teal);
+        }
 
         .item-thumb {
-            width: 80px; height: 80px;
+            width: 90px; height: 90px;
             object-fit: cover;
-            border-radius: 14px;
+            border-radius: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* Status Badges */
         .status-badge {
-            font-size: 10px; font-weight: 800; text-transform: uppercase;
-            padding: 6px 14px; border-radius: 50px; letter-spacing: 0.5px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase;
+            padding: 8px 16px; border-radius: 50px; letter-spacing: 0.5px;
         }
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-accepted { background: #dcfce7; color: #166534; }
-        .status-rejected { background: #fee2e2; color: #991b1b; }
-        .status-active { background: #e0f2fe; color: #075985; }
+        .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fef3c7; }
+        .status-accepted { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+        .status-active { background: #f0f9ff; color: #0369a1; border: 1px solid #e0f2fe; }
+        .status-rejected { background: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
 
-        .empty-state { text-align: center; padding: 60px 20px; }
+        .btn-teal {
+            background: var(--brand-teal);
+            color: white;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-teal:hover {
+            background: var(--brand-teal-dark);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .due-date-box {
+            background: #fff1f2;
+            padding: 8px 15px;
+            border-radius: 12px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
 {% include 'base/navbar.html' %}
 
-<div class="container mt-5 pt-5 mb-5">
-    <div class="d-flex justify-content-between align-items-end mb-5">
-        <div>
-            <h2 class="fw-extrabold mb-1">Borrower Dashboard</h2>
-            <p class="text-muted">Manage your active gear and track rental requests.</p>
-        </div>
-        <a href="{% url 'index' %}" class="btn btn-outline-dark rounded-pill fw-bold px-4">Browse Items</a>
-    </div>
-
-    {% if active_usage %}
-        <div class="alert bg-primary bg-opacity-10 border-primary border-opacity-25 rounded-4 d-flex align-items-center gap-3 mb-4 p-3">
-            <i class="bi bi-geo-alt-fill text-primary fs-3"></i>
-            <div>
-                <strong class="d-block">Ready for Pickup!</strong>
-                <span class="small text-muted">Your requests were accepted. Contact the lender to arrange pickup for your {{ active_usage.count }} item(s).</span>
+<div class="hero-gradient">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <span class="badge bg-teal mb-3 px-3 py-2 rounded-pill" style="background: var(--brand-teal);">Personal Workspace</span>
+                <h1 class="display-5 fw-bold mb-2">Borrower Hub</h1>
+                <p class="opacity-75 fs-5">Track your active loops, requests, and rental history in one place.</p>
             </div>
+            <div class="col-lg-6">
+                <div class="d-flex gap-3 justify-content-lg-end mt-4 mt-lg-0">
+                    <div class="stat-pill">
+                        <small class="d-block opacity-50 text-uppercase fw-bold" style="font-size: 10px;">Active Loops</small>
+                        <span class="fs-4 fw-bold">{{ active_usage.count|default:"0" }}</span>
+                    </div>
+                    <div class="stat-pill">
+                        <small class="d-block opacity-50 text-uppercase fw-bold" style="font-size: 10px;">Sent Requests</small>
+                        <span class="fs-4 fw-bold">{{ sent_requests.count|default:"0" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    
+    {% if active_usage %}
+        <div class="alert border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 mb-5 p-4" style="background: white; border-left: 5px solid var(--brand-teal) !important;">
+            <div class="icon-circle bg-teal text-white p-3 rounded-circle" style="background: var(--brand-teal);">
+                <i class="bi bi- megaphone-fill"></i>
+            </div>
+            <div>
+                <h5 class="fw-bold mb-1">Gear Ready for Pickup!</h5>
+                <p class="text-muted mb-0 small">Your requests were accepted. Contact the lenders to arrange handover for your {{ active_usage.count }} items.</p>
+            </div>
+            <a href="{% url 'index' %}" class="btn btn-dark ms-auto rounded-pill px-4 fw-bold">Browse More</a>
         </div>
     {% endif %}
 
-    <ul class="nav nav-pills mb-5 gap-2" id="pills-tab" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#active" type="button">Active Loops</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#requests" type="button">Sent Requests</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#history" type="button">Rental History</button>
-        </li>
-    </ul>
+    <div class="text-center mb-5">
+        <ul class="nav nav-pills-custom" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#active" type="button">Active Loops</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#requests" type="button">Sent Requests</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#history" type="button">Rental History</button>
+            </li>
+        </ul>
+    </div>
 
     <div class="tab-content" id="pills-tabContent">
         
@@ -106,30 +189,55 @@
                 {% for usage in active_usage %}
                 <div class="asset-card">
                     <div class="row align-items-center">
-                        <div class="col-md-6 d-flex align-items-center gap-3">
+                        <div class="col-md-6 d-flex align-items-center gap-4">
                             {% with usage.item.images.all|first as img %}
                                 <img src="{{ img.image.url }}" class="item-thumb" alt="{{ usage.item.name }}">
                             {% endwith %}
                             <div>
-                                <h6 class="fw-bold mb-1">{{ usage.item.name }}</h6>
-                                <small class="text-muted">Lender: <strong>{{ usage.lender.name }}</strong></small>
+                                <h5 class="fw-bold mb-1">{{ usage.item.name }}</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-xs" style="width: 20px; height: 20px; background: #eee; border-radius: 50%; display: inline-block;"></div>
+                                    <small class="text-muted">Owner: <span class="text-dark fw-bold">{{ usage.lender.name }}</span></small>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <small class="text-muted d-block uppercase" style="font-size: 9px;">DUE DATE</small>
-                            <span class="fw-bold text-danger">{{ usage.end_date|date:"M d, Y" }}</span>
+                        <div class="col-md-3 mt-3 mt-md-0">
+                            <div class="due-date-box">
+                                <small class="text-danger d-block fw-bold text-uppercase" style="font-size: 10px; letter-spacing: 1px;">Return By</small>
+                                <span class="fw-bold text-dark">{{ usage.end_date|date:"M d, Y" }}</span>
+                            </div>
                         </div>
-                        <div class="col-md-3 text-md-end">
-                            <span class="status-badge status-active">Currently Using</span>
+                        <div class="col-md-3 mt-3 mt-md-0 d-flex flex-column align-items-md-end justify-content-center">
+                            {% if usage.status == 'active' %}
+                                {% if today >= usage.end_date %}
+                                    <form action="{% url 'initiate_return' usage.id %}" method="POST" class="w-100" style="max-width: 200px;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-teal btn-sm w-100 rounded-pill fw-bold py-2 shadow-sm transition-all">
+                                            <i class="bi bi-arrow-return-left me-2"></i>Return Item
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <div class="status-badge status-active d-flex align-items-center gap-2 border">
+                                        <span class="pulse-dot"></span>
+                                        <span>In Loop • Ends {{ usage.end_date|date:"M d" }}</span>
+                                    </div>
+                                {% endif %}
+                                
+                            {% elif usage.status == 'returning' %}
+                                <div class="status-badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 d-flex align-items-center gap-2">
+                                    <div class="spinner-border spinner-border-sm" role="status" style="width: 12px; height: 12px; border-width: 2px;"></div>
+                                    <span>Awaiting Confirmation</span>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="empty-state bg-white rounded-5 border shadow-sm">
-                    <i class="bi bi-box-seam display-4 text-muted opacity-25"></i>
-                    <h5 class="fw-bold mt-3">No gear in loop</h5>
-                    <p class="text-muted">Items will appear here once the lender accepts your request.</p>
+                <div class="empty-state bg-white rounded-5 border-dashed py-5">
+                    <img src="{% static 'images/empty-box.png' %}" alt="" style="width: 120px; opacity: 0.5; filter: grayscale(1);">
+                    <h5 class="fw-bold mt-4">No Gear in Motion</h5>
+                    <p class="text-muted mx-auto" style="max-width: 300px;">Items you're currently renting will appear here once approved by the lender.</p>
                 </div>
             {% endif %}
         </div>
@@ -139,72 +247,84 @@
                 {% for req in sent_requests %}
                 <div class="asset-card">
                     <div class="row align-items-center">
-                        <div class="col-md-5 d-flex align-items-center gap-3">
+                        <div class="col-md-5 d-flex align-items-center gap-4">
                             {% with req.item.images.all|first as img %}
                                 <img src="{{ img.image.url }}" class="item-thumb" alt="{{ req.item.name }}">
                             {% endwith %}
                             <div>
-                                <h6 class="fw-bold mb-1">{{ req.item.name }}</h6>
-                                <small class="text-muted">Requested on: <strong>{{ req.created_at|date:"M d, Y" }}</strong></small>
+                                <h5 class="fw-bold mb-1">{{ req.item.name }}</h5>
+                                <small class="text-muted">Requested <span class="fw-bold">{{ req.created_at|date:"M d" }}</span></small>
                             </div>
                         </div>
-                        <div class="col-md-3 text-center">
-                            <small class="text-muted d-block uppercase" style="font-size: 9px;">ESTIMATED RENT</small>
-                            <span class="fw-bold">₹{{ req.total_rent }}</span>
+                        <div class="col-md-3 text-center py-3 py-md-0">
+                            <p class="mb-0 text-muted small fw-bold text-uppercase">Total Rent</p>
+                            <span class="fs-5 fw-extrabold text-teal" style="color: var(--brand-teal);">₹{{ req.total_rent }}</span>
                         </div>
-                        <div class="col-md-2 text-center">
+                        <div class="col-md-4 text-md-end d-flex flex-wrap justify-content-md-end gap-2">
                             {% if req.status == 'pending' %}
                                 <span class="status-badge status-pending">Pending Approval</span>
                             {% elif req.status == 'accepted' %}
-                                <span class="status-badge status-accepted">Request Accepted</span>
+                                <a href="{% url 'payment_page' req.id %}" class="btn btn-teal rounded-pill px-4 fw-bold">Pay Now</a>
+                            {% elif req.status == 'paid' %}
+                                <span class="status-badge status-active">Payment Verified</span>
                             {% else %}
-                                <span class="status-badge status-rejected">Request Rejected</span>
+                                <span class="status-badge status-rejected">Request Declined</span>
                             {% endif %}
-                        </div>
-                        <div class="col-md-2 text-md-end">
-                            <a href="{% url 'item_detail' req.item.id %}" class="btn btn-sm btn-light border rounded-pill px-3">View Details</a>
+                            <a href="{% url 'item_detail' req.item.id %}" class="btn btn-outline-secondary rounded-pill px-3 fw-bold"><i class="bi bi-eye"></i></a>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="empty-state bg-white rounded-5 border shadow-sm">
-                    <p class="text-muted">You haven't sent any rental requests yet.</p>
+                <div class="empty-state bg-white rounded-5 border py-5">
+                    <p class="text-muted">You haven't requested any gear yet.</p>
+                    <a href="{% url 'browse_items' %}" class="btn btn-dark rounded-pill">Explore Gear</a>
                 </div>
             {% endif %}
         </div>
 
         <div class="tab-pane fade" id="history" role="tabpanel">
             {% if rental_history %}
-                <div class="table-responsive bg-white rounded-4 border shadow-sm p-3">
-                    <table class="table align-middle mb-0">
-                        <thead class="small text-muted uppercase">
-                            <tr>
-                                <th class="border-0">Asset</th>
-                                <th class="border-0">Lender</th>
-                                <th class="border-0 text-center">Dates</th>
-                                <th class="border-0 text-end">Feedback</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for log in rental_history %}
-                            <tr>
-                                <td><span class="fw-bold">{{ log.item.name }}</span></td>
-                                <td>{{ log.lender.name }}</td>
-                                <td class="text-center small text-muted">{{ log.start_date|date:"d M" }} - {{ log.end_date|date:"d M, Y" }}</td>
-                                <td class="text-end">
-                                    <a href="{% url 'item_detail' log.item.id %}#reviews-section" class="btn btn-sm btn-teal text-white rounded-pill px-3 shadow-sm" style="background:var(--brand-teal); font-size: 11px;">
-                                        Leave Review
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr class="small text-muted text-uppercase fw-bold">
+                                    <th class="ps-4 py-3 border-0">Asset Details</th>
+                                    <th class="py-3 border-0">Owner</th>
+                                    <th class="py-3 border-0 text-center">Rental Period</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in rental_history %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <span class="fw-bold text-dark d-block">{{ log.item.name }}</span>
+                                        <small class="text-muted">ID: #{{ log.id }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="small fw-bold">{{ log.lender.name }}</div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-light text-dark fw-bold px-3 py-2 rounded-pill">
+                                            {{ log.start_date|date:"d M" }} - {{ log.end_date|date:"d M, Y" }}
+                                        </span>
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <a href="{% url 'item_detail' log.item.id %}#reviews-section" class="btn btn-sm btn-teal rounded-pill px-3 fw-bold">
+                                            Share Review
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             {% else %}
-                <div class="empty-state bg-white rounded-5 border shadow-sm">
-                    <p class="text-muted">Your completed rental history will appear here.</p>
+                <div class="empty-state bg-white rounded-5 border py-5">
+                    <p class="text-muted">No completed rentals yet.</p>
                 </div>
             {% endif %}
         </div>

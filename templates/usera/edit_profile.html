@@ -1,0 +1,360 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Account | SamanLoop</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-teal: #0d9488;
+            --brand-teal-soft: #f0fdfa;
+            --navy-dark: #0f172a;
+            --surface: #ffffff;
+            --background: #f8fafc;
+            --border-subtle: #e2e8f0;
+            --amazon-orange: #ff9900;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--background);
+            color: var(--navy-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 🔹 E-commerce Style Navbar */
+        .navbar-custom {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .breadcrumb-text {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        /* 🔹 Amazon-style Card Groups */
+        .settings-container {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .info-card {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 🔹 Profile Image Uploader */
+        .avatar-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 2rem;
+        }
+
+        .avatar-edit-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--brand-teal);
+            padding: 3px;
+        }
+
+        .file-input-label {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--navy-dark);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid white;
+            font-size: 0.9rem;
+        }
+
+        /* 🔹 Modern Flipkart-style Inputs */
+        .form-group-custom {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-control-custom {
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-subtle);
+            background: #fff;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .form-control-custom:focus {
+            border-color: var(--brand-teal);
+            box-shadow: 0 0 0 4px var(--brand-teal-soft);
+            outline: none;
+        }
+
+        .locked-field {
+            background: #f1f5f9;
+            cursor: not-allowed;
+            color: #94a3b8;
+        }
+
+        /* 🔹 Amazon Style Verification Badge */
+        .verified-badge {
+            background: var(--brand-teal-soft);
+            color: var(--brand-teal);
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        /* 🔹 Sticky Save Bar */
+        .action-footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border-subtle);
+            padding: 1.25rem 0;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -10px 20px rgba(0,0,0,0.03);
+        }
+
+        .btn-amazon-save {
+            background: var(--brand-teal);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-amazon-save:hover {
+            background: var(--navy-dark);
+            transform: translateY(-1px);
+        }
+
+        .cancel-link {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .form-control-custom {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+    appearance: none; /* Removes the default browser arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.form-control-custom:focus {
+    background-color: #fff;
+    border-color: var(--brand-teal);
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+    outline: none;
+}
+
+/* Ensure the helper icon doesn't block clicks */
+.pointer-events-none {
+    pointer-events: none;
+}
+    </style>
+</head>
+<body>
+
+<nav class="navbar-custom">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'profile' %}" class="btn btn-light btn-sm rounded-circle border">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div>
+                <span class="breadcrumb-text">Your Account / Login & Security</span>
+                <h6 class="mb-0 fw-bold">Edit Profile</h6>
+            </div>
+        </div>
+        <img src="{% static 'images/logo.png' %}" height="32" alt="Logo">
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="settings-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="info-card">
+                <div class="avatar-section">
+                    <div class="avatar-edit-wrapper">
+                        <img id="imagePreview" 
+                             src="{% if user.profile %}{{ user.profile.url }}{% else %}{% static 'media/images/default-avatar.png' %}{% endif %}" 
+                             class="profile-preview">
+                        <label for="profilePic" class="file-input-label">
+                            <i class="bi bi-camera"></i>
+                        </label>
+                        <input type="file" name="profile" id="profilePic" accept="image/*" hidden onchange="previewFile()">
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Profile Photo</h6>
+                        <p class="text-muted small mb-0">Visible to others when you list items.</p>
+                    </div>
+                </div>
+
+                <div class="card-title">
+                    <i class="bi bi-person-badge text-primary"></i> Basic Information
+                </div>
+                
+                <div class="form-group-custom">
+                    <label class="form-label">Display Name</label>
+                    <input type="text" name="name" class="form-control-custom w-100" 
+                           value="{{ user.name }}" placeholder="Enter your full name" required>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="bi bi-shield-lock text-success"></i> Verified Contacts
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="form-group-custom">
+                            <label class="form-label d-flex justify-content-between">
+                                Email Address
+                                {% if user.email_verified %}<span class="verified-badge"><i class="bi bi-check-lg"></i> Verified</span>{% endif %}
+                            </label>
+                            <input type="email" class="form-control-custom locked-field w-100" value="{{ user.email }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-group-custom">
+                            <label class="form-label d-flex justify-content-between">
+                                Phone Number
+                                <span class="verified-badge"><i class="bi bi-check-lg"></i> Linked</span>
+                            </label>
+                            <input type="text" class="form-control-custom locked-field w-100" value="{{ user.phone_number }}" readonly>
+                            <input type="hidden" name="phone" value="{{ user.phone_number }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light p-3 rounded-3" style="border: 1px dashed var(--border-subtle)">
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-info-circle me-1"></i> Contact details are used for rental updates. To change these, visit Security Settings.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="bi bi-geo-alt text-danger"></i> Pickup & Delivery Address
+                </div>
+                
+                <div class="row">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">City</label>
+                        <div class="position-relative">
+                            <select name="city" class="form-select form-control-custom w-100" required>
+                                <option value="" disabled {% if not user.city %}selected{% endif %}>Select your city</option>
+
+                                {% comment %} You can loop through a list of cities or hardcode them {% endcomment %}
+                                <option value="Mehsana" {% if user.city == 'Mehsana' %}selected{% endif %}>Mehsana</option>
+                                <option value="Ahmedabad" {% if user.city == 'Ahmedabad' %}selected{% endif %}>Ahmedabad</option>
+                                <option value="Surat" {% if user.city == 'Surat' %}selected{% endif %}>Surat</option>
+                                <option value="Vadodara" {% if user.city == 'Vadodara' %}selected{% endif %}>Vadodara</option>
+                                <option value="Gandhinagar" {% if user.city == 'Gandhinagar' %}selected{% endif %}>Gandhinagar</option>
+                                <option value="Rajkot" {% if user.city == 'Rajkot' %}selected{% endif %}>Rajkot</option>
+                                <option value="Mumbai" {% if user.city == 'Mumbai' %}selected{% endif %}>Mumbai</option>
+                                <option value="Delhi" {% if user.city == 'Delhi' %}selected{% endif %}>Delhi</option>
+                            </select>
+
+                            <i class="bi bi-chevron-down position-absolute top-50 end-0 translate-middle-y me-3 text-muted pointer-events-none" style="font-size: 0.75rem;"></i>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Full Address</label>
+                        <textarea name="address" rows="3" class="form-control-custom w-100" 
+                                  placeholder="House No, Landmark, Area...">{{ user.address|default:'' }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-footer mt-5">
+                <div class="container d-flex align-items-center justify-content-center gap-4">
+                    <a href="{% url 'profile' %}" class="cancel-link">Cancel</a>
+                    <button type="submit" class="btn-amazon-save shadow-sm">
+                        Update Settings
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewFile() {
+        const preview = document.getElementById('imagePreview');
+        const file = document.getElementById('profilePic').files[0];
+        const reader = new FileReader();
+        reader.onloadend = function() { preview.src = reader.result; }
+        if (file) { reader.readAsDataURL(file); }
+    }
+</script>
+
+</body>
+</html>

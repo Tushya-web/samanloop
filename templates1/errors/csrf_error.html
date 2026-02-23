@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Access Denied | SamanLoop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --brand-teal: #0d9488;
+            --brand-hover: #0f766e;
+            --error-red: #e11d48;
+            --error-bg: #fff1f2;
+            --navy-dark: #0f172a;
+            --border-subtle: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .error-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Background Blurs */
+        .bg-blur-circle {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.07) 0%, transparent 70%);
+            top: -150px;
+            left: -150px;
+        }
+
+        .bg-blur-circle.secondary {
+            bottom: -200px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(225, 29, 72, 0.04) 0%, transparent 70%);
+        }
+
+        /* Card Container */
+        .error-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            max-width: 500px;
+            width: 100%;
+            padding: 50px 40px;
+            border-radius: 32px;
+            border: 1px solid white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Logo Area */
+        .brand-logo-img {
+            height: 40px;
+            width: auto;
+            margin-bottom: 24px;
+        }
+
+        /* Error Badge */
+        .error-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: var(--error-bg);
+            color: var(--error-red);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 100px;
+            margin-bottom: 20px;
+            border: 1px solid #fecdd3;
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .error-text {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Action Buttons */
+        .action-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-teal);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-main:hover {
+            background: var(--brand-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.2);
+        }
+
+        .btn-ghost {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px;
+            font-size: 0.95rem;
+        }
+
+        .btn-ghost:hover { color: var(--navy-dark); }
+
+        /* Debug / Error Code Section */
+        .debug-info {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 32px;
+            text-align: left;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .debug-header {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .debug-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.75rem;
+            color: var(--navy-dark);
+        }
+
+        /* Utility Footer */
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .utility-item {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+        }
+
+        .utility-item i { font-size: 1.1rem; color: var(--navy-dark); }
+        .utility-item span { font-size: 0.7rem; font-weight: 600; }
+
+        .utility-item:hover span { color: var(--brand-teal); }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pulse { animation: pulse-red 2s infinite; }
+    </style>
+</head>
+<body>
+
+<div class="error-wrapper">
+    <div class="bg-blur-circle"></div>
+    <div class="bg-blur-circle secondary"></div>
+
+    <div class="error-card">
+        <div class="brand-logo text-center">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'images/logo.png' %}" alt="SamanLoop" class="brand-logo-img">
+            </a>
+        </div>
+
+        <div class="error-badge pulse">
+            <i class="bi bi-exclamation-octagon-fill"></i> Error 403: Forbidden
+        </div>
+
+        <h1 class="error-title">Session Security Check</h1>
+        
+        <p class="error-text">
+            Your security token has expired or is invalid. This request has been blocked to prevent unauthorized access.
+        </p>
+
+        <div class="action-stack">
+            <a href="{{ request.path }}" class="btn-main">
+                <i class="bi bi-shield-check me-2"></i>Re-validate Session
+            </a>
+            <a href="{% url 'index' %}" class="btn-ghost">
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="debug-info">
+            <span class="debug-header">Technical Details</span>
+            <div class="debug-row">
+                <span>Request ID:</span>
+                <span style="color: var(--brand-teal);">#SL-{{ request.timestamp|default:"20260122" }}</span>
+            </div>
+            <div class="debug-row" style="margin-top: 4px;">
+                <span>Protocol:</span>
+                <span>CSRF_TOKEN_MISMATCH</span>
+            </div>
+        </div>
+
+        <div class="utility-grid">
+            <a href={% url "error404" %} class="utility-item">
+                <i class="bi bi-question-circle"></i>
+                <span>Help</span>
+            </a>
+            <a href={% url "error404" %} class="utility-item">
+                <i class="bi bi-chat-dots"></i>
+                <span>Support</span>
+            </a>
+            <a href={% url "error404" %} class="utility-item">
+                <i class="bi bi-lock"></i>
+                <span>Privacy</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

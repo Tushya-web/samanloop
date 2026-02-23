@@ -16,13 +16,11 @@
         <i class="bi bi-geo-alt-fill"></i>
       </div>
       <div class="select-wrapper">
-        <select id="locationSelect" onchange="changeCity(this.value)">
-            {% for city in navbar_cities %}
-                <option value="{{ city }}" 
-                    {% if city == selected_city %}selected{% endif %}>
-                    {{ city }}
-                </option>
-            {% endfor %}
+        <select id="locationSelect">
+          <option>Mehsana</option>
+          {% comment %} <option>Mumbai</option>
+          <option>Bengaluru</option>
+          <option>Hyderabad</option> {% endcomment %}
         </select>
         <i class="bi bi-chevron-down select-arrow"></i>
       </div>
@@ -37,17 +35,22 @@
     <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navContent">
       
-    <!-- Search Bar (Desktop + Mobile) -->
-    <form class="search-form my-4 my-lg-0 mx-lg-4" method="GET" action="{% url 'browse_items' %}">
+      <!-- Search Bar (Desktop: Centered, Mobile: Top) -->
+      <form class="search-form my-4 my-lg-0 mx-lg-4">
         <div class="search-wrapper">
-            <i class="bi bi-search search-icon"></i>
-              <input type="text" name="q"  class="search-input"  placeholder="Search cameras, tools, camping gear..." value="{{ request.GET.q }}">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search cameras, tools, camping gear...">
         </div>
-    </form>
+      </form>
 
       <ul class="navbar-nav ms-auto mb-3 mb-lg-0 align-items-lg-center gap-1 gap-lg-3">
-        {% if request.session.user %}
         
+        {% if request.session.user %}
+
+<!-- ===== LOGGED IN STATE ===== -->
+
+
+<!-- Notifications -->
 <li class="nav-item d-none d-lg-block position-relative">
   <a class="nav-link icon-btn p-2" href="{% url 'error404' %}" title="Notifications">
     <i class="bi bi-bell"></i>
@@ -84,18 +87,6 @@
     </li>
 
     <li>
-      <a class="dropdown-item" href="{% url 'lender_dashboard' %}">
-        <i class="bi bi-collection me-2"></i> Lender Hub
-      </a>
-    </li>
-
-    <li>
-      <a class="dropdown-item" href="{% url 'borrower_dashboard' %}">
-        <i class="bi bi-collection me-2"></i> Borrower Hub
-      </a>
-    </li>
-
-    <li>
       <a class="dropdown-item" href="{% url 'wallet' %}">
         <i class="bi bi-wallet2 me-2"></i> Wallet
       </a>
@@ -122,10 +113,10 @@
 {% else %}
 
 <!-- ===== GUEST STATE ===== -->
-{% comment %} 
+
 <li class="nav-item">
   <a class="nav-link nav-link-custom" href="/account-hub/">Profile</a>
-</li> {% endcomment %}
+</li>
 
 <li class="nav-item d-none d-lg-block position-relative">
   <a class="nav-link icon-btn p-2" href="{% url 'error404' %}" title="Notifications">
@@ -196,15 +187,6 @@
 </style>
 
 <script>
-
-  function changeCity(city) {
-    fetch(`/set-city/${city}/`)
-    .then(response => response.json())
-    .then(data => {
-        location.reload();
-    });
-}
-
     // Auto-hide toast after 5 seconds
     document.addEventListener('DOMContentLoaded', function () {
         var toastElList = [].slice.call(document.querySelectorAll('.toast'))
@@ -512,7 +494,7 @@
   box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
 }
 
-{% comment %} /* Logic for Transparent Navbar state */
+/* Logic for Transparent Navbar state */
 #mainNav:not(.scrolled) .btn-login-outline {
   color: white !important;
   border-color: rgba(255, 255, 255, 0.6);
@@ -522,7 +504,7 @@
   background-color: white;
   color: var(--primary-teal) !important;
   border-color: white;
-} {% endcomment %}
+}
 
 /* Mobile tweak to ensure it doesn't look like a tiny link */
 @media (max-width: 991px) {

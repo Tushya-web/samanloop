@@ -1,0 +1,320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Samanloop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --brand-teal: #20c997;
+            --brand-teal-dark: #1ba87e;
+            --navy-dark: #0a192f;
+            --brand-yellow: #ffc107;
+            --soft-blue: #f8fafc;
+            --text-main: #1e293b;
+            --glass-white: rgba(255, 255, 255, 0.98);
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Premium Mesh Gradient Background */
+            background-color: var(--navy-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(32, 201, 151, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 193, 7, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(10, 25, 47, 1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .checkout-card {
+            background: var(--glass-white);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 460px;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Samanloop Logo Header */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            color: var(--navy-dark);
+            margin: 0;
+        }
+
+        .brand-name span {
+            color: var(--brand-teal);
+        }
+
+        /* Amount Display Box */
+        .price-hero {
+            background: var(--navy-dark);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .price-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.7;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .price-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .currency {
+            font-size: 1.5rem;
+            vertical-align: super;
+            margin-right: 4px;
+            color: var(--brand-teal);
+        }
+
+        /* Payment Selection */
+        .option-container {
+            margin-bottom: 30px;
+        }
+
+        .payment-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .payment-option {
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            background: white;
+        }
+
+        .payment-option:hover {
+            border-color: var(--brand-teal);
+            transform: translateY(-2px);
+        }
+
+        .payment-option.selected {
+            border-color: var(--brand-teal);
+            background-color: rgba(32, 201, 151, 0.04);
+            box-shadow: 0 8px 16px rgba(32, 201, 151, 0.1);
+        }
+
+        .custom-check {
+            width: 22px; height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .payment-option.selected .custom-check {
+            background: var(--brand-teal);
+            border-color: var(--brand-teal);
+        }
+
+        .payment-option.selected .custom-check::after {
+            content: '';
+            width: 8px; height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .method-info .name {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--navy-dark);
+        }
+
+        .method-info .desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Action Button */
+        .btn-checkout {
+            background: linear-gradient(to right, var(--brand-teal), var(--brand-teal-dark));
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 20px rgba(32, 201, 151, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(32, 201, 151, 0.35);
+            color: white;
+        }
+
+        /* Deposit Badge */
+        .badge-yellow {
+            background: var(--brand-yellow);
+            color: var(--navy-dark);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        /* Loader */
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.95);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .spinner-custom {
+            width: 50px; height: 50px;
+            border: 4px solid rgba(32, 201, 151, 0.1);
+            border-left-color: var(--brand-teal);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+    <div class="spinner-custom mb-3"></div>
+    <h5 class="fw-bold">Processing Securely</h5>
+    <p class="small opacity-50">Samanloop Payment Gateway</p>
+</div>
+
+<div class="checkout-card">
+    <div class="brand-header">
+        <img src="{% static 'images/logo.png' %}" alt="Samanloop Logo" style="height: 40px; margin-bottom: 8px;">
+        {% comment %} <h1 class="brand-name">SAMAN<span>LOOP</span></h1> {% endcomment %}
+        <p class="text-muted small">Quality rentals, secured payments</p>
+    </div>
+
+    <div class="price-hero">
+        <span class="price-label">Amount Due</span>
+        <div class="price-value"><span class="currency">₹</span>{{ total_amount }}</div>
+        <div class="badge-yellow">REIMBURSABLE DEPOSIT INCLUDED</div>
+    </div>
+
+    <div class="mb-4">
+        <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Rental Product</span>
+            <span class="fw-bold">{{ req.item.name }}</span>
+        </div>
+        <div class="d-flex justify-content-between small">
+            <span class="text-muted">Period Total</span>
+            <span class="fw-bold">₹{{ req.total_rent }}</span>
+        </div>
+    </div>
+
+    <form method="POST" id="paymentForm" onsubmit="showLoader()">
+        {% csrf_token %}
+        
+        <div class="option-container">
+            <span class="payment-label">Payment Method</span>
+            
+            <label class="payment-option selected" id="label-wallet">
+                <input type="radio" name="payment_mode" value="wallet" checked onchange="updateSelection()" hidden>
+                <div class="custom-check"></div>
+                <div class="method-info">
+                    <span class="name">Samanloop Wallet</span>
+                    <span class="desc">Balance: ₹{{ wallet.balance }}</span>
+                </div>
+                <svg class="ms-auto" width="20" height="20" fill="var(--brand-teal)" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </label>
+
+            <label class="payment-option" id="label-external">
+                <input type="radio" name="payment_mode" value="external" onchange="updateSelection()" hidden>
+                <div class="custom-check"></div>
+                <div class="method-info">
+                    <span class="name">Online Payment</span>
+                    <span class="desc">UPI, Cards, Net Banking</span>
+                </div>
+                <svg class="ms-auto" width="20" height="20" fill="#64748b" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            </label>
+        </div>
+
+        <button type="submit" class="btn-checkout">
+            Pay Now
+        </button>
+    </form>
+
+    <div class="text-center mt-4">
+        <p style="font-size: 11px; color: #94a3b8; margin: 0;">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" class="me-1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Your payment info is encrypted and never stored.
+        </p>
+    </div>
+</div>
+
+<script>
+    function updateSelection() {
+        const labels = document.querySelectorAll('.payment-option');
+        const radios = document.getElementsByName('payment_mode');
+        radios.forEach((radio, index) => {
+            labels[index].classList.toggle('selected', radio.checked);
+        });
+    }
+
+    function showLoader() {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>

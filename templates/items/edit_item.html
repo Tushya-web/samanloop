@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item | SamanLoop</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --brand-teal: #20c997;
+            --brand-teal-dark: #1ba87e;
+            --navy-dark: #0a192f;
+            --bg-gradient: radial-gradient(circle at top right, #f0fffb 0%, #f8fafc 100%);
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: #1e293b;
+            padding-bottom: 5rem;
+        }
+
+        .navbar-custom { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color); padding: 0.8rem 0; }
+        .form-card { background: white; border-radius: 28px; border: 1px solid var(--border-color); padding: 2.2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03); }
+        .section-title { font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--navy-dark); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 12px; }
+        .icon-wrapper { background: var(--brand-teal); padding: 8px; border-radius: 10px; color: white; display: flex; }
+
+        /* Photo UI */
+        .upload-zone { border: 2px dashed var(--brand-teal); background: #f0fffb; border-radius: 20px; padding: 1.5rem; text-align: center; cursor: pointer; transition: 0.3s; }
+        .upload-zone:hover { background: #e6fffa; }
+        .preview-img-container { position: relative; width: 100%; padding-top: 100%; overflow: hidden; border-radius: 12px; border: 2px solid var(--border-color); transition: 0.3s; }
+        .preview-img-container:hover { transform: scale(1.02); }
+        .preview-img-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        /* ❌ Cancel/Remove Button Styling */
+        .remove-img-btn { 
+            position: absolute; top: 5px; right: 5px; 
+            background: #ef4444; color: white; border: none; 
+            border-radius: 50%; width: 24px; height: 24px; 
+            display: flex; align-items: center; justify-content: center; 
+            z-index: 10; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .remove-img-btn:hover { background: #dc2626; transform: rotate(90deg); }
+
+        /* Custom Selects */
+        .custom-select-wrapper { position: relative; width: 100%; }
+        .custom-select-wrapper select { appearance: none; -webkit-appearance: none; width: 100%; padding: 12px 40px 12px 16px; background-color: #f9fafb; border: 2px solid var(--border-color); border-radius: 14px; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .custom-select-wrapper select:focus { border-color: var(--brand-teal); background-color: white; outline: none; box-shadow: 0 0 0 4px rgba(32, 201, 151, 0.1); }
+        .select-arrow { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #94a3b8; font-size: 0.8rem; }
+
+        /* Fulfillment Toggles */
+        .fulfillment-option { cursor: pointer; border: 2px solid var(--border-color); border-radius: 20px; padding: 1.25rem; transition: 0.3s; background: #fff; display: flex; align-items: center; gap: 15px; }
+        .fulfillment-option.active { border-color: var(--brand-teal); background: #f0fffb; }
+        .fulfillment-option .icon-box { width: 40px; height: 40px; border-radius: 10px; background: #f8fafc; display: flex; align-items: center; justify-content: center; }
+        .fulfillment-option.active .icon-box { background: var(--brand-teal); color: white; }
+        .check-mark { margin-left: auto; color: var(--brand-teal); display: none; }
+        .active .check-mark { display: block; }
+
+        .btn-save-trigger { background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%); color: white; border: none; padding: 1rem; border-radius: 18px; font-weight: 800; width: 100%; }
+        #map { height: 300px; width: 100%; border-radius: 20px; border: 2px solid var(--border-color); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom sticky-top mb-5">
+    <div class="container text-center">
+        <a href="/"><img src="{% static 'images/Group 7.png' %}" alt="SamanLoop" height="40"></a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="d-flex align-items-center mb-4">
+                <a href="javascript:history.back()" class="btn btn-light rounded-circle shadow-sm me-3"><i class="bi bi-arrow-left"></i></a>
+                <h1 class="h3 fw-extrabold mb-0">Update Listing</h1>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" id="editForm">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="form-card">
+                            <h6 class="section-title"><span class="icon-wrapper"><i class="bi bi-images"></i></span> Item Photos</h6>
+                            <div class="upload-zone" onclick="document.getElementById('imageInput').click()">
+                                <i class="bi bi-cloud-arrow-up fs-2 text-teal"></i>
+                                <h6 class="mt-2 fw-bold">Update Photos</h6>
+                                <p class="text-muted small mb-0">Click to add up to 5 clear images</p>
+                                <input type="file" id="imageInput" name="images" multiple accept="image/*" hidden>
+                            </div>
+                            
+                            <div class="row g-2 mt-3" id="imagePreviewRow">
+                                {% if item.images.all %}
+                                    {% for img in item.images.all %}
+                                        <div class="col-3 existing-img-wrapper" id="existing-{{ forloop.index }}">
+                                            <div class="preview-img-container">
+                                                <img src="{{ img.image.url }}">
+                                                <span class="badge bg-dark position-absolute bottom-0 start-0 m-1" style="font-size: 8px;">Existing</span>
+                                                <button type="button" class="remove-img-btn" onclick="this.closest('.existing-img-wrapper').remove()"><i class="bi bi-x"></i></button>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h6 class="section-title"><span class="icon-wrapper"><i class="bi bi-info-circle"></i></span> Basic Details</h6>
+                            <div class="mb-4">
+                                <label class="form-label">Item Title</label>
+                                <input type="text" name="name" id="name_input" value="{{ form.name.value|default:'' }}" class="form-control" required>
+                            </div>
+                            <div class="row g-3 mb-4">
+                                <div class="col-6">
+                                    <label class="form-label">Category</label>
+                                    <div class="custom-select-wrapper">{{ form.category }}<i class="bi bi-chevron-down select-arrow"></i></div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Brand</label>
+                                    <input type="text" name="brand" value="{{ form.brand.value|default:'' }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="form-label">Condition</label>
+                                    <div class="custom-select-wrapper">{{ form.quality }}<i class="bi bi-chevron-down select-arrow"></i></div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Visibility</label>
+                                    <div class="custom-select-wrapper">{{ form.availability_status }}<i class="bi bi-chevron-down select-arrow"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h6 class="section-title"><span class="icon-wrapper"><i class="bi bi-geo-alt"></i></span> Pickup Location</h6>
+                            <div id="map" class="mb-3"></div>
+                            <div class="row g-2">
+                                <div class="col-4"><input type="text" id="id_lat" name="latitude" value="{{ form.latitude.value }}" class="form-control form-control-sm text-center bg-light" readonly></div>
+                                <div class="col-4"><input type="text" id="id_lng" name="longitude" value="{{ form.longitude.value }}" class="form-control form-control-sm text-center bg-light" readonly></div>
+                                <div class="col-4"><input type="text" name="city" value="{{ form.city.value|default:'' }}" class="form-control form-control-sm" placeholder="City" required></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-card pricing-zone shadow-sm">
+                            <h6 class="section-title"><span class="icon-wrapper"><i class="bi bi-tag-fill"></i></span> Rental Pricing</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Daily Rate (₹)</label>
+                                <div class="input-group"><span class="input-group-text bg-white border-end-0">₹</span><input type="number" name="rent_per_day" id="rent_input" value="{{ form.rent_per_day.value }}" class="form-control fw-bold border-start-0" required></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Security Deposit (₹)</label>
+                                <div class="input-group"><span class="input-group-text bg-white border-end-0">₹</span><input type="number" name="deposit_amount" value="{{ form.deposit_amount.value }}" class="form-control border-start-0" required></div>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <h6 class="section-title"><span class="icon-wrapper"><i class="bi bi-truck"></i></span> Fulfillment</h6>
+                            
+                            <div class="fulfillment-option mb-3 {% if form.allow_delivery.value %}active{% endif %}" onclick="toggleFulfillment('delivery')">
+                                <div class="icon-box"><i class="bi bi-box-seam"></i></div>
+                                <div><h6 class="mb-0 fw-bold">Home Delivery</h6><small class="text-muted">You drop it off</small></div>
+                                <i class="bi bi-check-circle-fill check-mark"></i>
+                                <input type="checkbox" name="allow_delivery" id="id_allow_delivery" {% if form.allow_delivery.value %}checked{% endif %} hidden>
+                            </div>
+
+                            <div class="fulfillment-option mb-4 {% if form.self_pickup.value %}active{% endif %}" onclick="toggleFulfillment('pickup')">
+                                <div class="icon-box"><i class="bi bi-person-walking"></i></div>
+                                <div><h6 class="mb-0 fw-bold">Self Pickup</h6><small class="text-muted">They come to you</small></div>
+                                <i class="bi bi-check-circle-fill check-mark"></i>
+                                <input type="checkbox" name="self_pickup" id="id_self_pickup" {% if form.self_pickup.value %}checked{% endif %} hidden>
+                            </div>
+                            
+                            <button type="button" class="btn-save-trigger" onclick="validateAndOpenModal()">
+                                Save Changes <i class="bi bi-arrow-right-short ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 px-4"><h5 class="fw-bold">Confirm Updates?</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body text-center px-4">
+                <div class="bg-light p-3 rounded-4 mb-3 border">
+                    <h6 class="text-teal fw-bold" id="modal_item_name">---</h6>
+                    <p class="mb-0 small text-muted">Rent: ₹<span id="modal_rent">0</span>/day</p>
+                </div>
+                <p class="text-muted small">Your listing will be updated immediately across the SamanLoop marketplace.</p>
+            </div>
+            <div class="modal-footer border-0 d-flex gap-2 px-4 pb-4">
+                <button type="button" class="btn btn-light flex-grow-1 py-3 rounded-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-save-trigger flex-grow-1 py-3" onclick="submitFinalForm()" id="finalSubmitBtn">
+                    <span id="btnLabel">Confirm & Save</span>
+                    <div class="spinner-border spinner-border-sm d-none" id="btnSpinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // 📸 Updated Image Management Logic
+    const imageInput = document.getElementById('imageInput');
+    const imagePreviewRow = document.getElementById('imagePreviewRow');
+    let selectedFiles = []; // Track actual files globally
+
+    imageInput.addEventListener('change', function() {
+        const newFiles = Array.from(this.files);
+        // Add new files to our global tracker
+        selectedFiles = selectedFiles.concat(newFiles).slice(0, 5); 
+        renderPreviews();
+        updateInputFiles();
+    });
+
+    function renderPreviews() {
+        // Clear only the "New" previews, keep "Existing" if you didn't delete them
+        const newPreviews = imagePreviewRow.querySelectorAll('.new-img-wrapper');
+        newPreviews.forEach(el => el.remove());
+
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'col-3 new-img-wrapper';
+                div.innerHTML = `
+                    <div class="preview-img-container">
+                        <img src="${e.target.result}">
+                        <span class="badge bg-teal position-absolute bottom-0 start-0 m-1" style="font-size: 8px;">New</span>
+                        <button type="button" class="remove-img-btn" onclick="removeNewImage(${index})"><i class="bi bi-x"></i></button>
+                    </div>`;
+                imagePreviewRow.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeNewImage(index) {
+        selectedFiles.splice(index, 1); // Remove from array
+        renderPreviews(); // Redraw
+        updateInputFiles(); // Sync back to input
+    }
+
+    // 🔥 Crucial: Sync the JS array back to the actual File Input
+    function updateInputFiles() {
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        imageInput.files = dataTransfer.files;
+    }
+
+    // 🔄 Toggles
+    function toggleFulfillment(type) {
+        const id = type === 'delivery' ? 'id_allow_delivery' : 'id_self_pickup';
+        const checkbox = document.getElementById(id);
+        checkbox.checked = !checkbox.checked;
+        checkbox.parentElement.classList.toggle('active', checkbox.checked);
+    }
+
+    // 🗺️ Map
+    var startLat = parseFloat(document.getElementById('id_lat').value) || 23.58;
+    var startLng = parseFloat(document.getElementById('id_lng').value) || 72.36;
+    var map = L.map('map').setView([startLat, startLng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    var marker = L.marker([startLat, startLng], {draggable: true}).addTo(map);
+    marker.on('dragend', () => {
+        const pos = marker.getLatLng();
+        document.getElementById('id_lat').value = pos.lat.toFixed(6);
+        document.getElementById('id_lng').value = pos.lng.toFixed(6);
+    });
+
+    // 🚀 Modal & Final Submit
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    function validateAndOpenModal() {
+        const form = document.getElementById('editForm');
+        if (form.checkValidity()) {
+            document.getElementById('modal_item_name').innerText = document.getElementById('name_input').value;
+            document.getElementById('modal_rent').innerText = document.getElementById('rent_input').value;
+            confirmModal.show();
+        } else { form.reportValidity(); }
+    }
+
+    function submitFinalForm() {
+        document.getElementById('btnLabel').classList.add('d-none');
+        document.getElementById('btnSpinner').classList.remove('d-none');
+        document.getElementById('finalSubmitBtn').disabled = true;
+        document.getElementById('editForm').submit();
+    }
+</script>
+</body>
+</html>

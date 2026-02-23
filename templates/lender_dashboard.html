@@ -13,218 +13,362 @@
     <style>
         :root {
             --brand-teal: #0d9488;
+            --brand-teal-dark: #0f766e;
+            --brand-teal-light: #f0fdfa;
             --navy-dark: #0a192f;
             --soft-blue: #f8fafc;
             --border-color: #e2e8f0;
         }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--soft-blue); color: var(--navy-dark); }
-
-        /* Navigation Pills */
-        .nav-pills .nav-link {
-            color: var(--navy-dark); font-weight: 700; border-radius: 12px; padding: 12px 24px; transition: 0.3s;
-        }
-        .nav-pills .nav-link.active { background-color: var(--brand-teal); color: white; }
-
-        /* Asset Card */
-        .asset-card {
-            background: white; border-radius: 20px; border: 1px solid var(--border-color);
-            padding: 20px; transition: 0.3s; margin-bottom: 1rem;
-        }
-        .asset-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-
-        .item-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 12px; }
-
-        /* Stats Header */
-        .stats-strip {
-            background: var(--navy-dark); color: white; border-radius: 24px; padding: 25px; margin-bottom: 40px;
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #fcfcfd; 
+            color: var(--navy-dark); 
         }
 
+        /* Hero Section - Matching Borrower Hub */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #115e59 100%);
+            padding: 100px 0 60px;
+            color: white;
+            border-radius: 0 0 40px 40px;
+            margin-bottom: -40px;
+        }
+
+        /* Stats Cards */
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        /* Tabs Styling - Unified with Borrower Hub */
+        .nav-pills-custom {
+            background: white;
+            padding: 8px;
+            border-radius: 16px;
+            display: inline-flex;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-pills-custom .nav-link {
+            color: #64748b;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 10px 24px;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .nav-pills-custom .nav-link.active {
+            background-color: var(--brand-teal);
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+
+        /* Asset Card Improvements */
+        /* Change overflow from hidden to visible */
+.asset-card {
+    background: white;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    padding: 24px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: visible; /* Changed from hidden to visible */
+}
+
+/* Ensure the dropdown menu stays on top of everything */
+.dropdown-menu {
+    z-index: 1050 !important;
+}
+
+        .asset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border-color: var(--brand-teal);
+        }
+
+        .item-thumb {
+            width: 90px; height: 90px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Status Badges */
         .status-badge {
-            font-size: 10px; font-weight: 800; text-transform: uppercase;
-            padding: 6px 14px; border-radius: 50px; letter-spacing: 0.5px;
+            font-size: 11px; font-weight: 800; text-transform: uppercase;
+            padding: 8px 16px; border-radius: 50px; letter-spacing: 0.5px;
         }
-        .badge-active { background: #f0fdf4; color: #15803d; }
+        .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fef3c7; }
+        .status-accepted { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+        .status-active { background: #f0f9ff; color: #0369a1; border: 1px solid #e0f2fe; }
+        .status-warning { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+
+        .btn-teal {
+            background: var(--brand-teal);
+            color: white;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-teal:hover {
+            background: var(--brand-teal-dark);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .uppercase-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; }
+        
+        .pulse-dot {
+            width: 8px; height: 8px; background: #0ea5e9; border-radius: 50%;
+            display: inline-block; animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(14, 165, 233, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+        }
     </style>
 </head>
 <body>
 
 {% include 'base/navbar.html' %}
 
-<div class="container mt-5 pt-5 mb-5">
-    
-    <div class="stats-strip shadow-lg">
+<div class="hero-gradient">
+    <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-4 border-end border-secondary border-opacity-25">
-                <small class="opacity-50 fw-bold uppercase" style="font-size: 10px;">Portfolio Earnings</small>
-                <h3 class="fw-bold mb-0">₹{{ wallet_balance|default:"0.00" }}</h3>
+            <div class="col-lg-6">
+                <span class="badge bg-teal mb-3 px-3 py-2 rounded-pill" style="background: var(--brand-teal);">Lender Management</span>
+                <h1 class="display-5 fw-bold fw-800 mb-2">Lender Hub</h1>
+                <p class="opacity-75 fs-5">Manage your inventory, track requests, and monitor your earnings.</p>
             </div>
-            <div class="col-md-4 border-end border-secondary border-opacity-25 ps-md-4">
-                <small class="opacity-50 fw-bold uppercase" style="font-size: 10px;">Live Loops</small>
-                <h3 class="fw-bold mb-0">{{ active_lending.count|default:"0" }} Active</h3>
-            </div>
-            <div class="col-md-4 ps-md-4 d-flex justify-content-between align-items-center">
-                <div>
-                    <small class="opacity-50 fw-bold uppercase" style="font-size: 10px;">Trust Rating</small>
-                    <h3 class="fw-bold mb-0">4.9/5</h3>
+            <div class="col-lg-6">
+                <div class="d-flex gap-3 justify-content-lg-end mt-4 mt-lg-0">
+                    <div class="stat-pill text-center">
+                        <small class="d-block opacity-50 text-uppercase fw-bold" style="font-size: 10px;">Total Earnings</small>
+                        <span class="fs-4 fw-bold">₹{{ wallet_balance|default:"0.00" }}</span>
+                    </div>
+                    <div class="stat-pill text-center">
+                        <small class="d-block opacity-50 text-uppercase fw-bold" style="font-size: 10px;">Live Loops</small>
+                        <span class="fs-4 fw-bold">{{ active_lending.count|default:"0" }}</span>
+                    </div>
+                    <div class="stat-pill text-center d-none d-md-block">
+                        <small class="d-block opacity-50 text-uppercase fw-bold" style="font-size: 10px;">Rating</small>
+                        <span class="fs-4 fw-bold">4.9<small class="fs-6 opacity-50">/5</small></span>
+                    </div>
                 </div>
-                <a href="{% url 'add_item' %}" class="btn btn-teal btn-sm rounded-pill fw-bold" style="background:var(--brand-teal); border:none; color:white; padding: 8px 20px;">+ Add Item</a>
             </div>
         </div>
     </div>
+</div>
 
-    {% if active_lending %}
-    <div class="alert bg-warning bg-opacity-10 border-warning border-opacity-25 rounded-4 d-flex align-items-center gap-3 mb-4">
-        <i class="bi bi-box-seam-fill text-warning fs-4"></i>
-        <div>
-            <strong class="d-block text-dark">Handover Required</strong>
-            <span class="small text-muted">You have {{ active_lending.count }} item(s) ready for the borrower to pick up.</span>
-        </div>
-    </div>
-    {% endif %}
-
-    <ul class="nav nav-pills mb-4 gap-2" id="lenderTabs" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#requests" type="button">Incoming Requests</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#listings" type="button">My Inventory</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#out" type="button">Rented Out</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#log" type="button">Earnings Log</button>
-        </li>
-    </ul>
+<div class="container py-5">
     
-    <div class="tab-content mt-4">
-        <div class="tab-pane fade show active" id="requests">
+    <div class="alert border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 mb-5 p-4" style="background: white; border-left: 5px solid #f59e0b !important;">
+        <div class="icon-circle bg-warning text-white p-3 rounded-circle" style="background: #f59e0b;">
+            <i class="bi bi- lightning-charge-fill"></i>
+        </div>
+        <div class="flex-grow-1">
+            <h5 class="fw-bold mb-1">Lender Action Center</h5>
+            <p class="text-muted mb-0 small">You have {{ incoming_requests|length }} new requests. Fast responses help you stay at the top of search results!</p>
+        </div>
+        <a href="{% url 'add_item' %}" class="btn btn-teal rounded-pill px-4 fw-bold shadow-sm">
+            <i class="bi bi-plus-lg me-2"></i>Add Item
+        </a>
+    </div>
+
+    <div class="text-center mb-5">
+        <ul class="nav nav-pills-custom" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#requests" type="button">Incoming Requests</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#listings" type="button">Inventory</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#out" type="button">Rented Out</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#log" type="button">Earnings Log</button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content" id="pills-tabContent">
+        
+        <div class="tab-pane fade show active" id="requests" role="tabpanel">
             {% if incoming_requests %}
                 {% for req in incoming_requests %}
                 <div class="asset-card">
-                    <div class="row align-items-center text-center text-md-start">
-                        <div class="col-md-4 d-flex align-items-center gap-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-5 d-flex align-items-center gap-4">
                             {% with req.item.images.all|first as img %}
-                                <img src="{{ img.image.url }}" class="item-thumb">
+                                <img src="{{ img.image.url }}" class="item-thumb" alt="{{ req.item.name }}">
                             {% endwith %}
                             <div>
-                                <h6 class="fw-bold mb-0 text-truncate" style="max-width: 200px;">{{ req.item.name }}</h6>
-                                <small class="text-muted">From: <strong>{{ req.renter.name }}</strong></small>
+                                <h5 class="fw-bold mb-1">{{ req.item.name }}</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <small class="text-muted">From: <span class="text-dark fw-bold">{{ req.renter.name }}</span></small>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 mt-3 mt-md-0">
-                            <small class="text-muted d-block uppercase" style="font-size: 9px;">Rental Period</small>
-                            <span class="fw-bold small">{{ req.start_date }} → {{ req.end_date }}</span>
+                            <div class="uppercase-label">Rental Period</div>
+                            <span class="fw-bold text-dark">{{ req.start_date|date:"M d" }} → {{ req.end_date|date:"M d, Y" }}</span>
                         </div>
-                        <div class="col-md-2 mt-3 mt-md-0">
-                            <small class="text-muted d-block uppercase" style="font-size: 9px;">Earning</small>
-                            <span class="fw-bold text-teal">₹{{ req.total_rent }}</span>
-                        </div>
-                        <div class="col-md-3 mt-3 mt-md-0 text-md-end d-flex gap-2">
-                            <a href="{% url 'respond_to_request' req.id 'accept' %}" class="btn btn-dark btn-sm w-100 rounded-pill fw-bold">Accept</a>
-                            <a href="{% url 'respond_to_request' req.id 'reject' %}" class="btn btn-outline-danger btn-sm rounded-circle"><i class="bi bi-x"></i></a>
+                        <div class="col-md-4 mt-3 mt-md-0 d-flex flex-column align-items-md-end justify-content-center">
+                            {% if req.status == "pending" %}
+                                <div class="d-flex gap-2 w-100 justify-content-md-end">
+                                    <a href="{% url 'respond_to_request' req.id 'accept' %}" class="btn btn-teal btn-sm px-4 rounded-pill fw-bold py-2">Accept</a>
+                                    <a href="{% url 'respond_to_request' req.id 'reject' %}" class="btn btn-outline-danger btn-sm rounded-circle p-2" style="width: 38px; height: 38px;"><i class="bi bi-x-lg"></i></a>
+                                </div>
+                            {% elif req.status == "accepted" %}
+                                <span class="status-badge status-warning">Waiting Payment</span>
+                            {% elif req.status == "paid" %}
+                                <span class="status-badge status-accepted">Payment Received</span>
+                            {% else %}
+                                <span class="status-badge bg-light text-muted">{{ req.status }}</span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="text-center py-5 bg-white rounded-4 border">
+                <div class="empty-state text-center bg-white rounded-5 border-dashed py-5">
                     <i class="bi bi-inbox text-muted opacity-25 display-4"></i>
-                    <p class="text-muted mt-2">No pending requests at the moment.</p>
+                    <h5 class="fw-bold mt-4">All Caught Up!</h5>
+                    <p class="text-muted">New requests from borrowers will appear here.</p>
                 </div>
             {% endif %}
         </div>
 
-        <div class="tab-pane fade" id="listings">
-            <div class="row g-3">
+        <div class="tab-pane fade" id="listings" role="tabpanel">
+            <div class="row g-4">
                 {% for item in my_listings %}
                 <div class="col-md-6">
-                    <div class="asset-card">
+                    <div class="asset-card h-100 mb-0">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex gap-3">
                                 {% with item.images.all|first as img %}
-                                <img src="{{ img.image.url }}" class="item-thumb">
+                                    <img src="{{ img.image.url }}" class="item-thumb">
                                 {% endwith %}
                                 <div>
-                                    <h6 class="fw-bold mb-1">{{ item.name }}</h6>
-                                    <span class="badge bg-light text-dark border small">₹{{ item.rent_per_day }}/day</span>
+                                    <h5 class="fw-bold mb-1">{{ item.name }}</h5>
+                                    <span class="badge bg-light text-success border-0 fw-bold">₹{{ item.rent_per_day }}/day</span>
                                 </div>
                             </div>
                             <div class="dropdown">
-                                <button class="btn btn-light btn-sm rounded-circle shadow-none" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3">
-                                    <li><a class="dropdown-item small fw-bold" href="#">Edit Details</a></li>
-                                    <li><a class="dropdown-item small fw-bold text-danger" href="#">Unlist Item</a></li>
-                                </ul>
-                            </div>
+                            <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4">
+                                <li><a class="dropdown-item small fw-bold py-2" href="{% url 'item_detail' item.id %}">View Item</a></li>
+                                <li><a class="dropdown-item small fw-bold py-2" href="{% url 'edit_item' item.id %}">Edit Details</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item small fw-bold text-danger py-2" href="{% url 'delete_item' item.id %}">Unlist Item</a></li>
+                            </ul>
+                        </div>
                         </div>
                     </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">You haven't listed any gear yet.</p>
+                    <a href="{% url 'add_item' %}" class="btn btn-dark rounded-pill px-4">List Your First Item</a>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="tab-pane fade" id="out">
+        <div class="tab-pane fade" id="out" role="tabpanel">
             {% if active_lending %}
                 {% for active in active_lending %}
-                <div class="asset-card" style="border-left: 5px solid var(--brand-teal);">
+                <div class="asset-card" style="border-left: 5px solid {% if active.status == 'returning' %}#f59e0b{% else %}var(--brand-teal){% endif %} !important;">
                     <div class="row align-items-center">
-                        <div class="col-md-6 d-flex align-items-center gap-3">
-                            <img src="{{ active.item.images.first.image.url }}" class="item-thumb">
+                        <div class="col-md-5 d-flex align-items-center gap-4">
+                            {% if active.item.images.first %}
+                                <img src="{{ active.item.images.first.image.url }}" class="item-thumb">
+                            {% endif %}
                             <div>
-                                <h6 class="fw-bold mb-0">{{ active.item.name }}</h6>
-                                <small class="text-muted">Borrower: <strong>{{ active.renter.name }}</strong></small>
+                                <h5 class="fw-bold mb-1">{{ active.item.name }}</h5>
+                                <small class="text-muted">Borrower: <span class="fw-bold text-dark">{{ active.renter.name }}</span></small>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <small class="text-muted d-block uppercase" style="font-size: 9px;">Due Back</small>
-                            <span class="fw-bold text-teal">{{ active.end_date|date:"M d, Y" }}</span>
+                            <div class="uppercase-label">Return Expected</div>
+                            <span class="fw-bold text-dark">{{ active.end_date|date:"M d, Y" }}</span>
                         </div>
-                        <div class="col-md-3 text-md-end mt-3 mt-md-0">
-                            <span class="status-badge badge-active">In Loop</span>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            {% if active.status == 'returning' %}
+                                <form action="{% url 'confirm_return' active.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm rounded-pill px-4 fw-bold py-2 shadow-sm">
+                                        Confirm Return & Get Paid
+                                    </button>
+                                </form>
+                            {% else %}
+                                <div class="status-badge status-active d-inline-flex align-items-center gap-2">
+                                    <span class="pulse-dot"></span>
+                                    <span>Currently In Loop</span>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
-                <div class="text-center py-5 bg-white rounded-4 border">
-                    <p class="text-muted mb-0">No items are currently rented out.</p>
+                <div class="empty-state text-center bg-white rounded-5 border py-5">
+                    <p class="text-muted">No items are currently out with borrowers.</p>
                 </div>
             {% endif %}
         </div>
 
-        <div class="tab-pane fade" id="log">
-            <div class="bg-white rounded-4 border overflow-hidden">
-                <table class="table align-middle mb-0">
-                    <thead class="bg-light small text-muted uppercase">
-                        <tr>
-                            <th class="ps-4">Asset</th>
-                            <th>Renter</th>
-                            <th>Net Income</th>
-                            <th class="pe-4 text-end">Completion Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for history in lending_history %}
-                        <tr>
-                            <td class="ps-4 fw-bold">{{ history.item.name }}</td>
-                            <td>{{ history.renter.name }}</td>
-                            <td class="text-success fw-bold">+₹{{ history.total_rent }}</td>
-                            <td class="pe-4 text-end text-muted small">{{ history.end_date }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="4" class="text-center py-4 text-muted">No completed loops yet.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="tab-pane fade" id="log" role="tabpanel">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr class="small text-muted text-uppercase fw-bold">
+                                <th class="ps-4 py-3 border-0">Asset</th>
+                                <th class="py-3 border-0">Renter</th>
+                                <th class="py-3 border-0">Net Income</th>
+                                <th class="pe-4 py-3 border-0 text-end">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in earning_logs %}
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="fw-bold text-dark d-block">{{ log.item_usage.item.name }}</span>
+                                    <small class="text-muted">Loop #{{ log.item_usage.id }}</small>
+                                </td>
+                                <td>{{ log.borrower.name }}</td>
+                                <td><span class="text-success fw-bold">+₹{{ log.payment_amt }}</span></td>
+                                <td class="pe-4 text-end text-muted small">{{ log.payment_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">No earnings history yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
 {% include 'base/footer.html' %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

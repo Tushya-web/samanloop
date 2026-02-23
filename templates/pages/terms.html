@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SamanLoop - Terms of Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand-teal: #0d9488;
+      --brand-teal-light: #f0fdfa;
+      --brand-blue: #2563eb;
+      --brand-blue-light: #eff6ff;
+      --navy-dark: #0f172a;
+      --bg-slate: #f8fafc;
+      --border-color: #e2e8f0;
+      --text-main: #334155;
+      --text-muted: #64748b;
+      --glass-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.1);
+    }
+
+    * { box-sizing: border-box; scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-slate);
+      color: var(--text-main);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- DECORATION --- */
+    .hero-glow {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 600px;
+      background: radial-gradient(circle at 50% -20%, #14b8a615 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* --- HEADER --- */
+    .tc-header {
+      background: var(--navy-dark);
+      color: white;
+      padding: 100px 24px 140px;
+      text-align: center;
+      position: relative;
+      clip-path: ellipse(150% 100% at 50% 0%);
+    }
+
+    .tc-header img { height: 50px; margin-bottom: 24px; }
+    .tc-header h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); font-weight: 800; letter-spacing: -0.04em; margin: 0; }
+    .tc-header p { color: #94a3b8; font-weight: 600; font-size: 0.85rem; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
+
+    /* --- LAYOUT --- */
+    .main-wrapper {
+      max-width: 1200px;
+      margin: -80px auto 80px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* --- SIDEBAR --- */
+    .tc-sidebar { position: sticky; top: 40px; height: fit-content; }
+    .nav-card { background: white; padding: 25px; border-radius: 24px; border: 1px solid var(--border-color); box-shadow: var(--glass-shadow); }
+    .nav-card h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--brand-teal); margin-bottom: 20px; font-weight: 800; }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      border-radius: 12px;
+      margin-bottom: 4px;
+    }
+
+    .nav-link:hover { color: var(--brand-teal); background: var(--brand-teal-light); }
+    .nav-link.active { color: white; background: var(--brand-teal); box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2); }
+
+    /* --- CONTENT --- */
+    .tc-content-card { background: white; padding: 60px; border-radius: 32px; box-shadow: var(--glass-shadow); border: 1px solid var(--border-color); }
+    .tc-section { margin-bottom: 80px; scroll-margin-top: 40px; }
+    .tc-section h2 { font-size: 1.6rem; margin-bottom: 24px; font-weight: 800; color: var(--navy-dark); display: flex; align-items: center; gap: 16px; }
+    
+    .tc-section h2 i {
+      width: 44px; height: 44px;
+      background: var(--brand-teal-light); color: var(--brand-teal);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+
+    /* Educational Styling */
+    .edu-icon { background: var(--brand-blue-light) !important; color: var(--brand-blue) !important; }
+    .tc-section ul { padding: 0; list-style: none; }
+    .tc-section li { position: relative; padding-left: 32px; margin-bottom: 14px; font-weight: 500; font-size: 0.95rem; }
+    .tc-section li::before { content: "\F272"; font-family: "bootstrap-icons"; position: absolute; left: 0; color: var(--brand-teal); font-weight: 900; }
+
+    .tc-highlight {
+      background: #f8fafc; border: 1px solid var(--border-color);
+      border-radius: 20px; padding: 24px; display: flex; gap: 16px; margin-top: 30px;
+    }
+    .tc-highlight.warning { background: #fffbeb; border-color: #fde68a; }
+    .tc-highlight.warning i { color: #d97706; }
+
+    /* --- FOOTER --- */
+    .tc-footer { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); margin-top: 40px; }
+
+    @media (max-width: 1024px) {
+      .main-wrapper { grid-template-columns: 1fr; }
+      .tc-sidebar { display: none; }
+      .tc-content-card { padding: 40px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="hero-glow"></div>
+
+<header class="tc-header">
+  <img src="{% static 'images/Group 11.png' %}" alt="SamanLoop">
+  <h1>Project Terms & Policies</h1>
+  <p>Last Updated &bull; Jan 2026</p>
+</header>
+
+<div class="main-wrapper">
+  
+  <aside class="tc-sidebar">
+    <div class="nav-card">
+      <h4>Navigation</h4>
+      <nav id="tc-nav">
+        <a href="#acceptance" class="nav-link active"><i class="bi bi-shield-check"></i> Acceptance</a>
+        <a href="#education" class="nav-link"><i class="bi bi-mortarboard"></i> Educational Project</a>
+        <a href="#eligibility" class="nav-link"><i class="bi bi-person"></i> Identity & Ethics</a>
+        <a href="#truth" class="nav-link"><i class="bi bi-check-circle"></i> Anti-Fraud</a>
+        <a href="#lender" class="nav-link"><i class="bi bi-box-seam"></i> Responsibilities</a>
+        <a href="#liability" class="nav-link"><i class="bi bi-exclamation-triangle"></i> Liability</a>
+        <a href="#payments-demo" class="nav-link"><i class="bi bi-cash-coin"></i> Payment Demo</a>
+        <a href="#privacy" class="nav-link"><i class="bi bi-lock"></i> Data Privacy</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="tc-content-card">
+
+    <section id="acceptance" class="tc-section">
+      <h2><i class="bi bi-patch-check"></i> Acceptance</h2>
+      <p>
+        By interacting with <strong>SamanLoop</strong>, you acknowledge that you have read and understood these policies. 
+        This platform is built on community trust and academic integrity.
+      </p>
+    </section>
+
+    <section id="education" class="tc-section">
+      <h2><i class="bi bi-mortarboard-fill edu-icon"></i> Academic Disclaimer</h2>
+      <p>
+        <strong>SamanLoop is an academic project</strong> developed strictly for 
+        educational and demonstration purposes.
+      </p>
+      <ul>
+        <li>This is a <strong>non-commercial prototype</strong>.</li>
+        <li>No actual legal or financial guarantees are provided by the developers.</li>
+        <li>Features are designed to showcase Full-Stack System Design concepts.</li>
+      </ul>
+      <div class="tc-highlight">
+        <i class="bi bi-info-circle-fill text-primary"></i>
+        <div>
+          All data and transactions are simulated. Users should not use real sensitive financial data.
+        </div>
+      </div>
+    </section>
+
+    <section id="eligibility" class="tc-section">
+      <h2><i class="bi bi-person-lock"></i> User Identity & Ethics</h2>
+      <p>To ensure a high-quality simulation environment:</p>
+      <ul>
+        <li>Users must be <strong>18 years or older</strong>.</li>
+        <li>Academic honesty is expected; do not create multiple "test" accounts for malicious purposes.</li>
+        <li>Identity verification is a simulated flow to demonstrate security logic.</li>
+      </ul>
+    </section>
+
+    <section id="truth" class="tc-section">
+      <h2><i class="bi bi-shield-shaded"></i> Truthfulness & Anti-Fraud</h2>
+      <p>Even in a demo, we enforce a strict honesty policy:</p>
+      <ul>
+        <li>Fake listings or intentionally misleading descriptions are prohibited.</li>
+        <li>Users found "gaming" the simulated rating system will have their data reset.</li>
+        <li>Any attempt to bypass system logic for simulated gains is restricted.</li>
+      </ul>
+    </section>
+
+    <section id="lender" class="tc-section">
+      <h2><i class="bi bi-boxes"></i> Role Responsibilities</h2>
+      <p><strong>Lenders:</strong> Must provide accurate item condition and clear safety instructions.</p>
+      <p><strong>Borrowers:</strong> Responsible for returning items on time and in the condition received.</p>
+    </section>
+
+    <section id="liability" class="tc-section">
+      <h2><i class="bi bi-exclamation-octagon-fill"></i> Limitation of Liability</h2>
+      <div class="tc-highlight warning">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div>
+          <strong>Disclaimer:</strong> The developers assume no responsibility for disputes between users 
+          or any real-world actions resulting from this academic demonstration.
+        </div>
+      </div>
+    </section>
+
+    <section id="payments-demo" class="tc-section">
+      <h2><i class="bi bi-cash-coin"></i> Payment Simulation</h2>
+      <p>The "Wallet" and "Escrow" systems are for <strong>demonstration logic only</strong>.</p>
+      <ul>
+        <li>No real currency is exchanged or stored.</li>
+        <li>Mocked payment gateways are used for the transaction flow.</li>
+        <li>Any displayed currency is virtual "demo credits."</li>
+      </ul>
+    </section>
+
+    <section id="privacy" class="tc-section">
+      <h2><i class="bi bi-shield-lock-fill"></i> Data & Privacy</h2>
+      <p>
+        We treat simulated data with care. User profiles are encrypted using standard hashing (PBKDF2). 
+        Data is stored solely for project evaluation and will be purged upon completion of the academic term.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<footer class="tc-footer">
+  <p>© 2026 <strong>SamanLoop</strong> &bull; An Educational Initiative</p>
+  <p style="opacity: 0.5; font-size: 0.75rem;">Developed for Portfolio/Academic Exhibition</p>
+</footer>
+
+<script>
+  // Dynamic Scroll Highlighting with Intersection Observer (More performant)
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('.tc-section');
+
+  const options = { threshold: 0.3, rootMargin: "0px 0px -50% 0px" };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === entry.target.id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, options);
+
+  sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>

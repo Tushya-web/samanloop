@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SamanLoop  Rent Smarter</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    </head>
+<body>
+
+    <div id="global-loader" class="loader-overlay">
+    <video autoplay muted loop playsinline style="width: 600px; height: 600px;">
+        <source src="{% static 'videos/load.webm' %}" type="video/mp4">
+    </video>
+    <p class="fw-bold mt-3" style="color: var(--brand-teal); letter-spacing: 2px; font-size: 0.8rem;">PREPARING YOUR EXPERIENCE...</p>
+  </div>
+
+    {% include 'base/navbar.html' %}
+
+    {% block content %}{% endblock %}
+
+    {% include 'base/footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = document.getElementById("mainNav");
+    
+      const onScroll = () => {
+        nav.classList.toggle("scrolled", window.scrollY > 40);
+      };
+    
+      onScroll();
+      window.addEventListener("scroll", onScroll);
+    });
+
+   const loader = document.getElementById('global-loader');
+
+function runLoader(callback) {
+    // 1. Show the loader
+    document.body.classList.add('stop-scroll');
+    loader.classList.add('active');
+
+    // 2. Wait for 2 seconds (2000ms)
+    setTimeout(() => {
+        if (callback) {
+            callback();
+        } else {
+            // If just a page-load effect, hide it
+            loader.classList.remove('active');
+            document.body.classList.remove('stop-scroll');
+        }
+    }, 2000);
+}
+
+// Trigger on Marketplace Search Form
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Stop immediate submission
+        runLoader(() => {
+            form.submit(); // Submit after 2 seconds
+        });
+    });
+});
+
+// Trigger on Navigating Links (Marketplace/Earn buttons)
+document.querySelectorAll('.btn-intent-primary, .btn-intent-outline').forEach(link => {
+    link.addEventListener('click', (e) => {
+        if (link.tagName === 'A' && link.getAttribute('href').startsWith('http')) {
+            e.preventDefault();
+            const destination = link.href;
+            runLoader(() => {
+                window.location.href = destination;
+            });
+        }
+    });
+});
+
+ window.addEventListener('load', () => {
+     runLoader(); 
+ });
+    </script>
+
+    <style>
+     .loader-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 99999; /* Higher than everything else */
+    display: none; /* Controlled by JS */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.loader-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Prevents scrolling while loading */
+body.stop-scroll {
+    overflow: hidden;
+}
+
+    </style>
+</body>
+</html>
