@@ -2,18 +2,13 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.html import format_html
-from django.db.models import Sum
 import csv
 
 from .models import (
     User, Category, Item, ItemImage,
-    item_Request, item_usage, payment,
-    Review, query, Wallet, WalletTransaction
+    item_Request, item_usage, Payment,
+    Review, Query, Wallet, WalletTransaction
 )
-
-# ==========================
-# HELPER FUNCTION
-# ==========================
 
 def get_status_color(status):
     colors = {
@@ -27,11 +22,6 @@ def get_status_color(status):
         "completed": "#3b82f6",
     }
     return colors.get(status.lower(), "#64748b")
-
-
-# ==========================
-# USER ADMIN
-# ==========================
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -180,15 +170,20 @@ class ItemRequestAdmin(admin.ModelAdmin):
 # PAYMENT ADMIN
 # ==========================
 
-@admin.register(payment)
+@admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
 
     list_display = (
-        "item_usage",
-        "amount_display",
-        "deposit_status_badge",
+        "id",
+        "borrower",
+        "lender",
+        "payment_amt",
+        "deposit",
         "payment_date",
     )
+
+    list_filter = ("payment_date", "deposit_status")
+    search_fields = ("borrower__email", "lender__email")
 
     def amount_display(self, obj):
         return format_html(
@@ -262,9 +257,44 @@ class ItemUsageAdmin(admin.ModelAdmin):
 
     list_per_page = 20
     
-admin.site.register(Review)
-admin.site.register(query)
-admin.site.register(WalletTransaction)
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("item", "reviewer", "rating", "created_at")
+    list_filter = ("rating",)
+    search_fields = ("item__name", "reviewer__email")
+
+from django.contrib import admin
+from .models import Query
+
+@admin.register(Query)
+class QueryAdmin(admin.ModelAdmin):
+    list_display = ("subject", "user", "get_item_name", "status", "created_at")
+    list_filter = ("status", "created_at")
+    search_fields = ("subject", "user__email", "item__name")
+    readonly_fields = ("user", "item", "subject", "message", "created_at")
+    # Allows admin to resolve it directly from the list
+    actions = ['mark_as_resolved']
+    def get_item_name(self, obj):
+        return obj.item.name if obj.item else "General Query"
+    get_item_name.short_description = 'Related Item'
+    @admin.action(description='Mark selected reports as Resolved')
+    def mark_as_resolved(self, request, queryset):
+        queryset.update(status='resolved')
+    
+    
+@admin.register(WalletTransaction)
+class WalletTransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "amount",
+        "transaction_type",
+        "description",
+        "created_at"
+    )
+
+    list_filter = ("transaction_type",)
+    search_fields = ("user__email",)
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

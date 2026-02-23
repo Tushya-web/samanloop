@@ -28,3 +28,23 @@ class ItemCreateForm(forms.ModelForm):
             "purchase_year": forms.NumberInput(attrs={"placeholder": "e.g. 2022"}),
             "deposit_amount": forms.NumberInput(attrs={"placeholder": "Optional"}),
         }
+
+from .models import Item
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = [
+            "name",
+            "brand",
+            "category",
+            "quality",
+            "availability_status",
+            "latitude",
+            "longitude",
+            "city",
+            "rent_per_day",
+            "deposit_amount",
+            "allow_delivery",
+            "self_pickup",
+        ]

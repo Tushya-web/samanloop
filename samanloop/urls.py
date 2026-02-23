@@ -9,7 +9,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     
     path('', index, name='index'),
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('admin/logout/', admin.site.logout, name='logout'),
     
     path('#/', error404, name='error404'),
     
@@ -23,16 +24,25 @@ urlpatterns = [
     path("google-login/", views.google_login_page , name="google_login"),
     path("google-callback/", views.google_callback, name="google_callback"),
     
+
     
     path("profile/", views.profile, name="profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
     
-    path('my-rentals/', views.borrower_dashboard, name='borrower_dashboard'),
+    path('borrower_dashboard/', views.borrower_dashboard, name='borrower_dashboard'),
+    
+    path('payment_page/<int:request_id>/', views.payment_page, name='payment_page'),
     
     path('request/<int:request_id>/<str:action>/', views.respond_to_request, name='respond_to_request'),
     
     path('lender-dashboard/', views.lender_dashboard, name='lender_dashboard'),
     
+        # Initiate Return
+    path("initiate-return/<int:usage_id>/", views.initiate_return, name="initiate_return"),
+    
+    # Confirm Return (Lender)
+    path("confirm-return/<int:usage_id>/", views.confirm_return, name="confirm_return"),
+
     # 2. The Finalize Request (POST action from the confirmation page)
     path('item/<int:item_id>/finalize/', views.finalize_request, name='finalize_request'),
 
@@ -43,7 +53,7 @@ urlpatterns = [
     path('item/<int:item_id>/request/', views.request_item, name='request_item'),
 
     path("my_items/", views.my_items, name="my_items"),
-    # path("item/edit/<int:id>/", views.edit_item, name="edit_item"),
+    path("items/edit/<int:item_id>/", views.edit_item, name="edit_item"),
     
     path('item/<int:item_id>/', views.item_detail, name='item_detail'),
     path("item/delete/<int:id>/", views.delete_item, name="delete_item"),
@@ -64,15 +74,16 @@ urlpatterns = [
 
     
     path('add-item/', add_item, name='add_item'),
+    path("set-city/<str:city>/", views.set_city, name="set_city"),
     path('preview-item/', views.preview_item, name='preview_item'),
     path("confirm/", views.confirm_item, name="confirm_item"),
     path("item_success/<int:item_id>/", views.item_success, name="item_success"),
     
+    path("report/", views.report_issue, name="report_issue"),
+    path("report/<int:item_id>/", views.report_issue, name="report_item"),
+    
     path('browse-items/', browse_items, name='browse_items'),
-    
-    path('about/', about, name='about'),
-    
-    
+    path('about/', about, name='about'),    
     path('contact/', contact, name='contact'),
     path('pricingguide/', pricingguide, name='pricingguide'),
     path('howitworks/', howitworks, name='howitworks'),

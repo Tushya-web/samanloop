@@ -177,42 +177,82 @@ class Item(models.Model):
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="items/")
-
+    
+    
 class item_Request(models.Model):
+
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("accepted", "Accepted"),
+        ("paid", "Paid"),        # ⭐ NEW
+        ("completed", "Completed"),
         ("rejected", "Rejected"),
-        ("completed", "Completed")
     ]
 
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     renter = models.ForeignKey(User, on_delete=models.CASCADE)
+
     start_date = models.DateField()
     end_date = models.DateField()
+
     total_rent = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+
+    status = models.CharField(max_length=20,
+                              choices=STATUS_CHOICES,
+                              default="pending")
+
+    # 🔥 NEW FIELDS
+    payment_status = models.CharField(max_length=20, default="unpaid")
+    payment_id = models.CharField(max_length=200, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
 class item_usage(models.Model):
-    STATUS_CHOICES = [
-        ("active", "Active"),
-        ("completed", "Completed")
-    ]    
+    STATUS_CHOICES = (
+    ('active', 'Active'),
+    ('returning', 'Returning'),
+    ('completed', 'Completed'),
+    )
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     lender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="lent_items")
     renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rented_items")
     start_date = models.DateField()
     end_date = models.DateField()
-    status = models.CharField(max_length=20, choices=item_Request.STATUS_CHOICES, default="pending")
+    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default="active")
     created_at = models.DateTimeField(auto_now_add=True)
     
-class payment(models.Model):
-    item_usage = models.ForeignKey(item_usage, on_delete=models.CASCADE)
-    payment_amt = models.DecimalField(max_digits=7, decimal_places=2)
-    deposit = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+class Payment(models.Model):
+    item_usage = models.ForeignKey(
+        item_usage,
+        on_delete=models.CASCADE
+    )
+    lender = models.ForeignKey(
+    User,
+    on_delete=models.CASCADE,
+    related_name="payments_received",
+    null=True,
+    blank=True
+    )
+
+    borrower = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="payments_made",
+        null=True,
+        blank=True
+    )
+    payment_amt = models.DecimalField(max_digits=10, decimal_places=2)
+    deposit = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
     deposit_status = models.BooleanField(default=False)
     payment_date = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.borrower} → {self.lender} ₹{self.payment_amt}"
+
     
 class Review(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="reviews")
@@ -221,12 +261,27 @@ class Review(models.Model):
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-class query(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+class Query(models.Model):
+    STATUS_CHOICES = [
+        ("open", "Pending Review"),
+        ("in_progress", "Under Investigation"),
+        ("resolved", "Resolved"),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="support_queries")
+    item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True, blank=True, related_name="reports")
     subject = models.CharField(max_length=255)
     message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="open")
+    admin_reply = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Support Queries"
+
+    def __str__(self):
+        return f"{self.subject} - {self.user.email}"
+
 
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -255,5 +310,3 @@ class WalletTransaction(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.transaction_type} - ₹{self.amount}"
-    
-    

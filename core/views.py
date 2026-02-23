@@ -24,6 +24,8 @@ from .firebase_service import firebase_auth, auth, send_firebase_verification, s
 
 from .firebase_service import firebase_login
 
+
+
 def index(request):
 
     user = None
@@ -34,9 +36,27 @@ def index(request):
             user = User.objects.get(email=request.session["user"])
         except:
             pass
+        
+    selected_city = request.session.get("selected_city")
 
-    items = Item.objects.all().order_by('-created_at')[:4]
-    categories = Category.objects.all()
+    # If no city selected, fallback to first available city
+    if not selected_city:
+        first_item = Item.objects.first()
+        if first_item:
+            selected_city = first_item.city
+            request.session["selected_city"] = selected_city
+
+    # Filter items by selected city
+    items = Item.objects.filter(
+    city=selected_city
+    ).order_by('-created_at')[:4]
+
+    # Categories that have items in selected city
+    categories = Category.objects.filter(
+    items__city=selected_city
+    ).distinct()
+
+    
     return render(request, 'index.html', {'items': items, 'user': user, 'categories': categories})
 
 
@@ -80,11 +100,11 @@ def login(request):
             print("LOGIN ERROR:", e)
             messages.error(request, "Invalid login")
     
-    return render(request, "login.html")
+    return render(request, "usera/login.html")
 
 
 def google_login_page(request):
-    return render(request, "google_login.html")
+    return render(request, "usera/google_login.html")
 
 
 def google_callback(request):
@@ -132,10 +152,10 @@ def register(request):
                 messages.error(request, str(e))
     else:
         form = RegisterForm()
-    return render(request, "register.html", {"form": form})
+    return render(request, "usera/register.html", {"form": form})
 
 def forgot_password(request):
-    return render(request, "forgot_password.html")
+    return render(request, "usera/forgot_password.html")
 
 def logout(request):
     auth_logout(request)
@@ -148,68 +168,127 @@ def error404(request):
     return render(request, 'errors/404.html', status=404)
 
 def contact(request):
-    return render(request, "contactsupport.html")
+    return render(request, "pages/contactsupport.html")
 
 def about(request):
-    return render(request, "About.html")
+    return render(request, "pages/About.html")
 
 def pricingguide(request):
-    return render(request, "pricingguide.html")
+    return render(request, "pages/pricingguide.html")
 
 def howitworks(request):
-    return render(request, "howwork.html")
+    return render(request, "pages/howwork.html")
 
 def terms(request):
-    return render(request, "terms.html")
+    return render(request, "pages/terms.html")
 
 def verify_page(request):
-    return render(request, "verify.html")
+    return render(request, "usera/verify.html")
+
+
 
 def lender_dashboard(request):
     if not request.session.get("user"):
         return redirect("login")
 
+    today = timezone.now().date()
+    
     email = request.session["user"]
     user = User.objects.get(email=email)
+    user_wallet, _ = Wallet.objects.get_or_create(user=user)
     # 1. All items listed by this lender
     my_listings = Item.objects.filter(owner=user).order_by('-created_at')
     # 2. Incoming requests from others (Pending approval)
-    incoming_requests = item_Request.objects.filter(item__owner=user, status='pending').order_by('-created_at')
+    incoming_requests = item_Request.objects.filter(item__owner=user).order_by('-created_at')
     # 3. Active loops (Items currently out with borrowers)
-    active_lending = item_usage.objects.filter(lender=user, status='active').order_by('-start_date')
+    active_lending = item_usage.objects.filter(lender=user,status__in=['active', 'returning']).order_by('-start_date')
     # 4. Lending History (Completed loops)
     lending_history = item_usage.objects.filter(lender=user, status='completed').order_by('-end_date')
     
+    earning_logs = Payment.objects.filter(
+    lender=user
+    ).select_related("item_usage__item", "borrower").order_by("-payment_date")
+
+    
     return render(request, "lender_dashboard.html", {
+        "today": today,
+        "wallet_balance": user_wallet.balance,
+        "active_lending": active_lending,
         "my_listings": my_listings,
         "incoming_requests": incoming_requests,
         "active_lending": active_lending,
         "lending_history": lending_history,
+        "earning_logs": earning_logs,
     })
 
+from django.utils import timezone
+from .models import User, item_Request, item_usage
+
+
 def borrower_dashboard(request):
-    # Ensure user is logged in via your session logic
     if not request.session.get("user"):
         return redirect("login")
 
     email = request.session["user"]
     user = User.objects.get(email=email)
-    # 1. Requests sent by the borrower (Pending/Rejected/Accepted)
+    
     sent_requests = item_Request.objects.filter(renter=user).order_by('-created_at')
-    # 2. Items currently being used (Active Usage)
-    active_usage = item_usage.objects.filter(renter=user, status='active').order_by('-start_date')
-    # 3. Past rental history (Completed Usage)
+    
+    # active_usage should include both 'active' and 'returning' so the borrower sees the status
+    active_usage = item_usage.objects.filter(
+        renter=user, 
+        status__in=['active', 'returning'] 
+    ).order_by('-start_date')
+    
     rental_history = item_usage.objects.filter(renter=user, status='completed').order_by('-end_date')
+    
+    # Pass 'today' to the template for the button logic
+    today = timezone.now().date()
+    
     return render(request, "borrower_dashboard.html", {
+        "active_rentals": active_usage,
         "sent_requests": sent_requests,
         "active_usage": active_usage,
         "rental_history": rental_history,
+        "today": today, 
     })
+
+def initiate_return(request, usage_id):
+    usage = get_object_or_404(
+        item_usage, 
+        id=usage_id, 
+        renter__email=request.session['user']
+    )
+
+    today = timezone.now().date()
+
+    if usage.status == 'active' and today >= usage.end_date:
+        usage.status = 'returning'
+        usage.save()
+
+    return redirect('borrower_dashboard')
+
+
+def confirm_return(request, usage_id):
+    usage = get_object_or_404(item_usage, id=usage_id, lender__email=request.session['user'])
+    
+    with transaction.atomic():
+        usage.status = 'completed'
+        usage.save()
+        
+        # Make the item available for rent again
+        item = usage.item
+        # item.availability_status = "available" # or whatever your default string is
+        # item.save()
+    
+    messages.success(request, "Return confirmed! The item is now listed as available again.")
+    return redirect('lender_dashboard')
 
 from django.db.models import Q
 from django.shortcuts import render
-from .models import Item, Category
+from .models import Item, Category, Payment, Query
 from django.db.models import Q
+
 
 def browse_items(request):
     # 1. Fetch all items initially
@@ -244,6 +323,52 @@ def browse_items(request):
     }
     return render(request, 'browse_items.html', context)
 
+from django.db.models import Q
+
+def browse_items(request):
+
+    # 🔹 Get selected city from session
+    selected_city = request.session.get("selected_city")
+
+    # 🔹 Start with city-filtered items
+    if selected_city:
+        items = Item.objects.filter(city=selected_city)
+    else:
+        items = Item.objects.all()
+
+    categories = Category.objects.all()
+
+    # 🔍 Handle Search
+    query = request.GET.get('q')
+    if query:
+        items = items.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(brand__icontains=query)
+        )
+
+    # 🎯 Handle Category Filter
+    category_name = request.GET.get('category')
+    if category_name:
+        items = items.filter(category__name=category_name)
+
+    # 💰 Handle Sorting
+    sort_by = request.GET.get('sort')
+    if sort_by == 'low':
+        items = items.order_by('rent_per_day')
+    elif sort_by == 'high':
+        items = items.order_by('-rent_per_day')
+    else:
+        items = items.order_by('-created_at')
+
+    context = {
+        'items': items,
+        'categories': categories,
+        'selected_city': selected_city,
+        'search_query': query,
+    }
+
+    return render(request, 'browse_items.html', context)
 
 def check_verified(request):
     email = request.session.get("pending_email")
@@ -268,7 +393,7 @@ def profile(request):
         return redirect("/login/?next=/profile/")
     email = request.session.get("user")
     user = User.objects.get(email=email)
-    return render(request, "profile.html", {
+    return render(request, "usera/profile.html", {
         "user": user
     })
     
@@ -298,7 +423,7 @@ def edit_profile(request):
         messages.success(request, "Success! Your profile settings have been updated.")
         return redirect("profile")
 
-    return render(request, "edit_profile.html", {"user": user})
+    return render(request, "usera/edit_profile.html", {"user": user})
 
 def my_items(request):
     email = request.session.get("user")
@@ -306,7 +431,7 @@ def my_items(request):
 
     items = Item.objects.filter(owner=user).only("id")
 
-    return render(request, "my_items.html", {"items": items})
+    return render(request, "items/my_items.html", {"items": items})
 
 
 def delete_item(request, id):
@@ -343,7 +468,7 @@ def category_items(request, id):
     
     # -----------------------------
 
-    return render(request, 'category_items.html', {
+    return render(request, 'items/category_items.html', {
         'category': category,
         'all_categories': all_categories, # Necessary for the circular icons
         'items': items,
@@ -353,6 +478,10 @@ def category_items(request, id):
     })
 
 from core.models import Category
+
+def set_city(request, city):
+    request.session["selected_city"] = city
+    return JsonResponse({"status": "success"})
 
 def add_item(request):
     email = request.session.get("user")
@@ -397,7 +526,7 @@ def add_item(request):
     # GET request
     categories = Category.objects.all()
 
-    return render(request, "add_item.html", {
+    return render(request, "items/add_item.html", {
         "user_city": user.city,
         "categories": categories
     })
@@ -452,7 +581,7 @@ def preview_item(request):
             )
             request.session['temp_images'].append(path)
 
-        return render(request, "add_item_preview.html", {
+        return render(request, "items/add_item_preview.html", {
             "data": request.session['item_data'],
             "images": request.session['temp_images'],
             "category_obj": category_obj,
@@ -541,9 +670,40 @@ from django.utils.timezone import now
 def item_success(request, item_id):
     item = get_object_or_404(Item, id=item_id)
 
-    return render(request, "item_success.html", {
+    return render(request, "items/item_success_added.html", {
         "item": item
     })
+
+
+
+from .forms import ItemForm
+def edit_item(request, item_id):
+    email = request.session.get("user")
+    user = User.objects.get(email=email)
+
+    item = get_object_or_404(Item, id=item_id, owner=user)
+
+    if request.method == "POST":
+        form = ItemForm(request.POST, request.FILES, instance=item)
+
+        if form.is_valid():
+            item = form.save()
+
+            # 🔥 SAVE NEW IMAGE
+            if request.FILES.get("images"):
+                for img in request.FILES.getlist("images"):
+                    ItemImage.objects.create(item=item, image=img)
+
+            return redirect("my_items")
+
+        else:
+            print(form.errors)
+
+    else:
+        form = ItemForm(instance=item)
+
+    return render(request, "items/edit_item.html", {"form": form, "item": item})
+
 
 def item_detail(request, item_id):
     item = get_object_or_404(Item, id=item_id)
@@ -551,7 +711,7 @@ def item_detail(request, item_id):
     reviews = Review.objects.filter(item=item).order_by('-created_at')
     today_date = now().date()
 
-    return render(request, "item_detail.html", {
+    return render(request, "items/item_detail.html", {
         "item": item,
         "images": images,
         "reviews": reviews,
@@ -580,7 +740,7 @@ def request_item(request, item_id):
         total_rent = total_days * float(item.rent_per_day)
         grand_total = total_rent + float(item.deposit_amount)
 
-        return render(request, "request_item.html", {
+        return render(request, "items/request_item.html", {
             "item": item,
             "start_date": start_date,
             "end_date": end_date,
@@ -592,33 +752,65 @@ def request_item(request, item_id):
     # If accessed directly without dates, redirect back
     return redirect('item_detail', item_id=item_id)
 
+
 def finalize_request(request, item_id):
+
     email = request.session["user"]
     user = User.objects.get(email=email)
-    
+
     if request.method == "POST":
         item = get_object_or_404(Item, id=item_id)
-        
-        # Get data from hidden inputs
-        start_date = request.POST.get("start_date")
-        end_date = request.POST.get("end_date")
-        total_rent = request.POST.get("total_rent")
-        
-        # 1. Create the Request in Database
+
+        start_date = datetime.strptime(request.POST.get("start_date"), "%Y-%m-%d").date()
+        end_date = datetime.strptime(request.POST.get("end_date"), "%Y-%m-%d").date()
+
+        total_days = (end_date - start_date).days + 1
+        total_rent = total_days * float(item.rent_per_day)
+        grand_total = total_rent + float(item.deposit_amount)
+
+        # 🔥 CHECK CONFLICT IN ACTIVE USAGE
+        conflict = item_usage.objects.filter(
+            item=item,
+            status__in=["active", "returning"]
+        ).filter(
+            start_date__lte=end_date,
+            end_date__gte=start_date
+        ).exists()
+
+        # 🔥 CHECK CONFLICT IN REQUESTS
+        request_conflict = item_Request.objects.filter(
+            item=item,
+            status__in=["pending", "accepted", "paid"]
+        ).filter(
+            start_date__lte=end_date,
+            end_date__gte=start_date
+        ).exists()
+
+        if conflict or request_conflict:
+            messages.error(request, "⚠ This item is already booked for selected dates.")
+
+            return render(request, "items/request_item.html", {
+                "item": item,
+                "start_date": start_date,
+                "end_date": end_date,
+                "total_days": total_days,
+                "total_rent": total_rent,
+                "grand_total": grand_total
+            })
+
+        # ✅ CREATE REQUEST
         item_Request.objects.create(
             item=item,
-            renter=user, # Ensure user is logged in
+            renter=user,
             start_date=start_date,
             end_date=end_date,
             total_rent=total_rent,
             status="pending"
         )
-        
-        # 2. Trigger the Toast Message
-        messages.success(request, f"Request for {item.name} sent successfully! The owner will respond soon.")
-        
-        # 3. Redirect to User's Dashboard or current page
-        return redirect('item_detail', item_id=item.id)
+
+        messages.success(request, f"Request for {item.name} sent successfully!")
+
+        return redirect("item_detail", item_id=item.id)
 
 def submit_review(request, item_id):
     email = request.session["user"]
@@ -633,8 +825,6 @@ def submit_review(request, item_id):
         # Create the review
         Review.objects.create(
             item=item,
-            email = request.session["user"],
-            user = User.objects.get(email=email),    
             reviewer=user,
             rating=rating,
             comment=comment
@@ -643,10 +833,7 @@ def submit_review(request, item_id):
 
 def respond_to_request(request, request_id, action):
 
-    if not request.session.get("user"):
-        return redirect("login")
-
-    email = request.session["user"]
+    email = request.session.get("user")
     user = User.objects.get(email=email)
 
     rental_request = get_object_or_404(item_Request, id=request_id)
@@ -654,27 +841,137 @@ def respond_to_request(request, request_id, action):
     if rental_request.item.owner != user:
         return redirect("lender_dashboard")
 
-    if action == 'accept':
-        rental_request.status = 'accepted'
+    if action == "accept":
+        rental_request.status = "accepted"
         rental_request.save()
 
-        item_usage.objects.create(
-            item=rental_request.item,
-            renter=rental_request.renter,
-            lender=user,
-            start_date=rental_request.start_date,
-            end_date=rental_request.end_date,
-            status='active'
-        )
-
-    elif action == 'reject':
-        rental_request.status = 'rejected'
+    elif action == "reject":
+        rental_request.status = "rejected"
         rental_request.save()
 
-    return redirect('lender_dashboard')
+    return redirect("lender_dashboard")
 
-def browse_items(request):
-    return render(request, "browse_items.html")
+from django.db import transaction
+
+def payment_page(request, request_id):
+
+    email = request.session.get("user")
+    user = User.objects.get(email=email)
+
+    req = get_object_or_404(
+        item_Request,
+        id=request_id,
+        renter=user
+    )
+
+    # 🔒 prevent double payment
+    if req.status != "accepted":
+        messages.error(request, "This request is not available for payment.")
+        return redirect("borrower_dashboard")
+
+    wallet, _ = Wallet.objects.get_or_create(user=user)
+
+    total_amount = req.total_rent + req.item.deposit_amount
+
+    if request.method == "POST":
+
+        payment_mode = request.POST.get("payment_mode")
+
+        # =========================
+        # 💰 WALLET PAYMENT
+        # =========================
+        if payment_mode == "wallet":
+
+            if wallet.balance < total_amount:
+                messages.error(request, "Not enough wallet balance.")
+                return redirect("payment_page", request_id=req.id)
+
+            owner_wallet, _ = Wallet.objects.get_or_create(
+                user=req.item.owner
+            )
+
+            with transaction.atomic():
+            
+                # 🔻 Deduct from borrower
+                wallet.balance -= total_amount
+                wallet.save()
+
+                WalletTransaction.objects.create(
+                    user=user,
+                    amount=total_amount,
+                    transaction_type="debit",
+                    description=f"Rental payment for {req.item.name}"
+                )
+
+                # 🔺 Add rent to owner (NOT deposit)
+                owner_wallet.balance += req.total_rent
+                owner_wallet.save()
+
+                WalletTransaction.objects.create(
+                    user=req.item.owner,
+                    amount=req.total_rent,
+                    transaction_type="credit",
+                    description=f"Rental income from {req.item.name}"
+                )
+
+                # 💳 Mark request paid
+                req.status = "paid"
+                req.payment_status = "paid"
+                req.payment_id = "WALLET_TXN"
+                req.save()
+        
+        elif payment_mode == "external":
+
+            req.status = "paid"
+            req.payment_status = "paid"
+            req.payment_id = "EXT_TEST_123"
+            req.save()
+
+        else:
+            messages.error(request, "Invalid payment method.")
+            return redirect("payment_page", request_id=req.id)
+
+        # =========================
+        # CREATE ACTIVE USAGE
+        # =========================
+        if not item_usage.objects.filter(
+            item=req.item,
+            renter=req.renter,
+            status="active"
+        ).exists():
+        
+            usage = item_usage.objects.create(
+                item=req.item,
+                lender=req.item.owner,
+                renter=req.renter,
+                start_date=req.start_date,
+                end_date=req.end_date,
+                status="active"
+            )
+        
+            # 💰 CREATE PAYMENT RECORD (ADD HERE)
+            Payment.objects.create(
+                item_usage=usage,
+                lender=req.item.owner,
+                borrower=req.renter,
+                payment_amt=req.total_rent,
+                deposit=req.item.deposit_amount,
+                deposit_status=False
+            )
+        
+        # req.item.availability_status = "in use"
+        # req.item.save()
+
+        messages.success(request, "Payment successful!")
+        return redirect("borrower_dashboard")
+
+    return render(request, "payment_page.html", {
+        "req": req,
+        "wallet": wallet,
+        "total_amount": total_amount
+    })
+
+
 
 def wallet(request):
     return render(request, "wallet.html")
@@ -683,19 +980,21 @@ def wallet(request):
 def add_money(request):
     if request.method == "POST":
         amount = float(request.POST["amount"])
+        
+        user = User.objects.get(email=request.session["user"])
         email = request.session["user"]
-        user = User.objects.get(email=email)
-        wallet = Wallet.objects.get(user=user)
+        wallet, _ = Wallet.objects.get_or_create(user=user)
 
         wallet.balance += amount
         wallet.save()
 
         WalletTransaction.objects.create(
-            user=request.user,
-            amount=amount,
-            transaction_type="credit",
-            description="Wallet Top-up"
-        )
+        user=user,
+        amount=amount,
+        transaction_type="credit",
+        description="Wallet Top-up"
+    )
+
 
     return redirect("wallet")
 
@@ -713,10 +1012,55 @@ def withdraw_money(request):
             wallet.save()
 
             WalletTransaction.objects.create(
-                user=request.user,
+                user=user,
                 amount=amount,
                 transaction_type="debit",
                 description="Withdrawal Request"
             )
 
     return redirect("wallet")
+
+def report_issue(request, item_id=None):
+    email = request.session.get("user")
+    if not email:
+        return redirect("login")
+
+    user = User.objects.get(email=email)
+    
+    # Fetch items currently being used by the user for the dropdown
+    # We filter 'item_usage' where the renter is the user and status is active
+    active_rentals = item_usage.objects.filter(renter=user, status='active').select_related('item')
+    user_items = [usage.item for usage in active_rentals]
+
+    item = None
+    if item_id:
+        item = get_object_or_404(Item, id=item_id)
+
+    report_history = Query.objects.filter(user=user).order_by('-created_at')
+
+    if request.method == "POST":
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        # Get item from the dropdown if not provided in URL
+        selected_item_id = request.POST.get("selected_item")
+        
+        final_item = item
+        if not final_item and selected_item_id:
+            final_item = get_object_or_404(Item, id=selected_item_id)
+
+        Query.objects.create(
+            user=user,
+            item=final_item,
+            subject=subject,
+            message=message,
+            status="open"
+        )
+
+        messages.success(request, "Your report has been logged and sent to the Admin team.")
+        return redirect("report_issue")
+
+    return render(request, "report_page.html", {
+        "item": item,
+        "user_items": user_items,
+        "history": report_history
+    })
