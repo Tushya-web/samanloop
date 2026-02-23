@@ -9,9 +9,9 @@
 
   <script>
   const firebaseConfig = {
-      apiKey: "YOUR_WEB_API_KEY",
-      authDomain: "YOUR.firebaseapp.com",
-      projectId: "YOUR_ID",
+    "apiKey": os.getenv("FIREBASE_API_KEY"),
+    "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+    "projectId": os.getenv("FIREBASE_PROJECT_ID"),
   };
 
   firebase.initializeApp(firebaseConfig);
