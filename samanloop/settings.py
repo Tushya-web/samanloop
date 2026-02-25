@@ -13,12 +13,14 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-^-e_+3qx#kn3us16q%2ajkh_tezmw))vsbjb!!jmiq3^(3fu2n'
 
+AUTH_USER_MODEL = 'core.User'
 
 CSRF_FAILURE_VIEW = 'core.views.custom_csrf_failure'
 
@@ -48,8 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
-    
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -87,13 +88,11 @@ WSGI_APPLICATION = 'samanloop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-import dj_database_url
-import os
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
 # Password validation
@@ -208,7 +207,7 @@ JAZZMIN_SETTINGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "core.User"
+
 
 
 LOGIN_URL = "login"
