@@ -13,19 +13,3 @@ firebase-admin
 requests
 dj-database-url
 psycopg2-binary
-
-pip install asgiref==3.11.0
-pip install Django==6.0.1
-pip install django-jazzmin==3.0.1
-pip install gunicorn==23.0.0
-pip install packaging==25.0
-pip install pillow==12.1.0
-pip install python-dotenv==1.2.1
-pip install sqlparse==0.5.5
-pip install tzdata==2025.3
-pip install 
-pip install whitenoise
-pip install firebase-admin
-pip install requests
-pip install dj-database-url
-pip install psycopg2-binary
