@@ -48,8 +48,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_verified = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
 
+    upi_id = models.CharField(max_length=100, blank=True, null=True)
+    upi_verified = models.BooleanField(default=False)
+    
     wallet_balance = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0.00
+    max_digits=10, decimal_places=2, default=0.00
     )
 
     is_active = models.BooleanField(default=True)
@@ -222,34 +225,44 @@ class item_usage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
 class Payment(models.Model):
+
     item_usage = models.ForeignKey(
         item_usage,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="payments"
     )
+
     lender = models.ForeignKey(
-    User,
-    on_delete=models.CASCADE,
-    related_name="payments_received",
-    null=True,
-    blank=True
+        User,
+        on_delete=models.CASCADE,
+        related_name="payments_received"
     )
 
     borrower = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="payments_made",
-        null=True,
-        blank=True
+        related_name="payments_made"
     )
-    payment_amt = models.DecimalField(max_digits=10, decimal_places=2)
+
+    # 💰 Rent amount transferred to lender
+    payment_amt = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    # 🔒 Deposit amount held in escrow
     deposit = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        null=True,
-        blank=True
+        default=Decimal("0.00")
     )
-    deposit_status = models.BooleanField(default=False)
+
+    # 🔐 Escrow state
+    deposit_locked = models.BooleanField(default=True)
+    deposit_status = models.BooleanField(default=False)  # refunded or not
+
     payment_date = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return f"{self.borrower} → {self.lender} ₹{self.payment_amt}"
 

@@ -853,6 +853,34 @@ def respond_to_request(request, request_id, action):
 
 from django.db import transaction
 
+import re
+
+def validate_upi(upi):
+    pattern = r'^[\w\.\-]+@[\w]+$'
+    return re.match(pattern, upi)
+
+def add_upi(request):
+
+    email = request.session.get("user")
+    user = User.objects.get(email=email)
+
+    if request.method == "POST":
+        upi = request.POST.get("upi_id")
+
+        if not validate_upi(upi):
+            messages.error(request, "Invalid UPI format.")
+            return redirect("profile")
+
+        # Simulated verification
+        user.upi_id = upi
+        user.upi_verified = True
+        user.save()
+
+        messages.success(request, "UPI verified successfully.")
+
+    return redirect("profile")
+
+
 def payment_page(request, request_id):
 
     email = request.session.get("user")
