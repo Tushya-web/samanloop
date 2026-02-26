@@ -203,6 +203,56 @@
             .gallery-section { padding: 15px; }
             .main-img-wrap { border-radius: 15px; }
         }
+        /* Enhanced UPI Input */
+.upi-input-group {
+    background: #fff5f5;
+    border: 1px solid #fee2e2;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.upi-input-group:focus-within {
+    border-color: #f87171;
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1);
+}
+
+.form-control-upi {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.form-control-upi:focus {
+    border-color: var(--brand-teal);
+    box-shadow: none;
+    background: white;
+}
+
+/* Error State */
+.is-invalid-upi {
+    border-color: #dc3545 !important;
+    background-image: none !important;
+}
+
+.error-feedback {
+    color: #dc3545;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
+    display: none; /* Hidden by default */
+}
+
+/* Shake Animation for Errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+.shake { animation: shake 0.2s ease-in-out 0s 2; }
     </style>
 </head>
 <body>
@@ -311,14 +361,43 @@
                     {% if data.allow_delivery %}<span class="badge border text-dark fw-normal p-2 px-3 rounded-pill"><i class="bi bi-truck me-1 text-teal"></i> Delivery</span>{% endif %}
                 </div>
 
-                <form method="POST" action="{% url 'confirm_item' %}" class="d-flex gap-3 action-form">
+                
+
+                <form method="POST" action="{% url 'confirm_item' %}" id="publishForm" class="action-form">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-confirm flex-grow-1">
-                        Confirm & Publish Listing <i class="bi bi-rocket-takeoff ms-2"></i>
-                    </button>
-                    <a href="{% url 'add_item' %}" class="btn btn-edit">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
+
+                    {% if not request.user.upi_id %}
+                    <div class="upi-input-group mb-4" id="upiContainer">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="bg-danger bg-opacity-10 p-2 rounded-circle">
+                                <i class="bi bi-wallet2 text-danger"></i>
+                            </div>
+                            <h6 class="fw-bold mb-0">Payout Information</h6>
+                        </div>
+                        <p class="text-muted small mb-3">We need your UPI ID to transfer the rental earnings to your account.</p>
+
+                        <input type="text" 
+                               name="upi_id" 
+                               id="upi_id"
+                               class="form-control form-control-upi" 
+                               placeholder="username@bank" 
+                               required>
+                        <div id="upiError" class="error-feedback">
+                            <i class="bi bi-exclamation-circle-fill me-1"></i> Please enter a valid UPI ID (e.g., name@okaxis)
+                        </div>
+                    </div>
+                    {% endif %}
+                
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-confirm flex-grow-1 py-3">
+                            <span>Confirm & Publish Listing</span>
+                            <i class="bi bi-rocket-takeoff ms-2"></i>
+                        </button>
+
+                        <a href="{% url 'add_item' %}" class="btn btn-edit d-flex align-items-center justify-content-center" title="Edit Listing">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -339,6 +418,33 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         L.circle([lat, lng], { color: '#20c997', fillColor: '#20c997', fillOpacity: 0.2, radius: 400 }).addTo(map);
     });
+    document.getElementById('publishForm').addEventListener('submit', function(e) {
+    const upiInput = document.getElementById('upi_id');
+    const upiError = document.getElementById('upiError');
+    const upiContainer = document.getElementById('upiContainer');
+
+    if (upiInput) {
+        // Simple regex for UPI: matches alphanumeric@provider
+        const upiPattern = /^[\w.-]+@[\w.-]+$/;
+        
+        if (!upiPattern.test(upiInput.value)) {
+            e.preventDefault(); // Stop form
+            
+            // UI Feedback
+            upiInput.classList.add('is-invalid-upi');
+            upiError.style.display = 'block';
+            upiContainer.classList.add('shake');
+            
+            // Remove shake class after animation so it can trigger again
+            setTimeout(() => {
+                upiContainer.classList.remove('shake');
+            }, 500);
+        } else {
+            upiInput.classList.remove('is-invalid-upi');
+            upiError.style.display = 'none';
+        }
+    }
+});
 </script>
 
 </body>

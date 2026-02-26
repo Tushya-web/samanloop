@@ -140,6 +140,7 @@
 
 {% include 'base/navbar.html' %}
 
+<br><br>
 <div class="hero-gradient">
     <div class="container">
         <div class="row align-items-center">
@@ -306,11 +307,30 @@
                         </div>
                         <div class="col-md-4 text-md-end mt-3 mt-md-0">
                             {% if active.status == 'returning' %}
-                                <form action="{% url 'confirm_return' active.id %}" method="POST" class="d-inline">
+                                <form action="{% url 'confirm_return' active.id %}" method="POST" class="d-flex flex-wrap gap-2 justify-content-md-end">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-success btn-sm rounded-pill px-4 fw-bold py-2 shadow-sm">
-                                        Confirm Return & Get Paid
+
+                                    <button type="submit"
+                                            name="return_action"
+                                            value="received"
+                                            class="btn btn-success btn-sm rounded-pill px-3 fw-bold py-2 shadow-sm">
+                                        ✅ Item Received
                                     </button>
+                                
+                                    <button type="submit"
+                                            name="return_action"
+                                            value="defective"
+                                            class="btn btn-warning btn-sm rounded-pill px-3 fw-bold py-2 shadow-sm">
+                                        ⚠ Defective
+                                    </button>
+                                
+                                    <button type="submit"
+                                            name="return_action"
+                                            value="not_received"
+                                            class="btn btn-danger btn-sm rounded-pill px-3 fw-bold py-2 shadow-sm">
+                                        ❌ Money Not Received
+                                    </button>
+                                
                                 </form>
                             {% else %}
                                 <div class="status-badge status-active d-inline-flex align-items-center gap-2">
@@ -337,7 +357,9 @@
                             <tr class="small text-muted text-uppercase fw-bold">
                                 <th class="ps-4 py-3 border-0">Asset</th>
                                 <th class="py-3 border-0">Renter</th>
-                                <th class="py-3 border-0">Net Income</th>
+                                <th class="py-3 border-0">Rent</th>
+                                <th class="py-3 border-0">Deposit</th>
+                                <th class="py-3 border-0">Deposit Status</th>
                                 <th class="pe-4 py-3 border-0 text-end">Date</th>
                             </tr>
                         </thead>
@@ -345,19 +367,62 @@
                             {% for log in earning_logs %}
                             <tr>
                                 <td class="ps-4">
-                                    <span class="fw-bold text-dark d-block">{{ log.item_usage.item.name }}</span>
+                                    <span class="fw-bold text-dark d-block">
+                                        {{ log.item_usage.item.name }}
+                                    </span>
                                     <small class="text-muted">Loop #{{ log.item_usage.id }}</small>
                                 </td>
+                            
                                 <td>{{ log.borrower.name }}</td>
-                                <td><span class="text-success fw-bold">+₹{{ log.payment_amt }}</span></td>
-                                <td class="pe-4 text-end text-muted small">{{ log.payment_date|date:"M d, Y" }}</td>
+                            
+                                <!-- Rent -->
+                                <td>
+                                    <span class="text-success fw-bold">
+                                        +₹{{ log.payment_amt }}
+                                    </span>
+                                </td>
+                            
+                                <!-- Deposit Amount -->
+                                <td>
+                                    ₹{{ log.deposit }}
+                                </td>
+                            
+                                <!-- Deposit Status -->
+                                <td>
+                                {% if log.deposit_state == "returned_full" %}
+                                    <span class="badge bg-success">
+                                        Full Returned
+                                    </span>
+                                
+                                {% elif log.deposit_state == "returned_half" %}
+                                    <span class="badge bg-warning text-dark">
+                                        50% Deducted
+                                    </span>
+                                
+                                {% elif log.deposit_state == "dispute" %}
+                                    <span class="badge bg-danger">
+                                        Dispute Pending
+                                    </span>
+                                
+                                {% else %}
+                                    <span class="badge bg-info">
+                                        Held
+                                    </span>
+                                {% endif %}
+                            </td>
+                            
+                                <td class="pe-4 text-end text-muted small">
+                                    {{ log.payment_date|date:"M d, Y" }}
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4" class="text-center py-5 text-muted">No earnings history yet.</td>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    No earnings history yet.
+                                </td>
                             </tr>
                             {% endfor %}
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>

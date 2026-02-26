@@ -2,148 +2,355 @@
 {% load static %}
 
 {% block extrahead %}
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    :root {
+        --brand-teal: #20c997;
+        --brand-teal-dark: #1ba87e;
+        --navy-dark: #0a192f;
+        --navy-light: #1e293b;
+        --border-color: #f1f5f9;
+        --bg-body: #f8fafc;
+        --glass-bg: rgba(255, 255, 255, 0.9);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--navy-dark);
+    }
+
+    /* Layout Enhancements */
+    .dashboard-wrapper {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Typography */
+    .uppercase-tracking {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #64748b;
+    }
+
+    /* Header Styling */
+    .admin-logo-container img {
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+    }
+
+    .status-pulse {
+        width: 8px;
+        height: 8px;
+        background: var(--brand-teal);
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 rgba(32, 201, 151, 0.4);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(32, 201, 151, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(32, 201, 151, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(32, 201, 151, 0); }
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    /* Revenue Hero Styling */
+    .revenue-hero {
+        background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-light) 100%);
+        color: white;
+        border-radius: 24px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+    .revenue-hero::after {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: rgba(32, 201, 151, 0.1);
+        border-radius: 50%;
+    }
+
+    /* Management Desk Grid */
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .quick-action-btn {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem;
+        background: white;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        transition: all 0.25s ease;
+        text-decoration: none !important;
+    }
+    .quick-action-btn:hover {
+        border-color: var(--brand-teal);
+        background: #f0fdfa;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+    .quick-action-btn i {
+        margin-bottom: 0.75rem;
+        transition: transform 0.3s ease;
+    }
+    .quick-action-btn:hover i {
+        transform: scale(1.1);
+    }
+
+    /* Recent Users List */
+    .user-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f8fafc;
+    }
+    .user-row:last-child { border-bottom: none; }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    /* Progress & Inventory */
+    .inventory-card {
+        background: white;
+        border-radius: 24px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+    }
+    .progress {
+        background-color: #f1f5f9;
+        height: 8px;
+        border-radius: 10px;
+        overflow: visible;
+    }
+    .progress-bar {
+        background: linear-gradient(90deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
+        border-radius: 10px;
+        position: relative;
+    }
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: -4px;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border: 3px solid var(--brand-teal);
+        border-radius: 50%;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-
-
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-5">
+<div class="dashboard-wrapper container-fluid py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
         <div class="admin-logo-container">
-            <img src="{% static 'images/logo.png' %}" height="100px" width="320px" alt="SamanLoop Logo" class="admin-logo">
-            <h4 class="brand-text">Command Center</h4>
+            <img src="{% static 'images/logo.png' %}" height="60px" alt="SamanLoop Logo" class="admin-logo mb-2">
+            <h5 class="fw-bold text-navy-dark m-0" style="letter-spacing: -0.5px;">Command Center <span class="text-muted fw-normal">/ Overview</span></h5>
         </div>
-        <div class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-sm d-flex align-items-center">
-            <span class="status-pulse me-2"></span>
-            <span class="small fw-bold">Live Fleet Status</span>
+        <div>
+            <div class="badge bg-white text-dark border-0 p-2 px-3 rounded-pill shadow-sm d-flex align-items-center">
+                <span class="status-pulse me-2"></span>
+                <span class="uppercase-tracking">Live Fleet Status</span>
+            </div>
         </div>
     </div>
 
-    <div class="row mb-4 g-3">
-        <div class="col-md-3">
-            <div class="stat-card p-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="icon-box" style="background: rgba(10, 25, 47, 0.05); color: var(--navy-dark);"><i class="bi bi-people-fill"></i></div>
+    <div class="row mb-5 g-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h3 class="mb-0 fw-bold">{{ total_users }}</h3>
-                        <small class="text-muted fw-bold uppercase" style="font-size: 10px;">Lender Base</small>
+                        <p class="uppercase-tracking mb-1">Lender Base</p>
+                        <h2 class="fw-800 mb-0">{{ total_users }}</h2>
+                    </div>
+                    <div class="icon-box bg-soft-navy text-navy-dark" style="background: #f1f5f9;"><i class="bi bi-people"></i></div>
+                </div>
+                <div class="mt-3">
+                    <span class="text-success small fw-bold"><i class="bi bi-arrow-up"></i> 12%</span>
+                    <span class="text-muted small ms-1">vs last month</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="uppercase-tracking mb-1">Assets in Loop</p>
+                        <h2 class="fw-800 mb-0">{{ total_items }}</h2>
+                    </div>
+                    <div class="icon-box bg-soft-teal text-teal" style="background: #f0fdfa; color: var(--brand-teal);"><i class="bi bi-box-seam"></i></div>
+                </div>
+                <div class="mt-3">
+                    <span class="text-success small fw-bold"><i class="bi bi-check2-circle"></i> Healthy</span>
+                    <span class="text-muted small ms-1">Catalog Status</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-12">
+            <div class="revenue-hero h-100 d-flex flex-column justify-content-center">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <p class="uppercase-tracking text-white-50 mb-1">Gross Loop Value (GLV)</p>
+                        <h1 class="display-5 fw-800 mb-0">₹{{ total_revenue }}</h1>
+                    </div>
+                    <div class="col-4 text-end">
+                        <div class="display-4 opacity-25"><i class="bi bi-graph-up-arrow"></i></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stat-card p-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="icon-box" style="background: rgba(27, 168, 126, 0.05); color: var(--brand-teal-dark);"><i class="bi bi-arrow-repeat"></i></div>
-                    <div>
-                        <h3 class="mb-0 fw-bold">{{ total_items }}</h3>
-                        <small class="text-muted fw-bold uppercase" style="font-size: 10px;">Assets in Loop</small>
-                    </div>
-                </div>
-            </div>
+    </div>
+
+    <div class="mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <h6 class="uppercase-tracking m-0">Management Desk</h6>
+            <div class="flex-grow-1 ms-3 border-bottom opacity-10"></div>
         </div>
-        <div class="col-md-6">
-            <div class="revenue-hero shadow-sm">
-                <div>
-                    <small class="opacity-75 fw-bold uppercase" style="font-size: 11px; letter-spacing: 2px;">Gross Loop Value (GLV)</small>
-                    <h1 class="display-6 fw-bold mb-0">₹{{ total_revenue }}</h1>
-                </div>
-                <div class="text-end d-none d-md-block opacity-25">
-                    <i class="bi bi-currency-exchange fs-1 text-white"></i>
-                </div>
-            </div>
+        
+        <div class="action-grid">
+            <a href="/admin/core/user/" class="quick-action-btn">
+                <i class="bi bi-person-badge text-navy-dark fs-4"></i>
+                <span class="fw-bold text-navy-dark">Verified Owners</span>
+                <small class="text-muted">Manage Lender profiles</small>
+            </a>
+            <a href="/admin/core/item_request/?status__exact=pending" class="quick-action-btn">
+                <i class="bi bi-lightning-charge text-warning fs-4"></i>
+                <span class="fw-bold text-navy-dark">Item Requests</span>
+                <small class="text-warning fw-600">{{ pending_requests }} pending approval</small>
+            </a>
+            <a href="/admin/core/payment/?deposit_status__exact=0" class="quick-action-btn">
+                <i class="bi bi-shield-check text-danger fs-4"></i>
+                <span class="fw-bold text-navy-dark">Escrow Vault</span>
+                <small class="text-muted">Security deposits</small>
+            </a>
+            <a href="/admin/core/wallet/" class="quick-action-btn">
+                <i class="bi bi-bank text-success fs-4"></i>
+                <span class="fw-bold text-navy-dark">Settlements</span>
+                <small class="text-muted">Financial pipeline</small>
+            </a>
+            <a href="/admin/core/query/" class="quick-action-btn">
+                <i class="bi bi-headset text-primary fs-4"></i>
+                <span class="fw-bold text-navy-dark">Support Desk</span>
+                <small class="text-muted">Active tickets</small>
+            </a>
         </div>
     </div>
 
-    <h6 class="fw-bold mb-3 text-navy-dark uppercase" style="letter-spacing: 1px; font-size: 11px; opacity: 0.6;">Management Desk</h6>
-    <div class="action-grid">
-        <a href="/admin/core/user/" class="quick-action-btn">
-            <i class="bi bi-person-plus-fill text-dark fs-4"></i>
-            <div><span class="fw-bold d-block">View Users</span><small class="text-muted">Register Verified Owner</small></div>
-        </a>
-        <a href="/admin/core/item_request/?status__exact=pending" class="quick-action-btn">
-            <i class="bi bi-lightning-charge-fill text-warning fs-4"></i>
-            <div><span class="fw-bold d-block">item Requests</span><small class="text-muted">{{ pending_requests }} new requests</small></div>
-        </a>
-        <a href="/admin/core/payment/?deposit_status__exact=0" class="quick-action-btn">
-            <i class="bi bi-shield-lock-fill text-danger fs-4"></i>
-            <div><span class="fw-bold d-block">Escrow Vault</span><small class="text-muted">Security Deposits</small></div>
-        </a>
-        <a href="/admin/core/wallet/" class="quick-action-btn">
-            <i class="bi bi-wallet2 text-success fs-4"></i>
-            <div><span class="fw-bold d-block">Settlements</span><small class="text-muted">Payout Pipeline</small></div>
-        </a>
-        <a href="/admin/core/query/" class="quick-action-btn">
-            <i class="bi bi-chat-left-dots-fill text-primary fs-4"></i>
-            <div><span class="fw-bold d-block">Support Desk</span><small class="text-muted">Unresolved Queries</small></div>
-        </a>
-        <a href="/admin/core/item/" class="quick-action-btn">
-            <i class="bi bi-box-seam text-secondary fs-4"></i>
-            <div><span class="fw-bold d-block">Inventory</span><small class="text-muted">Item Catalog</small></div>
-        </a>
-    </div>
-
-    <div class="row">
+    <div class="row g-4">
         <div class="col-lg-8">
-            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+            <div class="stat-card h-100">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h6 class="fw-bold m-0 text-navy-dark">High-Active Lenders</h6>
-                    <a href="/admin/core/user/" class="btn btn-sm btn-link text-decoration-none text-teal fw-bold" style="color: var(--brand-teal-dark);">View All</a>
+                    <h6 class="fw-bold m-0">High-Active Lenders</h6>
+                    <a href="/admin/core/user/" class="btn btn-sm px-3 rounded-pill btn-light fw-bold text-teal" style="color: var(--brand-teal-dark);">View Full List</a>
                 </div>
-                {% for user in recent_users %}
-                <div class="user-row">
-                    <div class="d-flex align-items-center gap-3">
-                        <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=0a192f&color=fff" class="user-avatar">
-                        <div>
-                            <span class="fw-bold d-block" style="font-size: 14px;">{{ user.name }}</span>
-                            <small class="text-muted" style="font-size: 11px;"><i class="bi bi-geo-alt"></i> {{ user.city|default:"Gujarat Hub" }}</small>
+                <div class="table-responsive">
+                    {% for user in recent_users %}
+                    <div class="user-row">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=0a192f&color=fff&rounded=true" class="user-avatar">
+                            <div>
+                                <span class="fw-bold d-block" style="font-size: 0.9rem;">{{ user.name }}</span>
+                                <small class="text-muted"><i class="bi bi-geo-alt"></i> {{ user.city|default:"Mehsana Hub" }}</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="text-end">
+                                <span class="fw-bold text-navy-dark d-block" style="font-size: 0.9rem;">₹{{ user.wallet_balance }}</span>
+                                {% if user.email_verified %}
+                                    <span class="badge bg-soft-teal p-0 text-teal uppercase-tracking" style="font-size: 0.6rem; background: transparent;"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                                {% else %}
+                                    <span class="badge bg-transparent p-0 text-muted uppercase-tracking" style="font-size: 0.6rem;">Pending KYC</span>
+                                {% endif %}
+                            </div>
+                            <a href="/admin/core/user/{{ user.id }}/change/" class="btn btn-sm btn-light border-0"><i class="bi bi-chevron-right"></i></a>
                         </div>
                     </div>
-                    <div class="text-end">
-                        <span class="fw-bold text-navy-dark d-block" style="font-size: 14px;">₹{{ user.wallet_balance }}</span>
-                        {% if user.email_verified %}
-                            <small style="color: var(--brand-teal-dark); font-weight: 800; font-size: 10px;"><i class="bi bi-check-circle-fill"></i> VERIFIED</small>
-                        {% else %}
-                            <small class="text-muted fw-bold" style="font-size: 10px;">KYC PENDING</small>
-                        {% endif %}
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
 
         <div class="col-lg-4">
-            <div class="card border-0 p-4 rounded-4 shadow-sm h-100" style="background-color: #ffffff; border: 1px solid var(--border-color) !important;">
-                <h6 class="fw-bold text-navy-dark mb-4 uppercase" style="font-size: 11px; opacity: 0.7;">Inventory Health</h6>
+            <div class="inventory-card h-100">
+                <h6 class="uppercase-tracking mb-4">Inventory Health</h6>
                 
-                <div class="text-center mb-4">
-                    <div class="display-4 fw-bold" style="color: var(--brand-teal-dark);">{{ availability_rate }}%</div>
-                    <small class="text-muted uppercase fw-bold" style="font-size: 10px;">Utilization Rate</small>
+                <div class="text-center py-4 bg-light rounded-4 mb-4">
+                    <div class="display-5 fw-800 text-teal">{{ availability_rate }}%</div>
+                    <p class="uppercase-tracking m-0 mt-1">Utilization Rate</p>
                 </div>
 
-                <div class="progress mb-3" style="height: 10px; border-radius: 10px; background: #f1f5f9;">
-                    <div class="progress-bar" style="width: {{ availability_rate }}%; border-radius: 10px;"></div>
+                <div class="progress-wrapper mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-muted fw-bold">Market Capacity</span>
+                        <span class="small fw-800">{{ availability_rate }}%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ availability_rate }}%"></div>
+                    </div>
                 </div>
                 
-                <ul class="list-unstyled mt-4">
-                    <li class="d-flex justify-content-between mb-3 border-bottom pb-2">
-                        <small class="text-muted">Asset Catalog</small>
-                        <small class="fw-bold">{{ total_items }} Items</small>
-                    </li>
-                    <li class="d-flex justify-content-between mb-3 border-bottom pb-2">
-                        <small class="text-muted">In-Stock</small>
-                        <small class="fw-bold text-success">{{ active_items_count }}</small>
-                    </li>
-                    <li class="d-flex justify-content-between">
-                        <small class="text-muted">Currently Out</small>
-                        <small class="fw-bold text-warning">{{ pending_requests }}</small>
-                    </li>
-                </ul>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item bg-transparent d-flex justify-content-between px-0 border-color: #f1f5f9">
+                        <span class="text-muted small">Total Catalog</span>
+                        <span class="fw-bold small">{{ total_items }}</span>
+                    </div>
+                    <div class="list-group-item bg-transparent d-flex justify-content-between px-0">
+                        <span class="text-muted small">Active/In-Stock</span>
+                        <span class="fw-bold text-success small">{{ active_items_count }}</span>
+                    </div>
+                    <div class="list-group-item bg-transparent d-flex justify-content-between px-0">
+                        <span class="text-muted small">On Rent/Pending</span>
+                        <span class="fw-bold text-warning small">{{ pending_requests }}</span>
+                    </div>
+                </div>
 
-                <div class="mt-auto pt-4 text-center border-top">
-                    <small class="text-muted" style="font-size: 9px;">System Hub: Mehsana • {{ now }}</small>
+                <div class="mt-4 pt-4 border-top text-center">
+                    <p class="text-muted m-0" style="font-size: 0.7rem; font-style: italic;">
+                        <i class="bi bi-clock-history"></i> Last Updated: {{ now|date:"H:i" }} Mehsana Node
+                    </p>
                 </div>
             </div>
         </div>

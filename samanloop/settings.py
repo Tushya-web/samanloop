@@ -36,6 +36,12 @@ ALLOWED_HOSTS = [
     ".railway.app",
     "localhost",
     "127.0.0.1",
+    "192.168.1.8"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    # "https://samanloop.up.railway.app",
+    "http://192.168.1.8:8000",  # <-- your IP
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -208,7 +214,15 @@ JAZZMIN_SETTINGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+ALLOWED_CITIES = [
+    "Mehsana",
+    "Ahmedabad",
+    "Surat",
+    "Vadodara",
+    "Rajkot",
+    "Delhi",
+    "Mumbai"
+]
 
 
 LOGIN_URL = "login"

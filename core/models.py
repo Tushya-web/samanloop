@@ -57,6 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_city_selected = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
 
@@ -260,6 +261,24 @@ class Payment(models.Model):
     # 🔐 Escrow state
     deposit_locked = models.BooleanField(default=True)
     deposit_status = models.BooleanField(default=False)  # refunded or not
+    
+    DEPOSIT_STATE = [
+        ("held", "Held"),
+        ("returned_full", "Returned Full"),
+        ("returned_half", "Returned Half"),
+        ("forfeited", "Forfeited"),
+        ("dispute", "Under Dispute"),
+    ]
+
+    deposit_state = models.CharField(
+        max_length=20,
+        choices=DEPOSIT_STATE,
+        default="held"
+    )
+
+    dispute_open = models.BooleanField(default=False)
+    dispute_resolved = models.BooleanField(default=False)
+    
 
     payment_date = models.DateTimeField(auto_now_add=True)
 

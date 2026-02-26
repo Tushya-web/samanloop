@@ -128,7 +128,7 @@
 <body>
 
 {% include 'base/navbar.html' %}
-
+<br><br>
 <div class="hero-gradient">
     <div class="container">
         <div class="row align-items-center">
@@ -293,31 +293,73 @@
                                     <th class="ps-4 py-3 border-0">Asset Details</th>
                                     <th class="py-3 border-0">Owner</th>
                                     <th class="py-3 border-0 text-center">Rental Period</th>
+                                    <th class="py-3 border-0 text-center">Amount</th>
+                                    <th class="py-3 border-0 text-center">Deposit</th>
+                                    <th class="py-3 border-0 text-center">Deposit Status</th>
                                     <th class="pe-4 py-3 border-0 text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for log in rental_history %}
-                                <tr>
-                                    <td class="ps-4">
-                                        <span class="fw-bold text-dark d-block">{{ log.item.name }}</span>
-                                        <small class="text-muted">ID: #{{ log.id }}</small>
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="fw-bold text-dark d-block">
+                                        {{ log.item.name }}
+                                    </span>
+                                    <small class="text-muted">ID: #{{ log.id }}</small>
+                                </td>
+                            
+                                <td>
+                                    <div class="small fw-bold">
+                                        {{ log.lender.name }}
+                                    </div>
+                                </td>
+                            
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark fw-bold px-3 py-2 rounded-pill">
+                                        {{ log.start_date|date:"d M" }} - {{ log.end_date|date:"d M, Y" }}
+                                    </span>
+                                </td>
+                            
+                                {% with log.payments.first as pay %}
+                                <td class="text-center">
+                                    ₹{{ pay.payment_amt }}
+                                </td>
+                            
+                                <td class="text-center">
+                                    ₹{{ pay.deposit }}
+                                </td>
+                            
+                                <td class="text-center">
+                                        {% if pay.deposit_state == "returned_full" %}
+                                            <span class="badge bg-success">Full Refund</span>
+
+                                        {% elif pay.deposit_state == "returned_half" %}
+                                            <span class="badge bg-warning text-dark">
+                                                50% Deducted
+                                            </span>
+                                        
+                                        {% elif pay.deposit_state == "dispute" %}
+                                            <span class="badge bg-danger">
+                                                Dispute Under Review
+                                            </span>
+                                        
+                                        {% else %}
+                                            <span class="badge bg-info">
+                                                Deposit Held
+                                            </span>
+                                        {% endif %}
                                     </td>
-                                    <td>
-                                        <div class="small fw-bold">{{ log.lender.name }}</div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-light text-dark fw-bold px-3 py-2 rounded-pill">
-                                            {{ log.start_date|date:"d M" }} - {{ log.end_date|date:"d M, Y" }}
-                                        </span>
-                                    </td>
-                                    <td class="pe-4 text-end">
-                                        <a href="{% url 'item_detail' log.item.id %}#reviews-section" class="btn btn-sm btn-teal rounded-pill px-3 fw-bold">
-                                            Share Review
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
+                                {% endwith %}
+                            
+                                <td class="pe-4 text-end">
+                                    <a href="{% url 'item_detail' log.item.id %}#reviews-section"
+                                       class="btn btn-sm btn-teal rounded-pill px-3 fw-bold">
+                                        Share Review
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>

@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 import csv
 
-
 from .models import (
     User, Category, Item, ItemImage,
     item_Request, item_usage, Payment,
@@ -24,7 +23,60 @@ def get_status_color(status):
     }
     return colors.get(status.lower(), "#64748b")
 
-@admin.register(User)
+from django.contrib.admin import AdminSite
+from django.utils.timezone import now
+from django.db.models import Sum
+from .models import User, Item, item_Request, Payment
+
+class SamanLoopAdminSite(AdminSite):
+    site_header = "SamanLoop Command Center"
+    site_title = "SamanLoop Admin"
+    index_title = "Dashboard"
+
+    def index(self, request, extra_context=None):
+
+        total_users = User.objects.count()
+        total_items = Item.objects.count()
+
+        total_revenue = Payment.objects.aggregate(
+            total=Sum("payment_amt")
+        )["total"] or 0
+
+        pending_requests = item_Request.objects.filter(
+            status="pending"
+        ).count()
+
+        recent_users = User.objects.order_by("-created")[:5]
+
+        active_items_count = Item.objects.filter(
+            availability_status="available"
+        ).count()
+
+        if total_items > 0:
+            availability_rate = round(
+                (active_items_count / total_items) * 100
+            )
+        else:
+            availability_rate = 0
+
+        extra_context = extra_context or {}
+        extra_context.update({
+            "total_users": total_users,
+            "total_items": total_items,
+            "total_revenue": total_revenue,
+            "pending_requests": pending_requests,
+            "recent_users": recent_users,
+            "availability_rate": availability_rate,
+            "active_items_count": active_items_count,
+            "now": now().strftime("%d %b %Y"),
+        })
+
+        return super().index(request, extra_context=extra_context)
+
+admin_site = SamanLoopAdminSite(name="samanloop_admin")
+
+# @admin.register(User)
+
 class UserAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -106,7 +158,8 @@ class ItemImageInline(admin.TabularInline):
 # ITEM ADMIN
 # ==========================
 
-@admin.register(Item)
+# @admin.register(Item)
+
 class ItemAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -144,7 +197,7 @@ class ItemAdmin(admin.ModelAdmin):
 # RENTAL REQUEST ADMIN
 # ==========================
 
-@admin.register(item_Request)
+# @admin.register(item_Request)
 class ItemRequestAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -166,12 +219,10 @@ class ItemRequestAdmin(admin.ModelAdmin):
             obj.status.upper()
         )
 
+from decimal import Decimal
+from django.db import transaction
 
-# ==========================
-# PAYMENT ADMIN
-# ==========================
-
-@admin.register(Payment)
+# @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -180,32 +231,144 @@ class PaymentAdmin(admin.ModelAdmin):
         "lender",
         "payment_amt",
         "deposit",
+        "deposit_state_badge",
+        "dispute_badge",
         "payment_date",
     )
 
-    list_filter = ("payment_date", "deposit_status")
+    list_filter = ("deposit_state", "payment_date")
     search_fields = ("borrower__email", "lender__email")
 
-    def amount_display(self, obj):
+    actions = [
+        "resolve_full_refund",
+        "resolve_give_lender",
+        "resolve_split"
+    ]
+
+    # =========================
+    # STATUS BADGES
+    # =========================
+
+    def deposit_state_badge(self, obj):
+
+        color_map = {
+            "held": "#3b82f6",
+            "returned_full": "#10b981",
+            "returned_half": "#f59e0b",
+            "forfeited": "#ef4444",
+            "dispute": "#dc2626",
+        }
+
+        label_map = {
+            "held": "Held",
+            "returned_full": "Full Returned",
+            "returned_half": "50% Deducted",
+            "forfeited": "Forfeited",
+            "dispute": "Dispute",
+        }
+
         return format_html(
-            '<span style="color:#0d9488; font-weight:bold;">₹{}</span>',
-            obj.payment_amt
+            '<span style="background:{}; color:white; padding:4px 10px; border-radius:20px; font-size:11px;">{}</span>',
+            color_map.get(obj.deposit_state, "#64748b"),
+            label_map.get(obj.deposit_state, obj.deposit_state),
         )
 
-    def deposit_status_badge(self, obj):
-        icon = "check-circle-fill" if obj.deposit_status else "clock"
-        color = "#10b981" if obj.deposit_status else "#f59e0b"
+    deposit_state_badge.short_description = "Deposit Status"
+
+    def dispute_badge(self, obj):
+
+        if obj.dispute_open:
+            return format_html(
+                '<span style="color:{}; font-weight:bold;">● {}</span>',
+                "#dc2626",
+                "OPEN"
+            )
+
         return format_html(
-            '<i class="bi bi-{}" style="color:{}"></i>',
-            icon, color
+            '<span style="color:{};">{}</span>',
+            "#10b981",
+            "Resolved"
         )
 
+    dispute_badge.short_description = "Dispute"
 
-# ==========================
-# WALLET ADMIN
-# ==========================
+    # =========================
+    # ADMIN RESOLUTION ACTIONS
+    # =========================
 
-@admin.register(Wallet)
+    @admin.action(description="Refund FULL Deposit to Borrower")
+    def resolve_full_refund(self, request, queryset):
+
+        for payment in queryset:
+            if payment.deposit_state != "dispute":
+                continue
+
+            with transaction.atomic():
+                borrower_wallet = Wallet.objects.get(user=payment.borrower)
+                deposit = Decimal(payment.deposit)
+
+                borrower_wallet.balance += deposit
+                borrower_wallet.save()
+
+                payment.deposit_state = "returned_full"
+                payment.dispute_open = False
+                payment.dispute_resolved = True
+                payment.deposit_locked = False
+                payment.deposit_status = True
+                payment.save()
+
+
+    @admin.action(description="Give FULL Deposit to Lender")
+    def resolve_give_lender(self, request, queryset):
+
+        for payment in queryset:
+            if payment.deposit_state != "dispute":
+                continue
+
+            with transaction.atomic():
+                lender_wallet = Wallet.objects.get(user=payment.lender)
+                deposit = Decimal(payment.deposit)
+
+                lender_wallet.balance += deposit
+                lender_wallet.save()
+
+                payment.deposit_state = "forfeited"
+                payment.dispute_open = False
+                payment.dispute_resolved = True
+                payment.deposit_locked = False
+                payment.deposit_status = True
+                payment.save()
+
+
+    @admin.action(description="Split Deposit 50-50")
+    def resolve_split(self, request, queryset):
+
+        for payment in queryset:
+            if payment.deposit_state != "dispute":
+                continue
+
+            with transaction.atomic():
+
+                borrower_wallet = Wallet.objects.get(user=payment.borrower)
+                lender_wallet = Wallet.objects.get(user=payment.lender)
+
+                deposit = Decimal(payment.deposit)
+                half = deposit / Decimal("2")
+
+                borrower_wallet.balance += half
+                lender_wallet.balance += half
+
+                borrower_wallet.save()
+                lender_wallet.save()
+
+                payment.deposit_state = "returned_half"
+                payment.dispute_open = False
+                payment.dispute_resolved = True
+                payment.deposit_locked = False
+                payment.deposit_status = True
+                payment.save()
+
+# @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -223,7 +386,7 @@ class WalletAdmin(admin.ModelAdmin):
             obj.balance
         )
 
-@admin.register(item_usage)
+# @admin.register(item_usage)
 class ItemUsageAdmin(admin.ModelAdmin):
     
     list_display = (
@@ -258,7 +421,7 @@ class ItemUsageAdmin(admin.ModelAdmin):
 
     list_per_page = 20
     
-@admin.register(Review)
+# @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ("item", "reviewer", "rating", "created_at")
     list_filter = ("rating",)
@@ -267,7 +430,7 @@ class ReviewAdmin(admin.ModelAdmin):
 from django.contrib import admin
 from .models import Query
 
-@admin.register(Query)
+# @admin.register(Query)
 class QueryAdmin(admin.ModelAdmin):
     list_display = ("subject", "user", "get_item_name", "status", "created_at")
     list_filter = ("status", "created_at")
@@ -283,7 +446,7 @@ class QueryAdmin(admin.ModelAdmin):
         queryset.update(status='resolved')
     
     
-@admin.register(WalletTransaction)
+# @admin.register(WalletTransaction)
 class WalletTransactionAdmin(admin.ModelAdmin):
     list_display = (
         "user",
@@ -297,7 +460,7 @@ class WalletTransactionAdmin(admin.ModelAdmin):
     search_fields = ("user__email",)
 
 
-@admin.register(Category)
+# @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
 
     list_display = ("image_preview", "name", "created_at")
@@ -312,3 +475,15 @@ class CategoryAdmin(admin.ModelAdmin):
         return "-"
     image_preview.short_description = "Image"
 
+
+
+admin_site.register(User, UserAdmin)
+admin_site.register(Item, ItemAdmin)
+admin_site.register(item_Request, ItemRequestAdmin)
+admin_site.register(Payment, PaymentAdmin)
+admin_site.register(Wallet, WalletAdmin)
+admin_site.register(item_usage, ItemUsageAdmin)
+admin_site.register(Review, ReviewAdmin)
+admin_site.register(Query, QueryAdmin)
+admin_site.register(WalletTransaction, WalletTransactionAdmin)
+admin_site.register(Category, CategoryAdmin)

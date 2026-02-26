@@ -333,6 +333,33 @@
                     </div>
                 </div>
             </div>
+            <div class="info-card">
+                <div class="card-title">
+                    <i class="bi bi-wallet2 text-primary"></i> Payout Details
+                </div>
+                
+                <div class="form-group-custom">
+                    <label class="form-label d-flex justify-content-between">
+                        UPI ID (For Receiving Payments)
+                        <span class="text-muted fw-normal small">Example: username@okicici</span>
+                    </label>
+                    <div class="position-relative">
+                        <input type="text" 
+                               name="upi_id" 
+                               class="form-control-custom w-100" 
+                               value="{{ user.upi_id|default:'' }}" 
+                               placeholder="Enter your UPI ID (e.g., 9876543210@paytm)"
+                               pattern="^[\w.-]+@[\w.-]+$"
+                               title="Please enter a valid UPI ID (e.g., name@bank)">
+                        <i class="bi bi-qr-code-scan position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                    </div>
+                    <div class="bg-light p-2 mt-3 rounded-2" style="border-left: 3px solid var(--brand-teal)">
+                        <p class="small text-muted mb-0" style="font-size: 0.8rem;">
+                            <strong>Note:</strong> Ensure this ID is correct. This is where you will receive money when someone rents your items.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             <div class="action-footer mt-5">
                 <div class="container d-flex align-items-center justify-content-center gap-4">

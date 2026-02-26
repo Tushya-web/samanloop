@@ -1,6 +1,9 @@
 from django.conf import settings
 from core import views
 from django.contrib import admin
+from core.admin import admin_site
+
+
 from django.urls import path
 from core.views import about , add_money , error404, logout, contact, howitworks, index, pricingguide, terms, login, register, profile , add_item, verify_page, wallet, withdraw_money, browse_items
 
@@ -9,7 +12,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     
     path('', index, name='index'),
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path("admin/", admin_site.urls),
     path('admin/logout/', admin.site.logout, name='logout'),
     
     path('#/', error404, name='error404'),
@@ -24,6 +28,8 @@ urlpatterns = [
     path("google-login/", views.google_login_page , name="google_login"),
     path("google-callback/", views.google_callback, name="google_callback"),
     
+    path("select-city/", views.select_city, name="select_city"),
+    path("validate-location/", views.validate_location),
 
     
     path("profile/", views.profile, name="profile"),
@@ -32,6 +38,8 @@ urlpatterns = [
     path('borrower_dashboard/', views.borrower_dashboard, name='borrower_dashboard'),
     
     path('payment_page/<int:request_id>/', views.payment_page, name='payment_page'),
+    
+    path("confirm_external_payment/<int:request_id>/", views.confirm_external_payment,name="confirm_external_payment"),
     
     path('request/<int:request_id>/<str:action>/', views.respond_to_request, name='respond_to_request'),
     

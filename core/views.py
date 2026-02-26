@@ -89,8 +89,11 @@ def login(request):
             
             user = User.objects.get(email=email)
             request.session["user"] = email
-            next_url = request.GET.get("next") or "/profile/"
             User.email_verified = True
+            if not user.is_city_selected:
+                return redirect("select_city")
+
+            next_url = request.GET.get("next") or "/profile/"
             return redirect(next_url)
 
         except User.DoesNotExist:
@@ -102,6 +105,54 @@ def login(request):
     
     return render(request, "usera/login.html")
 
+from django.conf import settings
+
+def select_city(request):
+    email = request.session.get("user")
+    if not email:
+        return redirect("login")
+
+    user = User.objects.get(email=email)
+
+    if request.method == "POST":
+        city = request.POST.get("city")
+
+        if city not in settings.ALLOWED_CITIES:
+            messages.error(request, "We are currently not operating in this city.")
+            return redirect("select_city")
+
+        user.city = city
+        user.is_city_selected = True
+        user.save()
+
+        request.session["selected_city"] = city
+
+        return redirect("profile")
+
+    return render(request, "select_city.html", {
+        "allowed_cities": settings.ALLOWED_CITIES
+    })
+    
+def validate_location(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        city = data.get("city")
+
+        email = request.session.get("user")
+        user = User.objects.get(email=email)
+
+        from django.conf import settings
+
+        if city in settings.ALLOWED_CITIES:
+            user.city = city
+            user.is_city_selected = True
+            user.save()
+            request.session["selected_city"] = city
+            return JsonResponse({"status": "ok"})
+
+        return JsonResponse({"status": "error"})
+
+    return JsonResponse({"status": "invalid"})
 
 def google_login_page(request):
     return render(request, "usera/google_login.html")
@@ -270,19 +321,113 @@ def initiate_return(request, usage_id):
 
 
 def confirm_return(request, usage_id):
-    usage = get_object_or_404(item_usage, id=usage_id, lender__email=request.session['user'])
-    
-    with transaction.atomic():
-        usage.status = 'completed'
-        usage.save()
-        
-        # Make the item available for rent again
-        item = usage.item
-        # item.availability_status = "available" # or whatever your default string is
-        # item.save()
-    
-    messages.success(request, "Return confirmed! The item is now listed as available again.")
-    return redirect('lender_dashboard')
+
+    usage = get_object_or_404(
+        item_usage,
+        id=usage_id,
+        lender__email=request.session['user']
+    )
+
+    payment = Payment.objects.get(item_usage=usage)
+    borrower_wallet = Wallet.objects.get(user=usage.renter)
+    lender_wallet = Wallet.objects.get(user=usage.lender)
+
+    if request.method == "POST":
+
+        action = request.POST.get("return_action")
+
+        with transaction.atomic():
+
+            deposit_amount = Decimal(payment.deposit)
+
+            # =======================
+            # ✅ ITEM RECEIVED
+            # =======================
+            if action == "received":
+
+                borrower_wallet.held_deposit -= deposit_amount
+                borrower_wallet.balance += deposit_amount
+                borrower_wallet.save()
+
+                WalletTransaction.objects.create(
+                    user=usage.renter,
+                    amount=deposit_amount,
+                    transaction_type="release",
+                    description=f"Deposit returned for {usage.item.name}"
+                )
+
+                payment.deposit_state = "returned_full"
+                payment.deposit_locked = False
+                payment.deposit_status = True
+
+
+            # =======================
+            # ⚠ DEFECTIVE ITEM
+            # =======================
+            elif action == "defective":
+
+                half = deposit_amount / Decimal("2")
+
+                borrower_wallet.held_deposit -= deposit_amount
+                borrower_wallet.balance += half
+                borrower_wallet.save()
+
+                lender_wallet.balance += half
+                lender_wallet.save()
+
+                WalletTransaction.objects.create(
+                    user=usage.renter,
+                    amount=half,
+                    transaction_type="release",
+                    description="50% deposit returned (defective)"
+                )
+
+                WalletTransaction.objects.create(
+                    user=usage.lender,
+                    amount=half,
+                    transaction_type="credit",
+                    description="50% deposit compensation"
+                )
+
+                payment.deposit_state = "returned_half"
+                payment.deposit_locked = False
+                payment.deposit_status = True
+
+
+            # =======================
+            # ❌ MONEY NOT RECEIVED
+            # =======================
+            elif action == "not_received":
+
+                Query.objects.create(
+                    user=usage.lender,
+                    item=usage.item,
+                    subject="Payment Not Received",
+                    message="Lender reported payment not received during return.",
+                    status="open"
+                )
+
+                payment.deposit_state = "dispute"
+                payment.dispute_open = True
+                payment.save()
+                
+                messages.warning(request, "Dispute opened. Waiting for admin review.")
+                return redirect("lender_dashboard")
+
+            # =======================
+            # FINALIZE
+            # =======================
+            usage.status = "completed"
+            usage.item.availability_status = "available"
+            usage.item.save()
+            usage.save()
+            payment.save()
+
+        messages.success(request, "Return processed successfully.")
+        return redirect("lender_dashboard")
+
+    return redirect("lender_dashboard")
+
 
 from django.db.models import Q
 from django.shortcuts import render
@@ -585,6 +730,7 @@ def preview_item(request):
             "data": request.session['item_data'],
             "images": request.session['temp_images'],
             "category_obj": category_obj,
+            "user": user
         })
 
     return redirect("add_item")
@@ -600,8 +746,32 @@ def confirm_item(request):
     user = User.objects.get(email=email)
     data = request.session.get("item_data")
     images = request.session.get("temp_images")
+    
     if not data:
         return redirect("add_item")
+    # UPI check
+    if not user.upi_id:
+        upi = request.POST.get("upi_id")
+
+        if not upi:
+            messages.error(request, "UPI ID is required.")
+            return render(request, "items/add_item_preview.html", {
+                "data": data,
+                "images": images,
+                "user": user
+            })
+
+        if not validate_upi(upi):
+            messages.error(request, "Invalid UPI format.")
+            return render(request, "items/add_item_preview.html", {
+                "data": data,
+                "images": images,
+                "user": user
+            })
+
+        user.upi_id = upi
+        user.upi_verified = True
+        user.save()
 
     # 🔥 GET CATEGORY
     category_id = data.get("category_id")
@@ -920,24 +1090,31 @@ def payment_page(request, request_id):
 
             with transaction.atomic():
             
-                # 🔻 Deduct from borrower
-                wallet.balance -= total_amount
+                deposit_amount = Decimal(req.item.deposit_amount)
+                rent_amount = Decimal(req.total_rent)
+
+                # 🔻 Deduct FULL amount from borrower
+                wallet.balance -= (rent_amount + deposit_amount)
+
+                # 🔒 Hold deposit separately
+                wallet.held_deposit += deposit_amount
+
                 wallet.save()
 
                 WalletTransaction.objects.create(
                     user=user,
-                    amount=total_amount,
+                    amount=rent_amount + deposit_amount,
                     transaction_type="debit",
-                    description=f"Rental payment for {req.item.name}"
+                    description=f"Rental + Deposit for {req.item.name}"
                 )
 
-                # 🔺 Add rent to owner (NOT deposit)
-                owner_wallet.balance += req.total_rent
+                # 🔺 Give ONLY rent to lender
+                owner_wallet.balance += rent_amount
                 owner_wallet.save()
 
                 WalletTransaction.objects.create(
                     user=req.item.owner,
-                    amount=req.total_rent,
+                    amount=rent_amount,
                     transaction_type="credit",
                     description=f"Rental income from {req.item.name}"
                 )
@@ -950,10 +1127,26 @@ def payment_page(request, request_id):
         
         elif payment_mode == "external":
 
-            req.status = "paid"
-            req.payment_status = "paid"
-            req.payment_id = "EXT_TEST_123"
-            req.save()
+            lender = req.item.owner
+            if not lender.upi_id:
+                messages.error(request, "Lender does not have UPI configured.")
+                return redirect("payment_page", request_id=req.id)
+
+            total_amount = req.total_rent + req.item.deposit_amount
+
+            upi_link = (
+                f"upi://pay?"
+                f"pa={lender.upi_id}"
+                f"&pn={lender.name}"
+                f"&am={total_amount}"
+                f"&cu=INR"
+            )
+
+            return render(request, "external_payment.html", {
+                "upi_link": upi_link,
+                "req": req,
+                "amount": total_amount
+            })
 
         else:
             messages.error(request, "Invalid payment method.")
@@ -998,53 +1191,137 @@ def payment_page(request, request_id):
         "wallet": wallet,
         "total_amount": total_amount
     })
+    
+def confirm_external_payment(request, request_id):
 
+    email = request.session.get("user")
+    user = User.objects.get(email=email)
 
+    req = get_object_or_404(item_Request, id=request_id, renter=user)
+
+    if request.method == "POST":
+
+        req.status = "paid"
+        req.payment_status = "paid"
+        req.payment_id = "UPI_EXTERNAL"
+        req.save()
+
+        usage = item_usage.objects.create(
+            item=req.item,
+            lender=req.item.owner,
+            renter=req.renter,
+            start_date=req.start_date,
+            end_date=req.end_date,
+            status="active"
+        )
+
+        Payment.objects.create(
+            item_usage=usage,
+            lender=req.item.owner,
+            borrower=req.renter,
+            payment_amt=req.total_rent,
+            deposit=req.item.deposit_amount,
+            deposit_status=False
+        )
+
+        messages.success(request, "Payment marked as completed.")
+        return redirect("borrower_dashboard")
 
 def wallet(request):
-    return render(request, "wallet.html")
+    email = request.session.get("user")
+    if not email:
+        return redirect("login")
+
+    user = User.objects.get(email=email)
+    wallet, _ = Wallet.objects.get_or_create(user=user)
+
+    transactions = WalletTransaction.objects.filter(
+        user=user
+    ).order_by("-created_at")
+
+    return render(request, "wallet.html", {
+        "wallet": wallet,
+        "transactions": transactions
+    })
     
-# @login_required
+from decimal import Decimal, InvalidOperation
+        
 def add_money(request):
     if request.method == "POST":
-        amount = float(request.POST["amount"])
-        
-        user = User.objects.get(email=request.session["user"])
-        email = request.session["user"]
+
+        email = request.session.get("user")
+        if not email:
+            return redirect("login")
+
+        user = User.objects.get(email=email)
         wallet, _ = Wallet.objects.get_or_create(user=user)
+
+        try:
+            amount = Decimal(request.POST.get("amount"))
+
+            if amount <= 0:
+                messages.error(request, "Invalid amount.")
+                return redirect("wallet")
+
+        except (InvalidOperation, TypeError):
+            messages.error(request, "Invalid input.")
+            return redirect("wallet")
 
         wallet.balance += amount
         wallet.save()
 
         WalletTransaction.objects.create(
-        user=user,
-        amount=amount,
-        transaction_type="credit",
-        description="Wallet Top-up"
-    )
+            user=user,
+            amount=amount,
+            transaction_type="credit",
+            description="Wallet Top-up"
+        )
 
+        messages.success(request, "Money added successfully.")
 
     return redirect("wallet")
 
 
-# @login_required
 def withdraw_money(request):
     if request.method == "POST":
-        amount = float(request.POST["amount"])
-        email = request.session["user"]
+
+        email = request.session.get("user")
+        if not email:
+            return redirect("login")
+
         user = User.objects.get(email=email)
         wallet = Wallet.objects.get(user=user)
 
-        if wallet.balance >= amount:
-            wallet.balance -= amount
-            wallet.save()
+        try:
+            amount = Decimal(request.POST.get("amount"))
+        except:
+            messages.error(request, "Invalid amount.")
+            return redirect("wallet")
 
-            WalletTransaction.objects.create(
-                user=user,
-                amount=amount,
-                transaction_type="debit",
-                description="Withdrawal Request"
-            )
+        if amount <= 0:
+            messages.error(request, "Amount must be greater than 0.")
+            return redirect("wallet")
+
+        if wallet.balance < amount:
+            messages.error(request, "Insufficient balance.")
+            return redirect("wallet")
+
+        # 🔒 Require verified UPI
+        if not user.upi_id or not user.upi_verified:
+            messages.error(request, "Add & verify UPI before withdrawing.")
+            return redirect("wallet")
+
+        wallet.balance -= amount
+        wallet.save()
+
+        WalletTransaction.objects.create(
+            user=user,
+            amount=amount,
+            transaction_type="debit",
+            description=f"Withdrawal to {user.upi_id}"
+        )
+
+        messages.success(request, "Withdrawal successful.")
 
     return redirect("wallet")
 
