@@ -287,8 +287,8 @@ def borrower_dashboard(request):
     
     # active_usage should include both 'active' and 'returning' so the borrower sees the status
     active_usage = item_usage.objects.filter(
-        renter=user, 
-        status__in=['active', 'returning'] 
+    renter=user,
+    status__in=['pending_pickup', 'active', 'returning']
     ).order_by('-start_date')
     
     rental_history = item_usage.objects.filter(renter=user, status='completed').order_by('-end_date')
@@ -296,14 +296,55 @@ def borrower_dashboard(request):
     # Pass 'today' to the template for the button logic
     today = timezone.now().date()
     
+    usage_map = {
+    usage.item.id: usage
+    for usage in active_usage
+    }
+
     return render(request, "borrower_dashboard.html", {
-        "active_rentals": active_usage,
-        "sent_requests": sent_requests,
         "active_usage": active_usage,
+        "usage_map": usage_map,
+        "sent_requests": sent_requests,
         "rental_history": rental_history,
-        "today": today, 
+        "today": today
     })
 
+def withdraw_request(request, request_id):
+    # Ensure only the owner of the request can withdraw it
+    rental_req = get_object_or_404(item_Request, id=request_id, renter__email=request.session.get('user'))
+
+    if rental_req.status == 'pending':
+        # Simply delete or mark as cancelled
+        rental_req.status = 'cancelled' 
+        rental_req.save()
+        messages.success(request, "Request withdrawn successfully.")
+    else:
+        messages.error(request, "Cannot withdraw a request that has already been processed.")
+    
+    return redirect('borrower_hub')
+
+def record_pickup(request, usage_id):
+    usage = get_object_or_404(
+        item_usage,
+        id=usage_id,
+        renter__email=request.session['user']
+    )
+
+    if request.method == "POST":
+        usage.image = request.FILES.get('pickup_image')
+        usage.image_type = 'pickup'
+        usage.save()
+
+        messages.success(request, "Pickup recorded. Now complete payment.")
+
+        rental_req = item_Request.objects.filter(
+            item=usage.item,
+            renter=usage.renter,
+            status='accepted'
+        ).first()
+
+        return redirect('borrower_dashboard')
+    
 def initiate_return(request, usage_id):
     usage = get_object_or_404(
         item_usage, 
@@ -321,115 +362,201 @@ def initiate_return(request, usage_id):
 
 
 def confirm_return(request, usage_id):
+    # 1. Fetch data
+    usage = get_object_or_404(item_usage, id=usage_id, lender__email=request.session.get('user'))
+    
+    # Try to find the payment
+    try:
+        payment = usage.payment
+    except Payment.DoesNotExist:
+        messages.error(request, "Payment record missing.")
+        return redirect("lender_dashboard")
 
-    usage = get_object_or_404(
-        item_usage,
-        id=usage_id,
-        lender__email=request.session['user']
-    )
-
-    payment = Payment.objects.get(item_usage=usage)
-    borrower_wallet = Wallet.objects.get(user=usage.renter)
-    lender_wallet = Wallet.objects.get(user=usage.lender)
+    if not payment:
+        # Fallback if record is missing (Safety Net)
+        usage.status = "completed"
+        usage.item.availability_status = "available"
+        usage.save()
+        usage.item.save()
+        messages.warning(request, "Item returned, but no payment record found to process.")
+        return redirect("lender_dashboard")
 
     if request.method == "POST":
-
         action = request.POST.get("return_action")
+        deposit_amount = Decimal(payment.deposit)
+        
+        # Get Wallets
+        borrower_wallet, _ = Wallet.objects.get_or_create(user=usage.renter)
+        lender_wallet, _ = Wallet.objects.get_or_create(user=usage.lender)
 
-        with transaction.atomic():
+        # Logic for Tiered Refunds
+        if action == "received":
+            # 100% to Borrower
+            borrower_wallet.held_deposit -= deposit_amount
+            borrower_wallet.balance += deposit_amount
+            payment.deposit_state = "returned_full"
+            
+            WalletTransaction.objects.create(
+            user=usage.renter,
+            amount=deposit_amount,
+            transaction_type="release",
+            description=f"Deposit returned for {usage.item.name}"
+            )
+            
+        elif action == "defective":
+            # 50% to Borrower, 50% to Lender
+            half = deposit_amount / Decimal("2")
+            borrower_wallet.held_deposit -= deposit_amount
+            borrower_wallet.balance += half
+            lender_wallet.balance += half
+            payment.deposit_state = "returned_half"
+            WalletTransaction.objects.create(
+                user=usage.renter,
+                amount=half,
+                transaction_type="release",
+                description="50% deposit returned"
+            )
 
-            deposit_amount = Decimal(payment.deposit)
+            WalletTransaction.objects.create(
+                user=usage.lender,
+                amount=half,
+                transaction_type="credit",
+                description="50% deposit compensation"
+            )
 
-            # =======================
-            # ✅ ITEM RECEIVED
-            # =======================
-            if action == "received":
+        elif action == "high_defect":
+            # 0% to Borrower, 100% to Lender
+            borrower_wallet.held_deposit -= deposit_amount
+            lender_wallet.balance += deposit_amount
+            payment.deposit_state = "forfeited"
 
-                borrower_wallet.held_deposit -= deposit_amount
-                borrower_wallet.balance += deposit_amount
-                borrower_wallet.save()
+        # Update Final Statuses
+        usage.status = "completed"
+        usage.item.availability_status = "available"
+        payment.deposit_status = True
+        
+        # Save everything (Manual order)
+        borrower_wallet.save()
+        lender_wallet.save()
+        payment.save()
+        usage.save()
+        usage.item.save()
 
-                WalletTransaction.objects.create(
-                    user=usage.renter,
-                    amount=deposit_amount,
-                    transaction_type="release",
-                    description=f"Deposit returned for {usage.item.name}"
-                )
-
-                payment.deposit_state = "returned_full"
-                payment.deposit_locked = False
-                payment.deposit_status = True
-
-
-            # =======================
-            # ⚠ DEFECTIVE ITEM
-            # =======================
-            elif action == "defective":
-
-                half = deposit_amount / Decimal("2")
-
-                borrower_wallet.held_deposit -= deposit_amount
-                borrower_wallet.balance += half
-                borrower_wallet.save()
-
-                lender_wallet.balance += half
-                lender_wallet.save()
-
-                WalletTransaction.objects.create(
-                    user=usage.renter,
-                    amount=half,
-                    transaction_type="release",
-                    description="50% deposit returned (defective)"
-                )
-
-                WalletTransaction.objects.create(
-                    user=usage.lender,
-                    amount=half,
-                    transaction_type="credit",
-                    description="50% deposit compensation"
-                )
-
-                payment.deposit_state = "returned_half"
-                payment.deposit_locked = False
-                payment.deposit_status = True
-
-
-            # =======================
-            # ❌ MONEY NOT RECEIVED
-            # =======================
-            elif action == "not_received":
-
-                Query.objects.create(
-                    user=usage.lender,
-                    item=usage.item,
-                    subject="Payment Not Received",
-                    message="Lender reported payment not received during return.",
-                    status="open"
-                )
-
-                payment.deposit_state = "dispute"
-                payment.dispute_open = True
-                payment.save()
-                
-                messages.warning(request, "Dispute opened. Waiting for admin review.")
-                return redirect("lender_dashboard")
-
-            # =======================
-            # FINALIZE
-            # =======================
-            usage.status = "completed"
-            usage.item.availability_status = "available"
-            usage.item.save()
-            usage.save()
-            payment.save()
-
-        messages.success(request, "Return processed successfully.")
+        messages.success(request, "Return completed and deposit distributed based on item condition.")
         return redirect("lender_dashboard")
 
     return redirect("lender_dashboard")
 
+# def confirm_return(request, usage_id):
 
-from django.db.models import Q
+#     usage = get_object_or_404(
+#         item_usage,
+#         id=usage_id,
+#         lender__email=request.session['user']
+#     )
+
+#     payment = Payment.objects.get(item_usage=usage)
+#     borrower_wallet = Wallet.objects.get(user=usage.renter)
+#     lender_wallet = Wallet.objects.get(user=usage.lender)
+
+#     if request.method == "POST":
+
+#         action = request.POST.get("return_action")
+
+#         with transaction.atomic():
+
+#             deposit_amount = Decimal(payment.deposit)
+
+#             # =======================
+#             # ✅ ITEM RECEIVED
+#             # =======================
+#             if action == "received":
+
+#                 borrower_wallet.held_deposit -= deposit_amount
+#                 borrower_wallet.balance += deposit_amount
+#                 borrower_wallet.save()
+
+#                 WalletTransaction.objects.create(
+#                     user=usage.renter,
+#                     amount=deposit_amount,
+#                     transaction_type="release",
+#                     description=f"Deposit returned for {usage.item.name}"
+#                 )
+
+#                 payment.deposit_state = "returned_full"
+#                 payment.deposit_locked = False
+#                 payment.deposit_status = True
+
+
+#             # =======================
+#             # ⚠ DEFECTIVE ITEM
+#             # =======================
+#             elif action == "defective":
+
+#                 half = deposit_amount / Decimal("2")
+
+#                 borrower_wallet.held_deposit -= deposit_amount
+#                 borrower_wallet.balance += half
+#                 borrower_wallet.save()
+
+#                 lender_wallet.balance += half
+#                 lender_wallet.save()
+
+#                 WalletTransaction.objects.create(
+#                     user=usage.renter,
+#                     amount=half,
+#                     transaction_type="release",
+#                     description="50% deposit returned (defective)"
+#                 )
+
+#                 WalletTransaction.objects.create(
+#                     user=usage.lender,
+#                     amount=half,
+#                     transaction_type="credit",
+#                     description="50% deposit compensation"
+#                 )
+
+#                 payment.deposit_state = "returned_half"
+#                 payment.deposit_locked = False
+#                 payment.deposit_status = True
+
+
+#             # =======================
+#             # ❌ MONEY NOT RECEIVED
+#             # =======================
+#             elif action == "not_received":
+
+#                 Query.objects.create(
+#                     user=usage.lender,
+#                     item=usage.item,
+#                     subject="Payment Not Received",
+#                     message="Lender reported payment not received during return.",
+#                     status="open"
+#                 )
+
+#                 payment.deposit_state = "dispute"
+#                 payment.dispute_open = True
+#                 payment.save()
+                
+#                 messages.warning(request, "Dispute opened. Waiting for admin review.")
+#                 return redirect("lender_dashboard")
+
+#             # =======================
+#             # FINALIZE
+#             # =======================
+#             usage.status = "completed"
+#             usage.item.availability_status = "available"
+#             usage.item.save()
+#             usage.save()
+#             payment.save()
+
+#         messages.success(request, "Return processed successfully.")
+#         return redirect("lender_dashboard")
+
+#     return redirect("lender_dashboard")
+
+
+from django.db.models import Q, Avg
 from django.shortcuts import render
 from .models import Item, Category, Payment, Query
 from django.db.models import Q
@@ -481,6 +608,7 @@ def browse_items(request):
     else:
         items = Item.objects.all()
 
+    items = Item.objects.annotate(avg_rating=Avg('reviews__rating')).all()
     categories = Category.objects.all()
 
     # 🔍 Handle Search
@@ -1002,24 +1130,63 @@ def submit_review(request, item_id):
         return redirect('item_detail', item_id=item_id)
 
 def respond_to_request(request, request_id, action):
-
     email = request.session.get("user")
+    if not email:
+        return redirect("login")
+        
     user = User.objects.get(email=email)
-
     rental_request = get_object_or_404(item_Request, id=request_id)
 
+    # Security check: Ensure the person responding owns the item
     if rental_request.item.owner != user:
         return redirect("lender_dashboard")
 
     if action == "accept":
-        rental_request.status = "accepted"
-        rental_request.save()
+        with transaction.atomic():
+            # 1. Update Request Status
+            rental_request.status = "accepted"
+            rental_request.save()
+            
+            item_usage.objects.create(
+            item=rental_request.item,
+            lender=rental_request.item.owner,
+            renter=rental_request.renter,
+            start_date=rental_request.start_date,
+            end_date=rental_request.end_date,
+            status="pending_pickup"
+        )
+            messages.success(request, f"Request accepted! Waiting for pickup.")
+
+            # 2. Create the Usage record (The 'Trust Loop' starts here)
+            # This allows the borrower to see the 'Pickup Photos' button
+        messages.success(request, f"Request for {rental_request.item.name} accepted!")
 
     elif action == "reject":
         rental_request.status = "rejected"
         rental_request.save()
+        messages.info(request, "Request declined.")
 
     return redirect("lender_dashboard")
+
+# def respond_to_request(request, request_id, action):
+
+#     email = request.session.get("user")
+#     user = User.objects.get(email=email)
+
+#     rental_request = get_object_or_404(item_Request, id=request_id)
+
+#     if rental_request.item.owner != user:
+#         return redirect("lender_dashboard")
+
+#     if action == "accept":
+#         rental_request.status = "accepted"
+#         rental_request.save()
+
+#     elif action == "reject":
+#         rental_request.status = "rejected"
+#         rental_request.save()
+
+#     return redirect("lender_dashboard")
 
 from django.db import transaction
 
@@ -1101,11 +1268,20 @@ def payment_page(request, request_id):
 
                 wallet.save()
 
+                # Debit rent
                 WalletTransaction.objects.create(
                     user=user,
-                    amount=rent_amount + deposit_amount,
+                    amount=rent_amount,
                     transaction_type="debit",
-                    description=f"Rental + Deposit for {req.item.name}"
+                    description=f"Rental payment for {req.item.name}"
+                )
+
+                # Hold deposit
+                WalletTransaction.objects.create(
+                    user=user,
+                    amount=deposit_amount,
+                    transaction_type="hold",
+                    description=f"Deposit held for {req.item.name}"
                 )
 
                 # 🔺 Give ONLY rent to lender
@@ -1161,16 +1337,16 @@ def payment_page(request, request_id):
             status="active"
         ).exists():
         
-            usage = item_usage.objects.create(
+            usage = item_usage.objects.get(
                 item=req.item,
-                lender=req.item.owner,
                 renter=req.renter,
-                start_date=req.start_date,
-                end_date=req.end_date,
-                status="active"
+                status="pending_pickup"
             )
-        
-            # 💰 CREATE PAYMENT RECORD (ADD HERE)
+
+            usage.status = "active"
+            usage.save()
+
+            # CREATE PAYMENT RECORD
             Payment.objects.create(
                 item_usage=usage,
                 lender=req.item.owner,

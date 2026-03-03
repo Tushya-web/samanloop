@@ -45,9 +45,11 @@ urlpatterns = [
     
     path('lender-dashboard/', views.lender_dashboard, name='lender_dashboard'),
     
+    path('record-pickup/<int:usage_id>/', views.record_pickup, name='record_pickup'),
         # Initiate Return
     path("initiate-return/<int:usage_id>/", views.initiate_return, name="initiate_return"),
     
+    path('withdraw-request/<int:request_id>/', views.withdraw_request, name='withdraw_request'),
     # Confirm Return (Lender)
     path("confirm-return/<int:usage_id>/", views.confirm_return, name="confirm_return"),
 

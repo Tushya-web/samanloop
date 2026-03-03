@@ -213,6 +213,7 @@ class item_Request(models.Model):
 
 class item_usage(models.Model):
     STATUS_CHOICES = (
+    ('pending_pickup', 'Awaiting Pickup'),
     ('active', 'Active'),
     ('returning', 'Returning'),
     ('completed', 'Completed'),
@@ -220,17 +221,26 @@ class item_usage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     lender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="lent_items")
     renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rented_items")
+    image = models.ImageField(upload_to="usage/", null=True, blank=True, default= None)
+
+    IMAGE_TYPE = [
+        ("pickup", "Pickup"),
+        ("return", "Return"),
+    ]
+
+    image_type = models.CharField(max_length=20, choices=IMAGE_TYPE,null=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default="active")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending_pickup")
+    refund_percentage = models.IntegerField(default=100)
     created_at = models.DateTimeField(auto_now_add=True)
     
 class Payment(models.Model):
 
-    item_usage = models.ForeignKey(
+    item_usage = models.OneToOneField(
         item_usage,
         on_delete=models.CASCADE,
-        related_name="payments"
+        related_name="payment"
     )
 
     lender = models.ForeignKey(

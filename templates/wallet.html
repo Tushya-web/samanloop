@@ -188,7 +188,7 @@
         <div class="row align-items-center">
             <div class="col-md-7 text-center text-md-start">
                 <p class="text-uppercase small fw-bold opacity-75 mb-1" style="letter-spacing: 2px;">Total Balance</p>
-                <h1 class="display-3 fw-bold mb-0">₹{{ wallet.balance|default:"1,250.00" }}</h1>
+                <h1 class="display-3 fw-bold mb-0">₹{{ wallet.balance|add:wallet.held_deposit|default:"0.00" }}</h1>
                 <p class="small mt-2 text-success fw-bold d-none d-md-block"><i class="bi bi-shield-lock-fill"></i> Bank-grade encryption active</p>
             </div>
             <div class="col-md-5 mt-3 mt-md-0">
@@ -228,30 +228,79 @@
     </div>
 
     <div class="section-header">Activity History</div>
-
-    <div class="transaction-list">
-        {% for tx in transactions %}
-        <div class="tx-item d-flex align-items-center shadow-sm">
-            <div class="icon-circle {% if tx.transaction_type == 'credit' %}bg-success{% else %}bg-danger{% endif %} bg-opacity-10 m-0 me-3" style="width:40px; height:40px; border-radius: 12px;">
-                <i class="bi {% if tx.transaction_type == 'credit' %}bi-arrow-down-left text-success{% else %}bi-arrow-up-right text-danger{% endif %}" style="font-size: 1rem !important;"></i>
-            </div>
-            <div class="flex-grow-1 overflow-hidden">
-                <h6 class="fw-bold mb-0 text-dark text-truncate">{{ tx.description|default:"Security Deposit" }}</h6>
-                <small class="text-muted" style="font-size: 0.7rem;">{{ tx.created_at|date:"d M, h:i A" }}</small>
-            </div>
-            <div class="text-end">
-                <div class="fw-bold fs-5 {% if tx.transaction_type == 'credit' %}text-success{% else %}text-danger{% endif %}">
-                    {% if tx.transaction_type == 'credit' %}+{% else %}-{% endif %}₹{{ tx.amount }}
+        <div class="transaction-list">
+            {% for tx in transactions %}
+            <div class="tx-item d-flex align-items-center shadow-sm">
+            
+                <!-- ICON -->
+                <div class="icon-circle 
+                    {% if tx.transaction_type == 'credit' or tx.transaction_type == 'release' %}
+                        bg-success
+                    {% elif tx.transaction_type == 'debit' or tx.transaction_type == 'hold' %}
+                        bg-danger
+                    {% endif %}
+                    bg-opacity-10 m-0 me-3"
+                    style="width:40px; height:40px; border-radius: 12px;">
+            
+                    <i class="bi 
+                        {% if tx.transaction_type == 'credit' or tx.transaction_type == 'release' %}
+                            bi-arrow-down-left text-success
+                        {% elif tx.transaction_type == 'debit' or tx.transaction_type == 'hold' %}
+                            bi-arrow-up-right text-danger
+                        {% endif %}"
+                        style="font-size: 1rem !important;">
+                    </i>
                 </div>
-                <span class="badge rounded-pill bg-light text-muted border-0" style="font-size: 0.6rem;">Success</span>
+            
+                <!-- DESCRIPTION -->
+                <div class="flex-grow-1 overflow-hidden">
+                    <h6 class="fw-bold mb-0 text-dark text-truncate">
+                        {{ tx.description|default:"Transaction" }}
+                    </h6>
+                    <small class="text-muted" style="font-size: 0.7rem;">
+                        {{ tx.created_at|date:"d M, h:i A" }}
+                    </small>
+                </div>
+            
+                <!-- AMOUNT -->
+                <div class="text-end">
+                    <div class="fw-bold fs-5 
+                        {% if tx.transaction_type == 'credit' or tx.transaction_type == 'release' %}
+                            text-success
+                        {% elif tx.transaction_type == 'debit' or tx.transaction_type == 'hold' %}
+                            text-danger
+                        {% endif %}">
+                
+                        {% if tx.transaction_type == 'credit' or tx.transaction_type == 'release' %}
+                            +₹{{ tx.amount }}
+                        {% else %}
+                            -₹{{ tx.amount }}
+                        {% endif %}
+                    </div>
+                
+                    <!-- STATUS BADGE -->
+                    {% if tx.transaction_type == "hold" %}
+                        <span class="badge rounded-pill bg-warning text-dark border-0" style="font-size: 0.6rem;">
+                            Held
+                        </span>
+                    {% elif tx.transaction_type == "release" %}
+                        <span class="badge rounded-pill bg-success border-0" style="font-size: 0.6rem;">
+                            Released
+                        </span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-light text-muted border-0" style="font-size: 0.6rem;">
+                            Completed
+                        </span>
+                    {% endif %}
+                </div>
             </div>
+        
+            {% empty %}
+            <div class="text-center py-5 bg-white rounded-4 border border-dashed shadow-sm">
+                <p class="text-muted mb-0 small">No transactions found.</p>
+            </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="text-center py-5 bg-white rounded-4 border border-dashed shadow-sm">
-            <p class="text-muted mb-0 small">No transactions found.</p>
-        </div>
-        {% endfor %}
-    </div>
 
 </div>
 

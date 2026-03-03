@@ -134,11 +134,20 @@
             70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(14, 165, 233, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
         }
+
+
+.modal-lg { max-width: 800px; }
+.uppercase-label { color: var(--brand-teal); }
+
+.bg-teal-soft { background-color: rgba(20, 184, 166, 0.1); color: #14b8a6; }
+.bg-warning-soft { background-color: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+.border-dashed { border: 2px dashed #e2e8f0 !important; }
     </style>
 </head>
 <body>
 
-{% include 'base/navbar.html' %}
+{% include 'base/navbar1.html' %}
 
 <br><br>
 <div class="hero-gradient">
@@ -249,6 +258,7 @@
             {% endif %}
         </div>
 
+
         <div class="tab-pane fade" id="listings" role="tabpanel">
             <div class="row g-4">
                 {% for item in my_listings %}
@@ -287,67 +297,138 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="out" role="tabpanel">
-            {% if active_lending %}
-                {% for active in active_lending %}
-                <div class="asset-card" style="border-left: 5px solid {% if active.status == 'returning' %}#f59e0b{% else %}var(--brand-teal){% endif %} !important;">
-                    <div class="row align-items-center">
-                        <div class="col-md-5 d-flex align-items-center gap-4">
-                            {% if active.item.images.first %}
-                                <img src="{{ active.item.images.first.image.url }}" class="item-thumb">
-                            {% endif %}
-                            <div>
-                                <h5 class="fw-bold mb-1">{{ active.item.name }}</h5>
-                                <small class="text-muted">Borrower: <span class="fw-bold text-dark">{{ active.renter.name }}</span></small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="uppercase-label">Return Expected</div>
-                            <span class="fw-bold text-dark">{{ active.end_date|date:"M d, Y" }}</span>
-                        </div>
-                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                            {% if active.status == 'returning' %}
-                                <form action="{% url 'confirm_return' active.id %}" method="POST" class="d-flex flex-wrap gap-2 justify-content-md-end">
-                                    {% csrf_token %}
 
-                                    <button type="submit"
-                                            name="return_action"
-                                            value="received"
-                                            class="btn btn-success btn-sm rounded-pill px-3 fw-bold py-2 shadow-sm">
-                                        ✅ Item Received
-                                    </button>
-                                
-                                    <button type="submit"
-                                            name="return_action"
-                                            value="defective"
-                                            class="btn btn-warning btn-sm rounded-pill px-3 fw-bold py-2 shadow-sm">
-                                        ⚠ Defective
-                                    </button>
-                                
-                                    <button type="submit"
-                                            name="return_action"
-                                            value="not_received"
-                                            class="btn btn-danger btn-sm rounded-pill px-3 fw-bold py-2 shadow-sm">
-                                        ❌ Money Not Received
-                                    </button>
-                                
-                                </form>
-                            {% else %}
-                                <div class="status-badge status-active d-inline-flex align-items-center gap-2">
-                                    <span class="pulse-dot"></span>
-                                    <span>Currently In Loop</span>
-                                </div>
-                            {% endif %}
+
+<div class="tab-pane fade" id="out" role="tabpanel">
+    {% if active_lending %}
+        {% for active in active_lending %}
+        <div class="asset-card shadow-sm mb-3 p-3 position-relative" 
+             style="border-radius: 20px; border-left: 6px solid {% if active.status == 'returning' %}#f59e0b{% else %}var(--brand-teal){% endif %} !important; background: white;">
+            
+            <div class="row align-items-center">
+                <div class="col-md-5 d-flex align-items-center gap-3">
+                    {% if active.item.images.first %}
+                        <img src="{{ active.item.images.first.image.url }}" class="rounded-4" style="width: 75px; height: 75px; object-fit: cover;">
+                    {% endif %}
+                    <div>
+                        <h6 class="fw-bold mb-1">{{ active.item.name }}</h6>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge {% if active.status == 'returning' %}bg-warning-soft text-warning{% else %}bg-teal-soft text-teal{% endif %} py-1 px-2 rounded-pill" style="font-size: 0.65rem;">
+                                {{ active.status|upper }}
+                            </span>
+                            <small class="text-muted">with <span class="fw-bold text-dark">{{ active.renter.name }}</span></small>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state text-center bg-white rounded-5 border py-5">
-                    <p class="text-muted">No items are currently out with borrowers.</p>
+
+                <div class="col-md-3 text-md-center border-start border-end d-none d-md-block">
+                    <p class="text-muted small mb-0" style="text-transform: uppercase; font-size: 0.6rem; letter-spacing: 0.5px;">Return Expected</p>
+                    <span class="fw-bold {% if active.status == 'returning' %}text-warning{% else %}text-dark{% endif %}">
+                        {{ active.end_date|date:"M d, Y" }}
+                    </span>
                 </div>
-            {% endif %}
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    {% if active.status == 'returning' %}
+                        <button type="button" class="btn btn-warning text-white rounded-pill px-4 fw-bold shadow-sm pulse-animation" data-bs-toggle="modal" data-bs-target="#returnModal{{active.id}}">
+                            <i class="bi bi-shield-check me-1"></i> Verify Return
+                        </button>
+                    {% else %}
+                        <button class="btn btn-light rounded-pill px-4 fw-bold border text-muted" disabled>
+                            <i class="bi bi-clock-history me-1"></i> In Use
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
         </div>
+
+        {% if active.status == 'returning' %}
+        <div class="modal fade" id="returnModal{{active.id}}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-5 overflow-hidden">
+                    <form action="{% url 'confirm_return' active.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-header border-0 bg-light px-4 py-3">
+                            <h5 class="fw-bold mb-0">Return Verification: {{ active.item.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        
+                        <div class="modal-body p-4">
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                    <label class="small text-muted fw-bold mb-2 d-block" style="letter-spacing: 1px; text-transform: uppercase;">Condition at Pickup</label>
+                                    {% if active.image %}
+                                        <div class="position-relative">
+                                            <img src="{{ active.image.url }}" class="img-fluid rounded-4 border shadow-sm" alt="Original Condition">
+                                            <span class="position-absolute bottom-0 end-0 m-2 badge bg-dark opacity-75">Borrower's Photo</span>
+                                        </div>
+                                    {% else %}
+                                        <div class="bg-light rounded-4 p-5 text-center text-muted">
+                                            <i class="bi bi-camera-video-off fs-2 d-block mb-2"></i>
+                                            <small>No pickup photo available</small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="h-100 d-flex flex-column justify-content-center bg-teal-soft p-4 rounded-4 border-dashed">
+                                        <h6 class="fw-bold text-teal"><i class="bi bi-info-circle-fill me-2"></i>Inspection Guide</h6>
+                                        <p class="small text-dark mb-0">
+                                            Check for new deep scratches, broken parts, or missing cables.
+                                            <strong>Normal wear and tear is expected.</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label class="fw-bold mb-3 d-block">Assess Condition & Refund Deposit:</label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="return_action" value="received" id="opt1_{{active.id}}" checked>
+                                    <label class="btn btn-outline-success w-100 py-3 rounded-4 d-flex flex-column align-items-center gap-2" for="opt1_{{active.id}}">
+                                        <i class="bi bi-star-fill fs-4"></i>
+                                        <span class="fw-bold">Excellent</span>
+                                        <small class="opacity-75">100% Refund</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="return_action" value="defective" id="opt2_{{active.id}}">
+                                    <label class="btn btn-outline-warning w-100 py-3 rounded-4 d-flex flex-column align-items-center gap-2" for="opt2_{{active.id}}">
+                                        <i class="bi bi-wrench-adjustable fs-4"></i>
+                                        <span class="fw-bold">Minor Issue</span>
+                                        <small class="opacity-75">50% Refund</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="return_action" value="major_defect" id="opt3_{{active.id}}">
+                                    <label class="btn btn-outline-danger w-100 py-3 rounded-4 d-flex flex-column align-items-center gap-2" for="opt3_{{active.id}}">
+                                        <i class="bi bi-x-octagon-fill fs-4"></i>
+                                        <span class="fw-bold">Major Damage</span>
+                                        <small class="opacity-75">0% Refund</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-0 p-4 pt-0">
+                            <button type="submit" class="btn btn-teal text-white w-100 py-3 fw-bold rounded-pill shadow">
+                                Complete Inspection & Finalize Loop
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% endfor %}
+    {% else %}
+        <div class="empty-state text-center bg-white rounded-5 border-dashed py-5 shadow-sm" style="border: 2px dashed #eee;">
+            <i class="bi bi-box-arrow-right text-muted opacity-25 display-4"></i>
+            <h5 class="fw-bold mt-4">Safe & Sound</h5>
+            <p class="text-muted">All your items are currently with you.</p>
+        </div>
+    {% endif %}
+</div>
 
         <div class="tab-pane fade" id="log" role="tabpanel">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">

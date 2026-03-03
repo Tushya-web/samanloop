@@ -229,11 +229,181 @@
             .price-tag { font-size: 0.95rem; padding: 4px 8px; }
             .fw-700 { font-size: 0.9rem; }
         }
+
+        :root {
+    --sl-primary: #14b8a6; /* Teal */
+    --sl-dark: #1e293b;
+    --sl-gray: #64748b;
+    --sl-card-bg: #ffffff;
+    --sl-radius: 18px;
+    --sl-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+.sl-card-wrapper {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 100%;
+}
+
+.sl-product-card {
+    background: var(--sl-card-bg);
+    border-radius: var(--sl-radius);
+    overflow: hidden;
+    text-decoration: none !important;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #f1f5f9;
+    box-shadow: var(--sl-shadow);
+    transition: all 0.3s ease;
+}
+
+/* Hover Effects */
+.sl-card-wrapper:hover {
+    transform: translateY(-8px);
+}
+.sl-card-wrapper:hover .sl-product-card {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: var(--sl-primary);
+}
+
+/* Image Section */
+.sl-image-box {
+    position: relative;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.sl-main-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.sl-card-wrapper:hover .sl-main-img {
+    transform: scale(1.1);
+}
+
+/* Badges */
+.sl-badge-container {
+    position: absolute;
+    top: 10px; left: 10px; right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}
+
+.sl-badge-verified {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    color: var(--sl-primary);
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.sl-wishlist-btn {
+    background: white;
+    border: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+    color: #cbd5e1;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.sl-wishlist-btn:hover { color: #f43f5e; transform: scale(1.1); }
+
+/* Content Styling */
+.sl-content {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.sl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.sl-title {
+    color: var(--sl-dark);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sl-rating {
+    background: #fffbeb;
+    color: #d97706;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.sl-location {
+    color: var(--sl-gray);
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+}
+
+.sl-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.sl-price-block { color: var(--sl-dark); }
+.sl-currency { font-weight: 800; font-size: 0.8rem; }
+.sl-amount { font-weight: 800; font-size: 1.1rem; color: var(--sl-primary); }
+.sl-unit { font-size: 0.7rem; color: var(--sl-gray); }
+
+.sl-action-arrow {
+    width: 28px; height: 28px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+    color: var(--sl-dark);
+    transition: all 0.3s ease;
+}
+
+.sl-card-wrapper:hover .sl-action-arrow {
+    background: var(--sl-primary);
+    color: white;
+    transform: rotate(-45deg);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .sl-radius { var(--sl-radius): 14px; }
+    .sl-amount { font-size: 1rem; }
+    .sl-title { font-size: 0.85rem; }
+    .sl-badge-verified { font-size: 0.55rem; padding: 3px 8px; }
+    .sl-img-overlay { display: none; } /* Hide overlay on mobile */
+}
     </style>
 </head>
 <body>
 
-    {% include 'base/navbar.html' %}
+    {% include 'base/navbar1.html' %}
 <br><br><br>
     <div class="container mb-5">
         <div class="ai-assistant-box shadow-lg">
@@ -293,37 +463,69 @@
 
         <div class="row g-3 g-md-4">
             {% for item in items %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <a href="{% url 'item_detail' item.id %}" class="card-custom">
-                    <div class="card-img-container">
-                        <span class="badge-premium">Verified Gear</span>
-                        {% if item.images.all %}
-                            <img src="{{ item.images.first.image.url }}" class="card-img" alt="{{ item.name }}">
-                        {% else %}
-                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" class="card-img" alt="Placeholder">
-                        {% endif %}
-                    </div>
-                    <div class="pt-3 px-1">
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <h6 class="fw-700 mb-0 text-truncate" title="{{ item.name }}">{{ item.name }}</h6>
-                            <div class="small fw-700 text-nowrap"><i class="bi bi-star-fill text-warning me-1"></i>4.9</div>
-                        </div>
-                        <p class="text-muted small mb-2 text-truncate"><i class="ph ph-map-pin me-1"></i>{{ item.city|default:"Mehsana" }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="price-tag">₹{{ item.rent_per_day }}<span class="d-none d-sm-inline opacity-50 fw-normal" style="font-size: 0.7rem;"> / day</span></div>
-                            <span class="btn btn-sm btn-outline-dark rounded-circle"><i class="ph ph-arrow-right"></i></span>
-                        </div>
-                    </div>
-                </a>
+<div class="col-6 col-md-4 col-lg-3 mb-4">
+    <div class="sl-card-wrapper">
+        <a href="{% url 'item_detail' item.id %}" class="sl-product-card">
+            <div class="sl-image-box">
+                <div class="sl-badge-container">
+                    <span class="sl-badge-verified">
+                        <i class="bi bi-patch-check-fill"></i> Verified
+                    </span>
+
+                </div>
+                
+                {% if item.images.all %}
+                    <img src="{{ item.images.first.image.url }}" class="sl-main-img" loading="lazy" alt="{{ item.name }}">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" class="sl-main-img" alt="Placeholder">
+                {% endif %}
+                
+                <div class="sl-img-overlay">
+                    <span class="sl-view-btn">View Details</span>
+                </div>
             </div>
-            {% empty %}
-            <div class="text-center py-5 col-12">
-                <img src="https://illustrations.popsy.co/white/falling.svg" style="width: 200px;" alt="Not found">
-                <h4 class="mt-4 fw-bold">No gear found</h4>
-                <p class="text-muted">Maybe try a different search term?</p>
-                <a href="{% url 'browse_items' %}" class="btn btn-teal text-white rounded-pill px-5 mt-2">Browse All</a>
+
+            <div class="sl-content">
+                <div class="sl-header">
+                    <h6 class="sl-title" title="{{ item.name }}">{{ item.name }}</h6>
+                    <div class="sl-rating">
+                    {% if item.avg_rating %}
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <span>{{ item.avg_rating|floatformat:1 }}</span>
+                        <small class="text-muted" style="font-size: 0.6rem;">({{ item.reviews.count }})</small>
+                    {% else %}
+                        <span class="text-muted" style="font-size: 0.7rem;">New Gear</span>
+                    {% endif %}
+                </div>
+                </div>
+
+                <div class="sl-location">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>{{ item.city|default:"Mehsana" }}</span>
+                </div>
+
+                <div class="sl-footer">
+                    <div class="sl-price-block">
+                        <span class="sl-currency">₹</span>
+                        <span class="sl-amount">{{ item.rent_per_day }}</span>
+                        <span class="sl-unit">/day</span>
+                    </div>
+                    <div class="sl-action-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
             </div>
-            {% endfor %}
+        </a>
+    </div>
+</div>
+{% empty %}
+<div class="sl-empty-state text-center py-5 col-12">
+    <img src="https://illustrations.popsy.co/white/falling.svg" class="sl-empty-img" alt="Not found">
+    <h4 class="mt-4 fw-bold">No gear found</h4>
+    <p class="text-muted">Maybe try a different search term?</p>
+    <a href="{% url 'browse_items' %}" class="sl-browse-btn">Browse All Gear</a>
+</div>
+{% endfor %}
         </div>
     </div>
 

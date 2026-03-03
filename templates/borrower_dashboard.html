@@ -123,11 +123,69 @@
             border-radius: 12px;
             display: inline-block;
         }
+
+        /* Custom Styles for better UI */
+.bg-teal-soft { background-color: rgba(20, 184, 166, 0.1); color: #14b8a6; }
+.bg-danger-soft { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.bg-success-soft { background-color: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.bg-secondary-soft { background-color: rgba(107, 114, 128, 0.1); color: #6b7280; }
+
+.btn-outline-teal {
+    border: 2px solid #14b8a6;
+    color: #14b8a6;
+}
+.btn-outline-teal:hover {
+    background-color: #14b8a6;
+    color: white;
+}
+
+.upload-icon-circle {
+    width: 70px;
+    height: 70px;
+    background: #f0fdfa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
+    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+}
+.upload-drop-zone .border-dashed {
+    border-style: dashed !important;
+    border-color: #cbd5e1 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-drop-zone .border-dashed:hover {
+    background-color: var(--brand-teal-light) !important;
+    border-color: var(--brand-teal) !important;
+}
+
+.cursor-pointer { cursor: pointer; }
+
+.transition-all { transition: all 0.3s ease; }
+
+/* Image preview style */
+.preview-img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 12px;
+}
     </style>
 </head>
 <body>
 
-{% include 'base/navbar.html' %}
+{% include 'base/navbar1.html' %}
 <br><br>
 <div class="hero-gradient">
     <div class="container">
@@ -182,106 +240,215 @@
         </ul>
     </div>
 
+    {% comment %} Active Loop {% endcomment %}
+
     <div class="tab-content" id="pills-tabContent">
-        
-        <div class="tab-pane fade show active" id="active" role="tabpanel">
-            {% if active_usage %}
-                {% for usage in active_usage %}
-                <div class="asset-card">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 d-flex align-items-center gap-4">
-                            {% with usage.item.images.all|first as img %}
-                                <img src="{{ img.image.url }}" class="item-thumb" alt="{{ usage.item.name }}">
-                            {% endwith %}
-                            <div>
-                                <h5 class="fw-bold mb-1">{{ usage.item.name }}</h5>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar-xs" style="width: 20px; height: 20px; background: #eee; border-radius: 50%; display: inline-block;"></div>
-                                    <small class="text-muted">Owner: <span class="text-dark fw-bold">{{ usage.lender.name }}</span></small>
-                                </div>
-                            </div>
+    
+    <div class="tab-pane fade show active" id="active" role="tabpanel">
+    {% if active_usage %}
+        {% for usage in active_usage %}
+        <div class="asset-card shadow-sm border-0 mb-3 p-3" style="border-radius: 15px; background: #fff;">
+            <div class="row align-items-center">
+                <div class="col-md-5 d-flex align-items-center gap-3">
+                    {% with usage.item.images.all|first as img %}
+                        <div class="position-relative">
+                            <img src="{{ img.image.url }}" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;" alt="{{ usage.item.name }}">
+                            <span class="position-absolute top-0 start-0 badge rounded-pill bg-teal m-1" style="font-size: 0.6rem;">Active</span>
                         </div>
-                        <div class="col-md-3 mt-3 mt-md-0">
-                            <div class="due-date-box">
-                                <small class="text-danger d-block fw-bold text-uppercase" style="font-size: 10px; letter-spacing: 1px;">Return By</small>
-                                <span class="fw-bold text-dark">{{ usage.end_date|date:"M d, Y" }}</span>
-                            </div>
+                    {% endwith %}
+                    <div>
+                        <h6 class="fw-bold mb-0">{{ usage.item.name }}</h6>
+                        <p class="text-muted small mb-0">Lender: <span class="text-dark fw-semibold">{{ usage.lender.name }}</span></p>
+                        <a href="{% url 'item_detail' usage.item.id %}" class="text-teal small text-decoration-none fw-bold">View Item details →</a>
+                    </div>
+                </div>
+
+                <div class="col-md-3 border-start border-end text-center">
+                    <div class="px-2">
+                        <p class="text-uppercase text-muted mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Return Deadline</p>
+                        <h6 class="fw-extrabold {% if today >= usage.end_date %}text-danger{% else %}text-dark{% endif %} mb-0">
+                            {{ usage.end_date|date:"D, M d" }}
+                        </h6>
+                        {% if today >= usage.end_date %}
+                            <span class="badge bg-danger-soft text-danger tiny-font" style="font-size: 0.6rem;">Overdue</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    {% if usage.status == 'active' and today >= usage.end_date %}
+                        <div class="d-flex flex-column align-items-md-end gap-2">
+                            <form action="{% url 'initiate_return' usage.id %}" method="POST" class="w-100">
+                                {% csrf_token %}
+                                <button type="submit" class="btn {% if today >= usage.end_date %}btn-teal{% else %}btn-outline-teal{% endif %} w-100 rounded-pill fw-bold py-2 shadow-sm">
+                                    <i class="bi bi-arrow-return-left me-2"></i>Return Gear
+                                </button>
+                            </form>
+                            <small class="text-muted px-2" style="font-size: 0.7rem;">Pickup recorded via Photo</small>
                         </div>
-                        <div class="col-md-3 mt-3 mt-md-0 d-flex flex-column align-items-md-end justify-content-center">
-                            {% if usage.status == 'active' %}
-                                {% if today >= usage.end_date %}
-                                    <form action="{% url 'initiate_return' usage.id %}" method="POST" class="w-100" style="max-width: 200px;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-teal btn-sm w-100 rounded-pill fw-bold py-2 shadow-sm transition-all">
-                                            <i class="bi bi-arrow-return-left me-2"></i>Return Item
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <div class="status-badge status-active d-flex align-items-center gap-2 border">
-                                        <span class="pulse-dot"></span>
-                                        <span>In Loop • Ends {{ usage.end_date|date:"M d" }}</span>
-                                    </div>
-                                {% endif %}
-                                
-                            {% elif usage.status == 'returning' %}
-                                <div class="status-badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 d-flex align-items-center gap-2">
-                                    <div class="spinner-border spinner-border-sm" role="status" style="width: 12px; height: 12px; border-width: 2px;"></div>
-                                    <span>Awaiting Confirmation</span>
-                                </div>
-                            {% endif %}
+                    {% elif usage.status == 'returning' %}
+                        <div class="bg-light p-2 rounded-3 text-center">
+                            <span class="text-warning small fw-bold"><i class="bi bi-clock-history me-1"></i> Awaiting Lender Confirmation</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state text-center py-5 bg-light rounded-4">
+            <i class="bi bi-recycle display-4 text-muted opacity-25"></i>
+            <p class="text-muted mt-2">Your loop is empty. Rent something to get started!</p>
+        </div>
+    {% endif %}
+</div>
+<div class="tab-pane fade" id="requests" role="tabpanel">
+    {% if sent_requests %}
+        {% for req in sent_requests %}
+        <div class="asset-card shadow-sm border-0 mb-3 p-3 position-relative" style="border-radius: 20px; background: white;">
+            
+            {% for usage in active_usage %}
+                {% if usage.item.id == req.item.id and usage.status == "in_use" %}
+                <div class="position-absolute top-0 start-0 mt-2 ms-2">
+                    <span class="badge bg-teal text-white rounded-pill px-3 shadow-sm pulse-animation" style="font-size: 0.6rem; letter-spacing: 1px;">
+                        <i class="bi bi-arrow-repeat me-1"></i> IN LOOP
+                    </span>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="row align-items-center">
+                <div class="col-md-5 d-flex align-items-center gap-3">
+                    {% with req.item.images.all|first as img %}
+                        <div class="position-relative">
+                            <img src="{{ img.image.url }}" class="rounded-4" style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #eee;">
+                        </div>
+                    {% endwith %}
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">{{ req.item.name }}</h6>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="badge {% if req.status == 'pending' %}bg-warning-soft text-warning{% elif req.status == 'accepted' %}bg-success-soft text-success{% else %}bg-danger-soft text-danger{% endif %} py-1 px-2 rounded-pill" style="font-size: 0.65rem;">
+                                {{ req.get_status_display|upper }}
+                            </span>
+                            <small class="text-muted fw-medium" style="font-size: 0.7rem;">#REQ-{{ req.id }}</small>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state bg-white rounded-5 border-dashed py-5">
-                    <img src="{% static 'images/empty-box.png' %}" alt="" style="width: 120px; opacity: 0.5; filter: grayscale(1);">
-                    <h5 class="fw-bold mt-4">No Gear in Motion</h5>
-                    <p class="text-muted mx-auto" style="max-width: 300px;">Items you're currently renting will appear here once approved by the lender.</p>
+
+                <div class="col-md-2 text-center border-start border-end d-none d-md-block">
+                    <p class="text-muted mb-0" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">Total Rent</p>
+                    <span class="fw-extrabold text-dark fs-5">₹{{ req.total_rent }}</span>
                 </div>
-            {% endif %}
+
+                <div class="col-md-5 text-md-end mt-3 mt-md-0 d-flex align-items-center justify-content-md-end gap-2">
+                    
+                    {% if req.status == 'pending' %}
+                        <div class="d-flex align-items-center gap-2">
+                             <div class="text-end d-none d-lg-block">
+                                <small class="d-block text-muted" style="font-size: 0.65rem;">Changed your mind?</small>
+                            </div>
+                            <form action="{% url 'withdraw_request' req.id %}" method="POST" onsubmit="return confirm('Withdraw this request?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold border-2">
+                                    Withdraw
+                                </button>
+                            </form>
+                        </div>
+
+                    {% elif req.status == "accepted" %}
+                        {% for usage in active_usage %}
+                            {% if usage.item.id == req.item.id %}
+                                
+                                {% if usage.status == "pending_pickup" and not usage.image %}
+                                    <div class="text-start me-2 d-none d-lg-block">
+                                        <small class="d-block text-primary fw-bold" style="font-size: 0.6rem;">STEP 1 OF 2</small>
+                                        <small class="text-muted" style="font-size: 0.7rem;">Verify Gear</small>
+                                    </div>
+                                    <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#pickupModal{{ usage.id }}">
+                                        <i class="bi bi-camera-fill me-2"></i>Pickup
+                                    </button>
+
+                                {% elif usage.status == "pending_pickup" and usage.image %}
+                                    <div class="text-start me-2 d-none d-lg-block">
+                                        <small class="d-block text-success fw-bold" style="font-size: 0.6rem;">STEP 2 OF 2</small>
+                                        <small class="text-muted" style="font-size: 0.7rem;">Finalize Payment</small>
+                                    </div>
+                                    <a href="{% url 'payment_page' req.id %}" class="btn btn-teal rounded-pill px-4 fw-bold shadow-sm">
+                                        <i class="bi bi-wallet2 me-2"></i>Pay Now
+                                    </a>
+                                {% endif %}
+
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    <a href="{% url 'item_detail' req.item.id %}" class="btn btn-light rounded-pill px-3 fw-bold border shadow-sm btn-sm">
+                        <i class="bi bi-info-circle me-1"></i> <span class="d-none d-lg-inline">Details</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="tab-pane fade" id="requests" role="tabpanel">
-            {% if sent_requests %}
-                {% for req in sent_requests %}
-                <div class="asset-card">
-                    <div class="row align-items-center">
-                        <div class="col-md-5 d-flex align-items-center gap-4">
-                            {% with req.item.images.all|first as img %}
-                                <img src="{{ img.image.url }}" class="item-thumb" alt="{{ req.item.name }}">
-                            {% endwith %}
-                            <div>
-                                <h5 class="fw-bold mb-1">{{ req.item.name }}</h5>
-                                <small class="text-muted">Requested <span class="fw-bold">{{ req.created_at|date:"M d" }}</span></small>
+        {% if req.status == "accepted" %}
+            {% for usage in active_usage %}
+                {% if usage.item.id == req.item.id and usage.status == "pending_pickup" %}
+                <div class="modal fade" id="pickupModal{{ usage.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg rounded-5 overflow-hidden">
+                            <div class="bg-primary py-2 w-100"></div>
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="fw-bold px-2 pt-2">Pickup Verification</h5>
+                                <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal"></button>
                             </div>
-                        </div>
-                        <div class="col-md-3 text-center py-3 py-md-0">
-                            <p class="mb-0 text-muted small fw-bold text-uppercase">Total Rent</p>
-                            <span class="fs-5 fw-extrabold text-teal" style="color: var(--brand-teal);">₹{{ req.total_rent }}</span>
-                        </div>
-                        <div class="col-md-4 text-md-end d-flex flex-wrap justify-content-md-end gap-2">
-                            {% if req.status == 'pending' %}
-                                <span class="status-badge status-pending">Pending Approval</span>
-                            {% elif req.status == 'accepted' %}
-                                <a href="{% url 'payment_page' req.id %}" class="btn btn-teal rounded-pill px-4 fw-bold">Pay Now</a>
-                            {% elif req.status == 'paid' %}
-                                <span class="status-badge status-active">Payment Verified</span>
-                            {% else %}
-                                <span class="status-badge status-rejected">Request Declined</span>
-                            {% endif %}
-                            <a href="{% url 'item_detail' req.item.id %}" class="btn btn-outline-secondary rounded-pill px-3 fw-bold"><i class="bi bi-eye"></i></a>
+                            <div class="modal-body px-4 pb-4">
+                                <div class="text-center mb-4">
+                                    <div class="upload-icon-circle mx-auto mb-3 bg-primary-soft">
+                                        <i class="bi bi-camera-fill fs-3 text-primary"></i>
+                                    </div>
+                                    <p class="text-muted small px-3 mb-0">
+                                        Please take a clear photo of the item <strong>at the time of pickup</strong> to protect yourself from damage claims.
+                                    </p>
+                                </div>
+                                <form method="POST" action="{% url 'record_pickup' usage.id %}" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="upload-drop-zone mb-3">
+                                        <label for="fileInput{{ usage.id }}" class="w-100 cursor-pointer">
+                                            <div class="py-4 border border-2 border-dashed rounded-4 text-center bg-light transition-all" id="previewContainer{{ usage.id }}">
+                                                <i class="bi bi-cloud-arrow-up fs-2 text-muted"></i>
+                                                <p class="small text-muted mt-2 mb-0">Snap or Select Photo</p>
+                                            </div>
+                                            <input type="file" name="pickup_image" id="fileInput{{ usage.id }}" class="d-none" accept="image/*" required onchange="previewImage(this, '{{ usage.id }}')">
+                                        </label>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary py-3 rounded-pill fw-bold shadow-sm">
+                                            Confirm & Proceed to Payment
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state bg-white rounded-5 border py-5">
-                    <p class="text-muted">You haven't requested any gear yet.</p>
-                    <a href="{% url 'browse_items' %}" class="btn btn-dark rounded-pill">Explore Gear</a>
-                </div>
-            {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        {% endfor %}
+    {% else %}
+        <div class="empty-state text-center bg-white rounded-5 border-dashed py-5 shadow-sm mt-3" style="border: 2px dashed #dee2e6;">
+            <i class="bi bi-send-dash text-muted opacity-25 display-3"></i>
+            <h5 class="fw-bold mt-4">No active loop requests</h5>
+            <p class="text-muted px-4">Your sent requests and active gear loops will appear here.</p>
+            <a href="{% url 'index' %}" class="btn btn-teal rounded-pill px-4 fw-bold mt-2">Explore Gear</a>
         </div>
+    {% endif %}
+</div>
+
+                            
+{% comment %} History Section {% endcomment %}
 
         <div class="tab-pane fade" id="history" role="tabpanel">
             {% if rental_history %}
@@ -376,6 +543,38 @@
 {% include 'base/footer.html' %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function previewImage(input, usageId) {
+    const container = document.getElementById('previewContainer' + usageId);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            container.innerHTML = `
+                <div class="position-relative p-2">
+                    <img src="${e.target.result}" class="preview-img mb-2">
+                    <div class="small fw-bold text-teal">
+                        <i class="bi bi-check-circle-fill"></i> Image Selected
+                    </div>
+                    <button type="button" class="btn btn-sm btn-dark rounded-pill mt-2" onclick="resetUpload('${usageId}')">Change</button>
+                </div>`;
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function resetUpload(usageId) {
+    const container = document.getElementById('previewContainer' + usageId);
+    const input = document.getElementById('fileInput' + usageId);
+    input.value = ''; // Clear file
+    container.innerHTML = `
+        <i class="bi bi-cloud-arrow-up fs-2 text-muted"></i>
+        <p class="small text-muted mt-2 mb-0">Click to snap or upload photo</p>
+        <span class="badge bg-secondary-soft text-dark tiny-font">JPG, PNG allowed</span>`;
+}
+</script>
 
 </body>
 </html>
