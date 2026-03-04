@@ -1,87 +1,523 @@
 {% load static %}
 
-<footer class="footer mt-5 pt-5 pb-3" style="background-color: var(--navy-dark); color: rgba(255,255,255,0.8);">
+<style>
+/* ════════════════════════════════════════════
+   FOOTER — SAMANLOOP
+   Aesthetic: Deep Navy, Premium, Refined
+════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+.sl-footer {
+  background: #020c1b;
+  color: rgba(255,255,255,.65);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ambient background glow */
+.sl-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(13,148,136,.5) 30%, rgba(45,212,191,.8) 50%, rgba(13,148,136,.5) 70%, transparent 100%);
+}
+.sl-footer::after {
+  content: '';
+  position: absolute;
+  top: -200px; left: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(13,148,136,.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Mesh grid */
+.sl-footer-mesh {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13,148,136,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+}
+
+/* ── MAIN BODY ── */
+.sl-footer-body {
+  position: relative;
+  z-index: 10;
+  padding: 72px 0 0;
+}
+
+.sl-footer-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1.6fr;
+  gap: 40px;
+  padding-bottom: 56px;
+}
+
+/* ── BRAND COL ── */
+.sl-brand-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.sl-brand-dot {
+  color: #14b8a6;
+  font-size: 1.8rem;
+  line-height: 1;
+  margin-top: -4px;
+}
+.sl-brand-tagline {
+  font-size: .8rem;
+  font-weight: 600;
+  color: #14b8a6;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sl-tagline-dot {
+  width: 6px; height: 6px;
+  background: #14b8a6;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #14b8a6;
+  animation: taglinePulse 2s ease infinite;
+}
+@keyframes taglinePulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.sl-brand-desc {
+  font-size: .83rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,.42);
+  max-width: 300px;
+  margin-bottom: 28px;
+}
+
+/* Social Icons */
+.sl-socials { display: flex; gap: 10px; }
+.sl-social-btn {
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  font-size: .95rem;
+  transition: all .25s cubic-bezier(.4,0,.2,1);
+}
+.sl-social-btn:hover {
+  background: rgba(13,148,136,.2);
+  border-color: rgba(13,148,136,.4);
+  color: #14b8a6;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(13,148,136,.2);
+}
+
+/* ── NAV COLUMNS ── */
+.sl-col-title {
+  font-family: 'Sora', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 22px;
+  position: relative;
+  padding-bottom: 14px;
+}
+.sl-col-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 24px; height: 2px;
+  background: linear-gradient(90deg, #14b8a6, #2dd4bf);
+  border-radius: 2px;
+}
+
+.sl-nav-list { list-style: none; padding: 0; margin: 0; }
+.sl-nav-list li { margin-bottom: 10px; }
+.sl-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .84rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  transition: all .22s ease;
+  position: relative;
+}
+.sl-nav-link::before {
+  content: '';
+  width: 0; height: 1px;
+  background: #14b8a6;
+  transition: width .22s ease;
+  position: absolute;
+  bottom: -1px; left: 0;
+}
+.sl-nav-link:hover {
+  color: rgba(255,255,255,.88);
+  transform: translateX(4px);
+}
+.sl-nav-link:hover::before { width: 100%; }
+.sl-nav-arrow {
+  width: 14px; height: 14px;
+  opacity: 0;
+  transition: opacity .22s ease, transform .22s ease;
+  color: #14b8a6;
+  flex-shrink: 0;
+}
+.sl-nav-link:hover .sl-nav-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* ── NEWSLETTER COL ── */
+.sl-newsletter-title {
+  font-family: 'Sora', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 22px;
+  position: relative;
+  padding-bottom: 14px;
+}
+.sl-newsletter-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 24px; height: 2px;
+  background: linear-gradient(90deg, #14b8a6, #2dd4bf);
+  border-radius: 2px;
+}
+.sl-newsletter-desc {
+  font-size: .83rem;
+  color: rgba(255,255,255,.42);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+/* Email Input */
+.sl-email-wrap {
+  display: flex;
+  background: rgba(255,255,255,.05);
+  border: 1.5px solid rgba(255,255,255,.08);
+  border-radius: 13px;
+  overflow: hidden;
+  transition: all .25s ease;
+  margin-bottom: 20px;
+}
+.sl-email-wrap:focus-within {
+  border-color: rgba(13,148,136,.5);
+  background: rgba(13,148,136,.07);
+  box-shadow: 0 0 0 3px rgba(13,148,136,.1);
+}
+.sl-email-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .83rem;
+  padding: 12px 16px;
+}
+.sl-email-input::placeholder { color: rgba(255,255,255,.22); }
+.sl-email-btn {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  border: none;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  padding: 0 18px;
+  cursor: pointer;
+  letter-spacing: .5px;
+  transition: all .25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.sl-email-btn:hover { background: linear-gradient(135deg, #2dd4bf, #0d9488); }
+.sl-email-btn svg { width: 14px; height: 14px; }
+
+/* Contact Info */
+.sl-contact-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.sl-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: .8rem;
+  color: rgba(255,255,255,.42);
+  line-height: 1.5;
+}
+.sl-contact-icon {
+  width: 28px; height: 28px;
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #14b8a6;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.sl-contact-icon svg { width: 13px; height: 13px; }
+
+/* ── DIVIDER ── */
+.sl-footer-divider {
+  position: relative;
+  z-index: 10;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.07) 20%, rgba(255,255,255,.07) 80%, transparent);
+  margin: 0;
+}
+
+/* ── BOTTOM BAR ── */
+.sl-footer-bottom {
+  position: relative;
+  z-index: 10;
+  padding: 22px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.sl-copyright {
+  font-size: .78rem;
+  color: rgba(255,255,255,.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sl-copyright-heart {
+  color: #f43f5e;
+  animation: heartbeat 1.4s ease infinite;
+}
+@keyframes heartbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+.sl-copyright strong { color: rgba(255,255,255,.55); font-weight: 600; }
+
+.sl-payment-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sl-payment-label {
+  font-size: .68rem;
+  color: rgba(255,255,255,.2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-right: 4px;
+}
+.sl-pay-badge {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 7px;
+  padding: 4px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .2s ease;
+}
+.sl-pay-badge:hover { border-color: rgba(13,148,136,.3); }
+.sl-pay-badge img { height: 14px; opacity: .55; display: block; filter: brightness(1.8); transition: opacity .2s ease; }
+.sl-pay-badge:hover img { opacity: .9; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 992px) {
+  .sl-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+@media (max-width: 640px) {
+  .sl-footer-body { padding: 52px 0 0; }
+  .sl-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .sl-brand-desc { max-width: 100%; }
+  .sl-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 0 24px;
+  }
+  .sl-payment-row { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .sl-footer-grid { gap: 28px; }
+  .sl-brand-name { font-size: 1.3rem; }
+}
+</style>
+
+<footer class="sl-footer">
+  <div class="sl-footer-mesh"></div>
+
+  <div class="sl-footer-body">
+    <div class="container">
+      <div class="sl-footer-grid">
+
+        <!-- ── BRAND COL ── -->
+        <div>
+          <div class="sl-brand-name">
+            SamanLoop<span class="sl-brand-dot">.</span>
+          </div>
+          <div class="sl-brand-tagline">
+            <span class="sl-tagline-dot"></span>
+            India's Sharing Marketplace
+          </div>
+          <p class="sl-brand-desc">
+            Building India's largest community-driven rental marketplace. We help you save money and reduce waste by sharing resources locally.
+          </p>
+          <div class="sl-socials">
+            <a href="{% url 'error404' %}" class="sl-social-btn" title="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="{% url 'error404' %}" class="sl-social-btn" title="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="{% url 'error404' %}" class="sl-social-btn" title="X / Twitter">
+              <i class="bi bi-twitter-x"></i>
+            </a>
+            <a href="{% url 'error404' %}" class="sl-social-btn" title="LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- ── MARKETPLACE COL ── -->
+        <div>
+          <div class="sl-col-title">Marketplace</div>
+          <ul class="sl-nav-list">
+            <li>
+              <a href="{% url 'error404' %}" class="sl-nav-link">
+                Browse Items
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'howitworks' %}" class="sl-nav-link">
+                How it Works
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'error404' %}" class="sl-nav-link">
+                Safety &amp; Trust
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'pricingguide' %}" class="sl-nav-link">
+                Pricing Guide
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── COMPANY COL ── -->
+        <div>
+          <div class="sl-col-title">Company</div>
+          <ul class="sl-nav-list">
+            <li>
+              <a href="{% url 'about' %}" class="sl-nav-link">
+                About Us
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'error404' %}" class="sl-nav-link">
+                Privacy Policy
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'terms' %}" class="sl-nav-link">
+                Terms of Service
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'contact' %}" class="sl-nav-link">
+                Contact Support
+                <svg class="sl-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── NEWSLETTER COL ── -->
+        <div>
+          <div class="sl-newsletter-title">Stay Updated</div>
+          <p class="sl-newsletter-desc">Get notified about new items, local deals, and community updates.</p>
+
+          <div class="sl-email-wrap">
+            <input type="email" class="sl-email-input" placeholder="Enter your email…">
+            <button class="sl-email-btn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Join
+            </button>
+          </div>
+
+          <ul class="sl-contact-list">
+            <li class="sl-contact-item">
+              <span class="sl-contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <span>support@samanloop.in</span>
+            </li>
+            <li class="sl-contact-item">
+              <span class="sl-contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <span>Mehsana · Ahmedabad · Mumbai</span>
+            </li>
+          </ul>
+        </div>
+
+      </div><!-- /grid -->
+    </div><!-- /container -->
+  </div><!-- /body -->
+
+  <div class="sl-footer-divider"></div>
+
+  <!-- ── BOTTOM BAR ── -->
   <div class="container">
-    <div class="row g-4">
-      
-      <div class="col-lg-4 col-md-6">
-        <h5 class="fw-bold mb-3 text-white">SamanLoop<span style="color: var(--brand-teal);">.</span></h5>
-        {% comment %} <img src="{% static 'images/Group 11.png' %}" alt="SamanLoop Logo" height="40" class="mb-3"><span style="color: var(--brand-teal);">.</span> {% endcomment %}
-        <p class="small pe-lg-5" style="line-height: 1.8;">
-          Building India's largest community-driven rental marketplace. We help you save money and reduce waste by sharing resources locally.
-        </p>
-        <div class="d-flex gap-3 mt-3">
-          <a href={% url "error404" %} class="text-white opacity-50"><i class="bi bi-instagram fs-5"></i></a>
-          <a href={% url "error404" %} class="text-white opacity-50"><i class="bi bi-facebook fs-5"></i></a>
-          <a href={% url "error404" %} class="text-white opacity-50"><i class="bi bi-twitter-x fs-5"></i></a>
+    <div class="sl-footer-bottom">
+      <div class="sl-copyright">
+        © 2026 <strong>SamanLoop</strong>.&nbsp; Made with <span class="sl-copyright-heart">♥</span>&nbsp; in India.
+      </div>
+
+      <div class="sl-payment-row">
+        <span class="sl-payment-label">Accepted</span>
+        <div class="sl-pay-badge">
+          <img src="https://cdn-icons-png.flaticon.com/512/349/349221.png" alt="Visa">
         </div>
-      </div>
-
-      <div class="col-lg-2 col-md-6">
-        <h6 class="fw-bold mb-3 text-white">Marketplace</h6>
-        <ul class="list-unstyled small">
-          <li class="mb-2"><a href={% url "error404" %} class="footer-link">Browse Items</a></li>
-          <li class="mb-2"><a href="{%url 'howitworks'%}" class="footer-link">How it Works</a></li>
-          <li class="mb-2"><a href={% url "error404" %} class="footer-link">Safety & Trust</a></li>
-          <li class="mb-2"><a href="{%url 'pricingguide'%}" class="footer-link">Pricing Guide</a></li>
-        </ul>
-      </div>
-
-      <div class="col-lg-2 col-md-6">
-        <h6 class="fw-bold mb-3 text-white">Company</h6>
-        <ul class="list-unstyled small">
-          <li class="mb-2"><a href="{% url 'about' %}" class="footer-link">About Us</a></li>
-          <li class="mb-2"><a href={% url "error404" %} class="footer-link">Privacy Policy</a></li>
-          <li class="mb-2"><a href="{% url 'terms' %}" class="footer-link">Terms of Service</a></li>
-          <li class="mb-2"><a href="{% url 'contact'%}" class="footer-link">Contact Support</a></li>
-        </ul>
-      </div>
-
-      <div class="col-lg-4 col-md-6">
-        <h6 class="fw-bold mb-3 text-white">Stay Updated</h6>
-        <p class="small mb-3">Get notified about new items and local deals.</p>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control bg-dark border-0 text-white small" placeholder="Email address" style="font-size: 0.85rem;">
-          <button class="btn btn-brand" type="button" style="padding: 0 15px;">Join</button>
+        <div class="sl-pay-badge">
+          <img src="https://cdn-icons-png.flaticon.com/512/349/349228.png" alt="Mastercard">
         </div>
-        <p class="small mb-1"><i class="bi bi-envelope-fill me-2" style="color: var(--brand-teal);"></i> support@samanloop.in</p>
-        <p class="small"><i class="bi bi-geo-alt-fill me-2" style="color: var(--brand-teal);"></i> Available in New Delhi, Bengaluru, Mumbai</p>
-      </div>
-    </div>
-
-    <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
-
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <p class="small mb-0 ">
-          © 2026 SamanLoop. Made with ❤️ in India.
-        </p>
-      </div>
-      <div class="col-md-6 text-md-end mt-3 mt-md-0">
-        <img src="https://cdn-icons-png.flaticon.com/512/349/349221.png" height="20" class="me-2 opacity-50" alt="Visa">
-        <img src="https://cdn-icons-png.flaticon.com/512/349/349228.png" height="20" class="me-2 opacity-50" alt="Mastercard">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" height="15" class="opacity-50" alt="UPI">
+        <div class="sl-pay-badge">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height:13px">
+        </div>
       </div>
     </div>
   </div>
-</footer>
 
-<style>
-  .footer-link {
-    text-decoration: none;
-    color: rgba(255,255,255,0.6);
-    transition: 0.3s;
-  }
-  .footer-link:hover {
-    color: var(--brand-teal);
-    padding-left: 5px;
-  }
-  .bg-dark {
-    background-color: rgba(255,255,255,0.05) !important;
-  }
-  .bg-dark:focus {
-    background-color: rgba(255,255,255,0.1) !important;
-    box-shadow: none;
-    color: white;
-  }
-</style>
+</footer>

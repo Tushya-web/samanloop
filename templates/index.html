@@ -1224,6 +1224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
 
+{% comment %}
 {% load static %}
 
 {% block content %}
@@ -2766,7 +2767,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <!-- Social proof -->
-        {% comment %} <div class="proof">
+        <div class="proof">
           <div class="avatars">
             <div class="av">RK</div>
             <div class="av">MP</div>
@@ -2779,7 +2780,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <strong>2,400+ reviews</strong> · Avg ₹180/day saved
             </div>
           </div>
-        </div>{% endcomment %}
+        </div>
       </div> 
 
     </div>
@@ -2901,6 +2902,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </section> {% endcomment %}
 
+{%comment%}
 <section class="sl-trust-section py-5">
     <div class="container">
         <div class="sl-trust-wrapper shadow-sm">
@@ -3048,7 +3050,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </section> {% endcomment %}
 
-
+{%comment%}
 <section class="sl-trending-section py-5">
     <div class="container">
         <div class="sl-header d-flex justify-content-between align-items-end mb-4">
@@ -3197,6 +3199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </section> {% endcomment %}
 
+{% comment %} 
 
 <section class="sl-earn-dark-section py-5" id="earn">
     <div class="container">
@@ -3277,6 +3280,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </section> {% endcomment %}
 
+{% comment %} 
 <section class="container py-5">
     <div class="row g-5 align-items-center">
         <div class="col-lg-5">
@@ -3555,6 +3559,3878 @@ document.addEventListener("DOMContentLoaded", () => {
 
     slider.addEventListener('input', calculate);
     calculate(); // Run once on load
+});
+</script>
+ 
+{% endblock %} {% endcomment %}
+{% comment %} 
+{% load static %}
+{% block content %}
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — LOOP MARKETPLACE
+   Aesthetic: Refined Dark-to-Light, Premium
+═══════════════════════════════════════════ */
+:root {
+  --teal:        #0d9488;
+  --teal-light:  #14b8a6;
+  --teal-glow:   #2dd4bf;
+  --teal-dim:    rgba(13,148,136,.14);
+  --navy:        #0a1628;
+  --navy-mid:    #0f2a2a;
+  --white:       #ffffff;
+  --off-white:   #f8fafc;
+  --slate-100:   #f1f5f9;
+  --slate-200:   #e2e8f0;
+  --slate-400:   #94a3b8;
+  --slate-500:   #64748b;
+  --slate-700:   #334155;
+  --slate-900:   #0f172a;
+  --gold:        #f59e0b;
+  --green:       #10b981;
+  --navy-dark: #0a192f;
+  --r-sm:  12px;
+  --r-md:  20px;
+  --r-lg:  28px;
+  --r-xl:  40px;
+
+  --shadow-sm:  0 2px 8px rgba(0,0,0,.06);
+  --shadow-md:  0 8px 24px rgba(0,0,0,.10);
+  --shadow-lg:  0 24px 64px rgba(0,0,0,.14);
+  --shadow-teal:0 12px 40px rgba(13,148,136,.28);
+
+  --ease: cubic-bezier(.4,0,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+::selection { background: var(--teal); color: #fff; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--white);
+  color: var(--slate-900);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── TYPOGRAPHY ── */
+.font-display { font-family: 'Sora', sans-serif; }
+.fw-900 { font-weight: 900; }
+.fw-800 { font-weight: 800; }
+.fw-700 { font-weight: 700; }
+.fw-600 { font-weight: 600; }
+.text-teal { color: var(--teal-light); }
+.text-muted-light { color: rgba(255,255,255,.5); }
+
+
+/* ════════════════════════════════════════════
+   HERO SECTION
+════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: var(--navy);
+  overflow: hidden;
+  padding: 100px 0 130px;
+}
+
+/* Layered mesh bg */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% -10%, rgba(13,148,136,.25) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(20,184,166,.12) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 30% at 85% 75%, rgba(13,148,136,.08) 0%, transparent 50%),
+    linear-gradient(145deg, #050d1a 0%, #081a1a 45%, #061214 100%);
+}
+
+/* Animated grid */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13,148,136,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  animation: gridDrift 25s linear infinite;
+  pointer-events: none;
+}
+@keyframes gridDrift { to { background-position: 56px 56px; } }
+
+/* Glowing orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  will-change: transform;
+}
+.orb-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(13,148,136,.2), transparent 65%);
+  top: -200px; right: -150px;
+  animation: orb1 12s ease-in-out infinite;
+}
+.orb-2 {
+  width: 450px; height: 450px;
+  background: radial-gradient(circle, rgba(20,184,166,.12), transparent 65%);
+  bottom: -100px; left: -80px;
+  animation: orb2 15s ease-in-out infinite;
+}
+@keyframes orb1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,50px) scale(1.06)} }
+@keyframes orb2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-35px)} }
+
+/* Particles */
+.particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.particle {
+  position: absolute;
+  width: var(--s, 3px); height: var(--s, 3px);
+  background: var(--teal-light);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleRise var(--d,8s) var(--dl,0s) ease-in infinite;
+}
+@keyframes particleRise {
+  0%  { transform: translateY(100vh) scale(0); opacity: 0; }
+  15% { opacity: .7; }
+  85% { opacity: .2; }
+  100%{ transform: translateY(-5vh) scale(1); opacity: 0; }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: 80px;
+  align-items: center;
+}
+
+/* ── Hero Left ── */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.28);
+  color: var(--teal-glow);
+  padding: 7px 16px 7px 10px;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  animation: fadeUp .55s ease both;
+}
+.badge-pulse {
+  width: 7px; height: 7px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--teal-light);
+  animation: blink 2s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(1.6)} }
+
+.hero-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  letter-spacing: -2px;
+  margin-bottom: 22px;
+  animation: fadeUp .55s .08s ease both;
+}
+.title-gradient {
+  background: linear-gradient(100deg, var(--teal-glow) 0%, #34d399 50%, var(--teal-light) 100%);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+@keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.48);
+  line-height: 1.8;
+  max-width: 460px;
+  margin-bottom: 36px;
+  animation: fadeUp .55s .16s ease both;
+}
+
+/* Stats row */
+.hero-stats {
+  display: flex;
+  gap: 0;
+  margin-bottom: 40px;
+  animation: fadeUp .55s .24s ease both;
+}
+.stat-item { padding-right: 28px; }
+.stat-item + .stat-item {
+  padding-left: 28px;
+  border-left: 1px solid rgba(255,255,255,.08);
+}
+.stat-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-size: .7rem;
+  color: rgba(255,255,255,.35);
+  font-weight: 600;
+  letter-spacing: .5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* CTA Buttons */
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 44px;
+  animation: fadeUp .55s .32s ease both;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: var(--r-md);
+  font-weight: 700;
+  font-size: .93rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-teal);
+  transition: all .3s var(--ease);
+  position: relative;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  transform: translateX(-100%);
+  transition: .55s;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(13,148,136,.5); color: #fff; }
+.btn-primary:hover::after { transform: translateX(100%); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.78);
+  padding: 14px 24px;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: .93rem;
+  text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(12px);
+  transition: all .3s var(--ease);
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(13,148,136,.45);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* Steps */
+.hero-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  animation: fadeUp .55s .4s ease both;
+}
+.hstep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .76rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.38);
+}
+.hstep-icon {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.22);
+  display: flex; align-items: center; justify-content: center;
+}
+.hstep-icon svg { width: 14px; height: 14px; color: var(--teal-light); }
+.hstep-arrow { margin: 0 12px; color: rgba(255,255,255,.15); }
+.hstep-arrow svg { width: 13px; height: 13px; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Hero Right Card ── */
+.hero-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--r-xl);
+  padding: 36px;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 0 40px 100px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .55s .2s ease both;
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 16%; right: 16%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal-light), transparent);
+}
+.hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(13,148,136,.08), transparent 70%);
+  pointer-events: none;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.card-heading {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-heading svg { width: 17px; height: 17px; color: var(--teal-light); }
+.instant-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(251,191,36,.1);
+  border: 1px solid rgba(251,191,36,.2);
+  color: #fbbf24;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.instant-pill svg { width: 12px; height: 12px; }
+
+/* Form fields */
+.field-group { margin-bottom: 14px; }
+.field-label {
+  font-size: .65rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.field-label svg { width: 11px; height: 11px; color: var(--teal-light); opacity: .7; }
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,.055);
+  border: 1.5px solid rgba(255,255,255,.08);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  transition: all .25s var(--ease);
+}
+.input-row:focus-within {
+  border-color: var(--teal);
+  background: rgba(13,148,136,.07);
+  box-shadow: 0 0 0 3px rgba(13,148,136,.12);
+}
+.input-row svg { width: 16px; height: 16px; color: rgba(255,255,255,.25); flex-shrink: 0; }
+.input-row input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: .9rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  width: 100%;
+}
+.input-row input::placeholder { color: rgba(255,255,255,.2); }
+.near-pill {
+  background: rgba(13,148,136,.18);
+  border: 1px solid rgba(13,148,136,.3);
+  color: var(--teal-light);
+  font-size: .65rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 50px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.near-pill svg { width: 9px; height: 9px; }
+
+.btn-search-main {
+  width: 100%;
+  padding: 15px;
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  color: #fff;
+  font-size: .92rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(13,148,136,.38);
+  transition: all .3s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-search-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  transform: translateX(-100%);
+  transition: .5s;
+}
+.btn-search-main:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(13,148,136,.5); }
+.btn-search-main:hover::after { transform: translateX(100%); }
+.btn-search-main svg { width: 16px; height: 16px; }
+
+.popular-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pop-label { font-size: .7rem; color: rgba(255,255,255,.28); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.pop-label svg { width: 11px; height: 11px; }
+.pop-tag {
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.55);
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.pop-tag:hover {
+  background: rgba(13,148,136,.14);
+  border-color: rgba(13,148,136,.35);
+  color: var(--teal-light);
+}
+
+/* Social proof */
+.proof-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.avatars { display: flex; }
+.av {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  border: 2px solid rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .55rem; font-weight: 800; color: #fff;
+  margin-left: -7px;
+}
+.av:first-child { margin-left: 0; }
+.proof-text { font-size: .72rem; color: rgba(255,255,255,.38); line-height: 1.5; }
+.proof-text strong { color: rgba(255,255,255,.68); font-weight: 600; }
+.proof-stars { color: #fbbf24; font-size: .75rem; letter-spacing: 1px; display: block; margin-bottom: 1px; }
+
+/* Wave */
+.hero-wave {
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  line-height: 0;
+  z-index: 11;
+}
+.hero-wave svg { display: block; width: 100%; }
+
+
+/* ════════════════════════════════════════════
+   TRUST BAR
+════════════════════════════════════════════ */
+.trust-section {
+  background: var(--off-white);
+  padding: 0;
+}
+.trust-wrap {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  position: relative;
+}
+.trust-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal-light), var(--teal-glow), var(--teal-light));
+  background-size: 200%;
+  animation: shimmer 3s linear infinite;
+}
+.trust-row { display: flex; }
+.trust-item {
+  flex: 1;
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  transition: background .25s var(--ease);
+}
+.trust-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 20%; bottom: 20%;
+  width: 1px;
+  background: var(--slate-200);
+}
+.trust-item:hover { background: var(--off-white); }
+.trust-icon {
+  width: 46px; height: 46px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #ccfbf1, #e0f2fe);
+  color: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .3s var(--ease-spring);
+}
+.trust-icon svg { width: 20px; height: 20px; }
+.trust-item:hover .trust-icon {
+  background: var(--teal);
+  color: #fff;
+  transform: rotate(-6deg) scale(1.1);
+}
+.trust-label { font-weight: 700; font-size: .9rem; color: var(--slate-900); margin-bottom: 2px; }
+.trust-sub { font-size: .76rem; color: var(--slate-400); font-weight: 500; }
+
+
+/* ════════════════════════════════════════════
+   SECTION COMMONS
+════════════════════════════════════════════ */
+.section { padding: 80px 0; }
+.section-alt { background: var(--off-white); }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+.section-kicker {
+  display: inline-block;
+  background: #ccfbf1;
+  color: var(--teal);
+  padding: 4px 14px;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.section-title-main {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+.section-sub { font-size: .95rem; color: var(--slate-500); }
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 36px;
+}
+.view-all-link {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap .2s var(--ease);
+}
+.view-all-link:hover { gap: 8px; }
+.view-all-link svg { width: 15px; height: 15px; }
+
+
+/* ════════════════════════════════════════════
+   CATEGORY CARDS
+════════════════════════════════════════════ */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.cat-card {
+  position: relative;
+  height: 230px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.cat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,22,40,.85) 0%, rgba(10,22,40,.15) 55%, transparent 100%);
+  transition: opacity .4s var(--ease);
+  z-index: 1;
+}
+.cat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,148,136,.85) 0%, rgba(10,22,40,.3) 100%);
+  opacity: 0;
+  transition: opacity .4s var(--ease);
+  z-index: 1;
+}
+.cat-card:hover::before { opacity: 0; }
+.cat-card:hover::after  { opacity: 1; }
+.cat-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.2); }
+
+.cat-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 22px 20px;
+  z-index: 2;
+  transition: transform .35s var(--ease);
+}
+.cat-card:hover .cat-content { transform: translateY(-3px); }
+.cat-kicker {
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  display: block;
+  margin-bottom: 3px;
+}
+.cat-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  display: block;
+  margin-bottom: 0;
+}
+.cat-count { font-size: .72rem; color: rgba(255,255,255,.6); margin-top: 3px; display: block; }
+
+.cat-arrow {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.9);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--slate-900);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all .3s var(--ease-spring);
+  z-index: 3;
+}
+.cat-arrow svg { width: 15px; height: 15px; }
+.cat-card:hover .cat-arrow { opacity: 1; transform: translateY(0); }
+
+
+/* ════════════════════════════════════════════
+   LISTING CARDS
+════════════════════════════════════════════ */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.listing-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: all .4s var(--ease);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+.listing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--teal-light);
+}
+.card-media {
+  position: relative;
+  height: 195px;
+  overflow: hidden;
+  margin: 8px 8px 0;
+  border-radius: var(--r-md);
+}
+.card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .6s var(--ease);
+}
+.listing-card:hover .card-img { transform: scale(1.07); }
+
+.card-badges {
+  position: absolute;
+  top: 10px; left: 10px; right: 10px;
+  display: flex;
+  gap: 5px;
+  z-index: 2;
+}
+.badge-verified {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(8px);
+  color: var(--teal);
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: .62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.badge-verified svg { width: 11px; height: 11px; }
+.badge-no-deposit {
+  background: rgba(16,185,129,.1);
+  backdrop-filter: blur(8px);
+  color: #059669;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: .62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* Hover overlay on image */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(13,148,136,.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .3s var(--ease);
+  border-radius: inherit;
+}
+.card-overlay span {
+  color: #fff;
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .5px;
+  background: rgba(0,0,0,.2);
+  padding: 8px 18px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,.3);
+}
+.listing-card:hover .card-overlay { opacity: 1; }
+
+.card-body { padding: 14px 16px 16px; }
+.card-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.card-cat {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+.card-rating {
+  background: #fffbeb;
+  color: #b45309;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: .7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-rating svg { width: 11px; height: 11px; }
+.card-name {
+  font-family: 'Sora', sans-serif;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-loc {
+  font-size: .73rem;
+  color: var(--slate-500);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.card-loc svg { width: 12px; height: 12px; color: #ef4444; }
+.dot-sep { width: 3px; height: 3px; background: var(--slate-300); border-radius: 50%; }
+.card-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--slate-100);
+  padding-top: 12px;
+}
+.price-label { font-size: .6rem; text-transform: uppercase; color: var(--slate-400); font-weight: 700; }
+.price-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--slate-900);
+  line-height: 1;
+}
+.price-cur { font-size: .85rem; margin-right: 1px; }
+.card-action-btn {
+  width: 34px; height: 34px;
+  background: var(--slate-100);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--slate-700);
+  transition: all .25s var(--ease);
+}
+.card-action-btn svg { width: 15px; height: 15px; }
+.listing-card:hover .card-action-btn {
+  background: var(--teal);
+  color: #fff;
+}
+
+
+/* ════════════════════════════════════════════
+   EARN / DARK CTA SECTION
+════════════════════════════════════════════ */
+.earn-canvas {
+  background: #020918;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: relative;
+  min-height: 480px;
+  border: 1px solid rgba(255,255,255,.04);
+  box-shadow: 0 40px 80px rgba(0,0,0,.2);
+}
+.earn-mesh-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 50%, rgba(13,148,136,.2), transparent 55%),
+    radial-gradient(ellipse 40% 40% at 90% 20%, rgba(13,148,136,.1), transparent 50%);
+}
+.earn-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13,148,136,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.earn-content {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: center;
+}
+.earn-left { padding: 60px 48px; }
+.earn-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.earn-pulse { width: 7px; height: 7px; background: var(--teal-light); border-radius: 50%; box-shadow: 0 0 10px var(--teal-light); animation: blink 2s ease infinite; }
+.earn-status-text { font-size: .7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.earn-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 18px;
+}
+.earn-title .grad {
+  background: linear-gradient(100deg, var(--teal-glow), #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.earn-desc { font-size: .95rem; color: rgba(255,255,255,.45); line-height: 1.75; margin-bottom: 36px; max-width: 380px; }
+.earn-desc strong { color: rgba(255,255,255,.75); font-weight: 700; }
+
+.btn-earn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  color: #fff;
+  padding: 15px 32px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: .93rem;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(13,148,136,.35);
+  transition: all .3s var(--ease);
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-earn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(13,148,136,.55); color: #fff; }
+.btn-earn svg { width: 17px; height: 17px; }
+
+.earn-right { padding: 40px 48px 40px 0; }
+.glass-calc {
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.3);
+  position: relative;
+  overflow: hidden;
+}
+.glass-calc::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 12%; right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal-light), transparent);
+}
+.calc-title { font-family: 'Sora', sans-serif; font-size: .95rem; font-weight: 800; color: #fff; margin-bottom: 28px; }
+.calc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.calc-key { font-size: .65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.calc-val {
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.2);
+  color: var(--teal-light);
+  padding: 2px 12px;
+  border-radius: 8px;
+  font-size: .8rem;
+  font-weight: 800;
+}
+.calc-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  background: rgba(255,255,255,.08);
+  border-radius: 10px;
+  margin-bottom: 28px;
+  cursor: pointer;
+}
+.calc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 14px rgba(20,184,166,.6);
+  border: 3px solid #fff;
+}
+.calc-result-label { font-size: .62rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,.35); display: block; margin-bottom: 6px; }
+.calc-result-value {
+  font-family: 'Sora', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(13,148,136,.3);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.calc-result-note { font-size: .68rem; color: rgba(255,255,255,.28); text-align: center; margin-top: 20px; }
+
+
+/* ════════════════════════════════════════════
+   HOW IT WORKS
+════════════════════════════════════════════ */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.how-steps { display: flex; flex-direction: column; gap: 28px; }
+.how-step {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 20px;
+  transition: all .3s var(--ease);
+  cursor: default;
+  border: 1px solid transparent;
+}
+.how-step:hover {
+  background: #fff;
+  border-color: var(--slate-200);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(4px);
+}
+.how-step-icon {
+  width: 50px; height: 50px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ccfbf1, #e0f2fe);
+  color: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .3s var(--ease-spring);
+}
+.how-step-icon svg { width: 22px; height: 22px; }
+.how-step:hover .how-step-icon {
+  background: var(--teal);
+  color: #fff;
+  transform: rotate(-8deg) scale(1.1);
+}
+.how-step-title { font-weight: 700; font-size: .95rem; margin-bottom: 4px; color: var(--slate-900); }
+.how-step-desc { font-size: .82rem; color: var(--slate-500); line-height: 1.6; }
+
+.how-visual { position: relative; }
+.how-img {
+  width: 100%;
+  border-radius: 28px;
+  object-fit: cover;
+  height: 480px;
+  box-shadow: var(--shadow-lg);
+  display: block;
+}
+.how-testimonial-card {
+  position: absolute;
+  bottom: 24px; left: -30px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.14);
+  max-width: 260px;
+  border: 1px solid var(--slate-100);
+}
+.how-t-top { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.how-t-avatar { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
+.how-t-name { font-weight: 700; font-size: .88rem; color: var(--slate-900); margin-bottom: 1px; }
+.how-t-role { font-size: .7rem; color: var(--slate-400); font-weight: 500; }
+.how-t-quote { font-size: .78rem; color: var(--slate-500); line-height: 1.55; }
+.how-badge {
+  position: absolute;
+  top: 24px; right: -16px;
+  background: var(--teal);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(13,148,136,.35);
+}
+.how-badge-val { font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 900; line-height: 1; }
+.how-badge-lbl { font-size: .65rem; font-weight: 700; opacity: .75; margin-top: 1px; }
+
+
+/* ════════════════════════════════════════════
+   TESTIMONIALS
+════════════════════════════════════════════ */
+.testimonial-section { background: var(--off-white); }
+.toggle-pill {
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: 50px;
+  display: inline-flex;
+  padding: 5px;
+  gap: 4px;
+  box-shadow: var(--shadow-sm);
+}
+.tgl-btn {
+  padding: 8px 22px;
+  border-radius: 50px;
+  font-size: .82rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--slate-400);
+  transition: all .25s var(--ease);
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.tgl-btn svg { width: 14px; height: 14px; }
+.tgl-btn.active {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13,148,136,.3);
+}
+.tcard {
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  height: 100%;
+  transition: all .3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.tcard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal-light), var(--teal-glow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s var(--ease);
+}
+.tcard:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: transparent; }
+.tcard:hover::before { transform: scaleX(1); }
+.tcard-quote {
+  position: absolute;
+  top: 20px; right: 22px;
+  color: var(--teal-light);
+  opacity: .08;
+}
+.tcard-quote svg { width: 40px; height: 40px; }
+.tcard-top { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+.tcard-avatar { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; border: 2px solid var(--slate-100); }
+.tcard-name { font-weight: 700; font-size: .9rem; color: var(--slate-900); margin-bottom: 1px; }
+.tcard-loc { font-size: .72rem; color: var(--slate-400); font-weight: 500; }
+.tcard-stars { color: var(--gold); font-size: .8rem; letter-spacing: 1.5px; margin-bottom: 10px; }
+.tcard-text { font-size: .83rem; color: var(--slate-500); line-height: 1.7; }
+.tcard-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: .67rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.tcard-badge svg { width: 11px; height: 11px; }
+.tcard-badge-earn { background: #d1fae5; color: #059669; }
+.tcard-badge-verified { background: #ccfbf1; color: var(--teal); }
+
+.hidden-t { display: none; }
+
+
+/* ════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+  .listings-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 50px; }
+  .hero { padding: 90px 0 120px; }
+  .earn-content { grid-template-columns: 1fr; }
+  .earn-left { padding: 48px 36px; }
+  .earn-right { padding: 0 36px 48px; }
+  .how-grid { grid-template-columns: 1fr; gap: 48px; }
+  .how-testimonial-card { display: none; }
+  .how-badge { top: 16px; right: 16px; }
+}
+@media (max-width: 768px) {
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .listings-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-row { flex-wrap: wrap; }
+  .trust-item { flex: 0 0 50%; }
+  .trust-item::after { display: none; }
+  .trust-item:nth-child(odd) { border-right: 1px solid var(--slate-200); }
+  .trust-item:nth-child(1), .trust-item:nth-child(2) { border-bottom: 1px solid var(--slate-200); }
+  .section { padding: 60px 0; }
+  .how-img { height: 340px; }
+  .earn-canvas { border-radius: var(--r-lg); }
+}
+@media (max-width: 540px) {
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .listings-grid { grid-template-columns: 1fr; }
+  .hero-card { padding: 24px; }
+  .hero-title { font-size: 2.5rem; }
+  .glass-calc { padding: 28px 22px; }
+}
+</style>
+
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="particles">
+    <div class="particle" style="left:7%;--s:3px;--d:7s;--dl:0s"></div>
+    <div class="particle" style="left:19%;--s:2px;--d:9s;--dl:1.3s"></div>
+    <div class="particle" style="left:36%;--s:4px;--d:6s;--dl:2.7s"></div>
+    <div class="particle" style="left:52%;--s:3px;--d:8s;--dl:.4s"></div>
+    <div class="particle" style="left:67%;--s:2px;--d:11s;--dl:3.2s"></div>
+    <div class="particle" style="left:80%;--s:3px;--d:7s;--dl:1.9s"></div>
+    <div class="particle" style="left:92%;--s:3px;--d:9s;--dl:4.1s"></div>
+  </div>
+
+  <div class="hero-inner">
+    <!-- LEFT -->
+    <div>
+      <div class="hero-badge">
+        <div class="badge-pulse"></div>
+        <i data-lucide="shield-check" style="width:13px;height:13px"></i>
+        India's Trusted Rental Community
+      </div>
+
+      <h1 class="hero-title font-display">
+        Borrow Smart.<br>
+        <span class="title-gradient">Earn Easy.</span>
+      </h1>
+
+      <p class="hero-sub">
+        India's first sharing marketplace. Rent high-quality gear from verified neighbors — or list your idle assets and turn them into real income.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-val">12K+</div>
+          <div class="stat-lbl"><i data-lucide="package" style="width:12px;height:12px;color:#14b8a6"></i> Active Listings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">50K+</div>
+          <div class="stat-lbl"><i data-lucide="users" style="width:12px;height:12px;color:#14b8a6"></i> Happy Borrowers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">₹2Cr+</div>
+          <div class="stat-lbl"><i data-lucide="indian-rupee" style="width:12px;height:12px;color:#14b8a6"></i> Earned by Lenders</div>
+        </div>
+      </div>
+
+      <div class="hero-ctas">
+        <a href="#marketplace" class="btn-primary">
+          <i data-lucide="shopping-bag"></i>
+          Explore Marketplace
+        </a>
+        <a href="{% url 'add_item' %}" class="btn-ghost">
+          <i data-lucide="banknote"></i>
+          Start Earning
+        </a>
+      </div>
+
+      <div class="hero-steps">
+        <div class="hstep">
+          <div class="hstep-icon"><i data-lucide="search"></i></div>
+          Find local gear
+        </div>
+        <div class="hstep-arrow"><i data-lucide="chevron-right"></i></div>
+        <div class="hstep">
+          <div class="hstep-icon"><i data-lucide="calendar-check"></i></div>
+          Book dates
+        </div>
+        <div class="hstep-arrow"><i data-lucide="chevron-right"></i></div>
+        <div class="hstep">
+          <div class="hstep-icon"><i data-lucide="refresh-cw"></i></div>
+          Use &amp; Return
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CARD -->
+    <div class="hero-card">
+      <div class="card-top">
+        <div class="card-heading">
+          <i data-lucide="zap"></i>
+          Start Looping
+        </div>
+        <div class="instant-pill">
+          <i data-lucide="bolt"></i> Instant Book
+        </div>
+      </div>
+
+      <form method="GET" action="{% url 'browse_items' %}">
+        <div class="field-group">
+          <div class="field-label">
+            <i data-lucide="sparkles"></i> What do you need?
+          </div>
+          <div class="input-row">
+            <i data-lucide="search"></i>
+            <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Projector, DSLR, Camping Tent…">
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom:20px">
+          <div class="field-label">
+            <i data-lucide="map-pin"></i> Location
+          </div>
+          <div class="input-row">
+            <i data-lucide="navigation"></i>
+            <input type="text" name="city" value="{{ selected_city|default:'Mehsana, GJ' }}" readonly>
+            <span class="near-pill"><i data-lucide="radio"></i> Near You</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-search-main">
+          <i data-lucide="search"></i>
+          Browse Marketplace
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="popular-row">
+        <span class="pop-label"><i data-lucide="trending-up"></i> Popular:</span>
+        <span class="pop-tag">📷 DSLR</span>
+        <span class="pop-tag">🔧 Power Drill</span>
+        <span class="pop-tag">⛺ Tent</span>
+      </div>
+
+      <div class="proof-row">
+        <div class="avatars">
+          <div class="av">RK</div>
+          <div class="av">MP</div>
+          <div class="av">SA</div>
+          <div class="av" style="font-size:.5rem">+99</div>
+        </div>
+        <div>
+          <span class="proof-stars">★★★★★</span>
+          <div class="proof-text"><strong>2,400+ reviews</strong> · Avg ₹180/day saved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-wave">
+    <svg viewBox="0 0 1200 100" preserveAspectRatio="none" style="height:64px;fill:#f8fafc">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V100H0V0C49.49,23.11,101.18,44.57,155.13,54.66,209.08,64.75,265,67.23,321.39,56.44Z"/>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TRUST BAR
+══════════════════════════════════════════ -->
+<section class="trust-section">
+  <div class="container" style="padding-top:40px;padding-bottom:56px">
+    <div class="trust-wrap">
+      <div class="trust-row">
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="user-check"></i></div>
+          <div>
+            <div class="trust-label">Verified Users</div>
+            <div class="trust-sub">100% ID-checked lenders</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="shield"></i></div>
+          <div>
+            <div class="trust-label">Damage Cover</div>
+            <div class="trust-sub">Protection built in</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="credit-card"></i></div>
+          <div>
+            <div class="trust-label">Secure Pay</div>
+            <div class="trust-sub">Escrow-protected</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="heart"></i></div>
+          <div>
+            <div class="trust-label">Top Rated</div>
+            <div class="trust-sub">Peer-reviewed listings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     CATEGORIES
+══════════════════════════════════════════ -->
+<section class="section section-alt" id="marketplace">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-kicker">Categories</span>
+        <h2 class="section-title-main font-display">Browse by <span style="color:var(--teal-light)">Category</span></h2>
+        <p class="section-sub">Quality assets, verified lenders, one simple loop</p>
+      </div>
+      <a href="{% url 'category_items' 1 %}" class="view-all-link d-none d-md-flex">
+        View All <i data-lucide="arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="cat-grid">
+      {% for category in categories %}
+      <a href="{% url 'category_items' category.id %}" class="cat-card"
+         style="background-image:url('{% if category.image %}{{ category.image.url }}{% else %}{% static 'images/default-category.jpg' %}{% endif %}')">
+        <div class="cat-content">
+          <span class="cat-kicker">Explore</span>
+          <span class="cat-name">{{ category.name }}</span>
+          {% if category.items.count %}
+          <span class="cat-count">{{ category.items.count }} items</span>
+          {% endif %}
+        </div>
+        <div class="cat-arrow"><i data-lucide="arrow-up-right"></i></div>
+      </a>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--slate-400)">
+        No categories available yet.
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TRENDING LISTINGS
+══════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-kicker">Trending</span>
+        <h2 class="section-title-main font-display">Popular in <span style="color:var(--teal-light)">{{ selected_city }}</span></h2>
+        <p class="section-sub">Curated gear from your community</p>
+      </div>
+      <a href="{% url 'browse_items' %}" class="view-all-link d-none d-md-flex">
+        Browse All <i data-lucide="arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="listings-grid">
+      {% for item in items %}
+      <a href="{% url 'item_detail' item.id %}" class="listing-card">
+        <div class="card-media">
+          <div class="card-badges">
+            <span class="badge-verified"><i data-lucide="patch-check" style="width:11px;height:11px"></i> Verified</span>
+            {% if item.deposit_amount == 0 %}<span class="badge-no-deposit">No Deposit</span>{% endif %}
+          </div>
+          {% with item.images.all|first as fi %}
+          <img src="{% if fi %}{{ fi.image.url }}{% else %}/static/images/default.jpg{% endif %}"
+               class="card-img" alt="{{ item.name }}">
+          {% endwith %}
+          <div class="card-overlay"><span>Check Availability</span></div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta-row">
+            <span class="card-cat">{{ item.category|default:"Rental" }}</span>
+            <div class="card-rating">
+              <i data-lucide="star" style="width:11px;height:11px;fill:#b45309;color:#b45309"></i>
+              {% if item.avg_rating %}{{ item.avg_rating|floatformat:1 }}{% else %}New{% endif %}
+            </div>
+          </div>
+          <div class="card-name">{{ item.name }}</div>
+          <div class="card-loc">
+            <i data-lucide="map-pin"></i>
+            {{ item.city }}
+            <span class="dot-sep"></span>
+            Instant Loop
+          </div>
+          <div class="card-footer-row">
+            <div>
+              <div class="price-label">Per Day</div>
+              <div class="price-val"><span class="price-cur">₹</span>{{ item.rent_per_day }}</div>
+            </div>
+            <div class="card-action-btn"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--slate-400)">
+        No listings in {{ selected_city }} yet. <a href="{% url 'add_item' %}" style="color:var(--teal)">Be the first to list!</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     EARN DARK SECTION
+══════════════════════════════════════════ -->
+<section class="section section-alt" id="earn">
+  <div class="container">
+    <div class="earn-canvas">
+      <div class="earn-mesh-bg"></div>
+      <div class="earn-grid"></div>
+
+      <div class="earn-content">
+        <div class="earn-left">
+          <div class="earn-status-pill">
+            <span class="earn-pulse"></span>
+            <span class="earn-status-text">Lender Marketplace is Live</span>
+          </div>
+          <h2 class="earn-title font-display">
+            Turn Idle Assets<br>into <span class="grad">Passive Wealth</span>
+          </h2>
+          <p class="earn-desc">
+            Lenders in <strong>{{ selected_city|default:"your area" }}</strong> are making up to ₹15,000/mo renting gear they already own. Join 1,000+ verified partners on Loop.
+          </p>
+          <a href="{% url 'add_item' %}" class="btn-earn">
+            <i data-lucide="plus-circle"></i>
+            Start Listing Free
+          </a>
+        </div>
+
+        <div class="earn-right">
+          <div class="glass-calc">
+            <div class="calc-title font-display">Earnings Estimator</div>
+            <div class="calc-row">
+              <span class="calc-key">Item Value</span>
+              <span class="calc-val" id="val-display">₹15,000</span>
+            </div>
+            <input type="range" class="calc-range" id="earn-range" min="2000" max="200000" step="1000" value="15000">
+            <span class="calc-result-label">Potential Monthly Earnings</span>
+            <div class="calc-result-value" id="income-display">₹2,250</div>
+            <p class="calc-result-note">*Based on 10 rental days/month at 1.5% daily rate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="how-grid">
+      <div>
+        <span class="section-kicker">How It Works</span>
+        <h2 class="section-title-main font-display" style="margin-bottom:8px">
+          Sharing made<br><span style="color:var(--teal-light)">effortless.</span>
+        </h2>
+        <p class="section-sub" style="margin-bottom:40px">We've built a secure environment where neighbors support neighbors.</p>
+
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-icon"><i data-lucide="search"></i></div>
+            <div>
+              <div class="how-step-title">Search &amp; Book</div>
+              <div class="how-step-desc">Browse verified listings and book dates instantly with secure, escrow-protected payments.</div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon"><i data-lucide="handshake"></i></div>
+            <div>
+              <div class="how-step-title">Meet &amp; Collect</div>
+              <div class="how-step-desc">Meet your neighbor at a convenient spot and pick up the item. No hidden hassles.</div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon"><i data-lucide="refresh-ccw"></i></div>
+            <div>
+              <div class="how-step-title">Use &amp; Return</div>
+              <div class="how-step-desc">Finish your project and return the item. Rate your experience and help the community.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-visual">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80"
+             class="how-img" alt="Community sharing">
+        <div class="how-badge">
+          <div class="how-badge-val">₹12K</div>
+          <div class="how-badge-lbl">earned last month</div>
+        </div>
+        <div class="how-testimonial-card">
+          <div class="how-t-top">
+            <img src="https://i.pravatar.cc/150?u=9" class="how-t-avatar" alt="Tony Shark">
+            <div>
+              <div class="how-t-name">Tony Shark</div>
+              <div class="how-t-role">Lender since 2026</div>
+            </div>
+          </div>
+          <div class="how-t-quote">"Loop helped me earn ₹12k last month just from my drill and camera!"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════════ -->
+<section class="section testimonial-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:40px">
+      <span class="section-kicker">Community</span>
+      <h2 class="section-title-main font-display" style="margin-bottom:8px">Community Voice</h2>
+      <p class="section-sub" style="margin-bottom:24px">Join thousands of happy Loopers across India</p>
+      <div class="toggle-pill">
+        <button class="tgl-btn active" onclick="filterT('borrower',this)">
+          <i data-lucide="shopping-bag"></i> Borrowers
+        </button>
+        <button class="tgl-btn" onclick="filterT('lender',this)">
+          <i data-lucide="banknote"></i> Lenders
+        </button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px" id="t-grid">
+
+      <div class="t-item" data-type="borrower">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=1" class="tcard-avatar" alt="Arjun">
+            <div>
+              <div class="tcard-name">Arjun Mehta</div>
+              <div class="tcard-loc">Ahmedabad</div>
+            </div>
+          </div>
+          <div class="tcard-stars">★★★★★</div>
+          <p class="tcard-text">"Needed a Sony A7III for a weekend wedding shoot. Found one 2km away at a fraction of a rental store. Super smooth!"</p>
+        </div>
+      </div>
+
+      <div class="t-item" data-type="borrower">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=2" class="tcard-avatar" alt="Rahul">
+            <div>
+              <div class="tcard-name">Rahul V.</div>
+              <div class="tcard-loc">Surat</div>
+            </div>
+          </div>
+          <div class="tcard-stars">★★★★★</div>
+          <p class="tcard-text">"Rented a high-end projector for a home movie night. Lender helped set it up. Definitely doing this again!"</p>
+        </div>
+      </div>
+
+      <div class="t-item" data-type="borrower">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=3" class="tcard-avatar" alt="Ananya">
+            <div>
+              <div class="tcard-name">Ananya R.</div>
+              <div class="tcard-loc">Vadodara</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-verified"><i data-lucide="check-circle"></i> Verified Borrower</div>
+          <p class="tcard-text">"Better for the planet and my wallet. Why buy a pressure washer once? Loop is a game changer for urban living."</p>
+        </div>
+      </div>
+
+      <div class="t-item hidden-t" data-type="lender">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=4" class="tcard-avatar" alt="Priya">
+            <div>
+              <div class="tcard-name">Priya Sharma</div>
+              <div class="tcard-loc">Mehsana</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-earn"><i data-lucide="trending-up"></i> Earned ₹8,400 last month</div>
+          <p class="tcard-text">"My camping gear used to collect dust. Now it pays for my weekend trips! Damage protection gives me peace of mind."</p>
+        </div>
+      </div>
+
+      <div class="t-item hidden-t" data-type="lender">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=5" class="tcard-avatar" alt="Suresh">
+            <div>
+              <div class="tcard-name">Suresh K.</div>
+              <div class="tcard-loc">Gandhinagar</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-earn"><i data-lucide="award"></i> Power User</div>
+          <p class="tcard-text">"Listing my drills and saws took 5 minutes. The escrow payment system makes everything feel professional."</p>
+        </div>
+      </div>
+
+      <div class="t-item hidden-t" data-type="lender">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=7" class="tcard-avatar" alt="Neha">
+            <div>
+              <div class="tcard-name">Neha Patel</div>
+              <div class="tcard-loc">Rajkot</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-earn"><i data-lucide="trending-up"></i> Earned ₹6,200/mo</div>
+          <p class="tcard-text">"Starting was dead simple. My projector alone brings in 6k a month. Loop is genuinely changing how I think about my stuff."</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+// ─── Init Icons ───
+lucide.createIcons();
+
+// ─── Earnings Calc ───
+(function(){
+  const range = document.getElementById('earn-range');
+  const valD  = document.getElementById('val-display');
+  const incD  = document.getElementById('income-display');
+  if(!range) return;
+  function calc(){
+    const v = parseInt(range.value);
+    valD.textContent = '₹' + v.toLocaleString('en-IN');
+    const est = Math.round(v * 0.015 * 10);
+    incD.textContent = '₹' + est.toLocaleString('en-IN');
+  }
+  range.addEventListener('input', calc);
+  calc();
+})();
+
+// ─── Testimonial toggle ───
+function filterT(type, btn){
+  document.querySelectorAll('.tgl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.t-item').forEach(el => {
+    if(el.dataset.type === type){
+      el.classList.remove('hidden-t');
+      el.style.opacity = '0';
+      requestAnimationFrame(()=>{
+        el.style.transition = 'opacity .35s ease';
+        el.style.opacity = '1';
+      });
+    } else {
+      el.style.opacity = '0';
+      setTimeout(()=> el.classList.add('hidden-t'), 280);
+    }
+  });
+  setTimeout(()=> lucide.createIcons(), 120);
+}
+
+// ─── Scroll reveal ───
+const reveal = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+},{threshold:.1});
+
+document.querySelectorAll('.listing-card, .cat-card, .how-step, .tcard').forEach(el=>{
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .55s ease, transform .55s ease';
+  reveal.observe(el);
+});
+
+// ─── Smooth anchor scroll ───
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+</script>
+
+{% endblock %} {% endcomment %}
+
+{% load static %}
+{% block content %}
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — LOOP MARKETPLACE
+   Aesthetic: Refined Dark-to-Light, Premium
+═══════════════════════════════════════════ */
+:root {
+  --teal:        #0d9488;
+  --teal-light:  #14b8a6;
+  --teal-glow:   #2dd4bf;
+  --teal-dim:    rgba(13,148,136,.14);
+  --navy:        #0a1628;
+  --navy-mid:    #0f2a2a;
+  --white:       #ffffff;
+  --off-white:   #f8fafc;
+  --slate-100:   #f1f5f9;
+  --slate-200:   #e2e8f0;
+  --slate-400:   #94a3b8;
+  --slate-500:   #64748b;
+  --slate-700:   #334155;
+  --slate-900:   #0f172a;
+  --gold:        #f59e0b;
+  --green:       #10b981;
+
+  --navy-dark: #0a192f;
+  --r-sm:  12px;
+  --r-md:  20px;
+  --r-lg:  28px;
+  --r-xl:  40px;
+
+  --shadow-sm:  0 2px 8px rgba(0,0,0,.06);
+  --shadow-md:  0 8px 24px rgba(0,0,0,.10);
+  --shadow-lg:  0 24px 64px rgba(0,0,0,.14);
+  --shadow-teal:0 12px 40px rgba(13,148,136,.28);
+
+  --ease: cubic-bezier(.4,0,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+::selection { background: var(--teal); color: #fff; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--white);
+  color: var(--slate-900);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── TYPOGRAPHY ── */
+.font-display { font-family: 'Sora', sans-serif; }
+.fw-900 { font-weight: 900; }
+.fw-800 { font-weight: 800; }
+.fw-700 { font-weight: 700; }
+.fw-600 { font-weight: 600; }
+.text-teal { color: var(--teal-light); }
+.text-muted-light { color: rgba(255,255,255,.5); }
+
+
+/* ════════════════════════════════════════════
+   HERO SECTION
+════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: var(--navy);
+  overflow: hidden;
+  padding: 100px 0 130px;
+}
+
+/* Layered mesh bg */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% -10%, rgba(13,148,136,.25) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(20,184,166,.12) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 30% at 85% 75%, rgba(13,148,136,.08) 0%, transparent 50%),
+    linear-gradient(145deg, #050d1a 0%, #081a1a 45%, #061214 100%);
+}
+
+/* Animated grid */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13,148,136,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  animation: gridDrift 25s linear infinite;
+  pointer-events: none;
+}
+@keyframes gridDrift { to { background-position: 56px 56px; } }
+
+/* Glowing orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  will-change: transform;
+}
+.orb-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(13,148,136,.2), transparent 65%);
+  top: -200px; right: -150px;
+  animation: orb1 12s ease-in-out infinite;
+}
+.orb-2 {
+  width: 450px; height: 450px;
+  background: radial-gradient(circle, rgba(20,184,166,.12), transparent 65%);
+  bottom: -100px; left: -80px;
+  animation: orb2 15s ease-in-out infinite;
+}
+@keyframes orb1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,50px) scale(1.06)} }
+@keyframes orb2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-35px)} }
+
+/* Particles */
+.particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.particle {
+  position: absolute;
+  width: var(--s, 3px); height: var(--s, 3px);
+  background: var(--teal-light);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleRise var(--d,8s) var(--dl,0s) ease-in infinite;
+}
+@keyframes particleRise {
+  0%  { transform: translateY(100vh) scale(0); opacity: 0; }
+  15% { opacity: .7; }
+  85% { opacity: .2; }
+  100%{ transform: translateY(-5vh) scale(1); opacity: 0; }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: 80px;
+  align-items: center;
+}
+
+/* ── Hero Left ── */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.28);
+  color: var(--teal-glow);
+  padding: 7px 16px 7px 10px;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  animation: fadeUp .55s ease both;
+}
+.badge-pulse {
+  width: 7px; height: 7px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--teal-light);
+  animation: blink 2s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(1.6)} }
+
+.hero-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  letter-spacing: -2px;
+  margin-bottom: 22px;
+  animation: fadeUp .55s .08s ease both;
+}
+.title-gradient {
+  background: linear-gradient(100deg, var(--teal-glow) 0%, #34d399 50%, var(--teal-light) 100%);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+@keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.48);
+  line-height: 1.8;
+  max-width: 460px;
+  margin-bottom: 36px;
+  animation: fadeUp .55s .16s ease both;
+}
+
+/* Stats row */
+.hero-stats {
+  display: flex;
+  gap: 0;
+  margin-bottom: 40px;
+  animation: fadeUp .55s .24s ease both;
+}
+.stat-item { padding-right: 28px; }
+.stat-item + .stat-item {
+  padding-left: 28px;
+  border-left: 1px solid rgba(255,255,255,.08);
+}
+.stat-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-size: .7rem;
+  color: rgba(255,255,255,.35);
+  font-weight: 600;
+  letter-spacing: .5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* CTA Buttons */
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 44px;
+  animation: fadeUp .55s .32s ease both;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: var(--r-md);
+  font-weight: 700;
+  font-size: .93rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-teal);
+  transition: all .3s var(--ease);
+  position: relative;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  transform: translateX(-100%);
+  transition: .55s;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(13,148,136,.5); color: #fff; }
+.btn-primary:hover::after { transform: translateX(100%); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.78);
+  padding: 14px 24px;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: .93rem;
+  text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(12px);
+  transition: all .3s var(--ease);
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(13,148,136,.45);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* Steps */
+.hero-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  animation: fadeUp .55s .4s ease both;
+}
+.hstep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .76rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.38);
+}
+.hstep-icon {
+  width: 30px; height: 30px;
+  border-radius: 9px;
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.22);
+  display: flex; align-items: center; justify-content: center;
+}
+.hstep-icon svg { width: 14px; height: 14px; color: var(--teal-light); }
+.hstep-arrow { margin: 0 12px; color: rgba(255,255,255,.15); }
+.hstep-arrow svg { width: 13px; height: 13px; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Hero Right Card ── */
+.hero-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--r-xl);
+  padding: 36px;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 0 40px 100px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .55s .2s ease both;
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 16%; right: 16%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal-light), transparent);
+}
+.hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(13,148,136,.08), transparent 70%);
+  pointer-events: none;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.card-heading {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-heading svg { width: 17px; height: 17px; color: var(--teal-light); }
+.instant-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(251,191,36,.1);
+  border: 1px solid rgba(251,191,36,.2);
+  color: #fbbf24;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.instant-pill svg { width: 12px; height: 12px; }
+
+/* Form fields */
+.field-group { margin-bottom: 14px; }
+.field-label {
+  font-size: .65rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.field-label svg { width: 11px; height: 11px; color: var(--teal-light); opacity: .7; }
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,.055);
+  border: 1.5px solid rgba(255,255,255,.08);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  transition: all .25s var(--ease);
+}
+.input-row:focus-within {
+  border-color: var(--teal);
+  background: rgba(13,148,136,.07);
+  box-shadow: 0 0 0 3px rgba(13,148,136,.12);
+}
+.input-row svg { width: 16px; height: 16px; color: rgba(255,255,255,.25); flex-shrink: 0; }
+.input-row input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: .9rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  width: 100%;
+}
+.input-row input::placeholder { color: rgba(255,255,255,.2); }
+.near-pill {
+  background: rgba(13,148,136,.18);
+  border: 1px solid rgba(13,148,136,.3);
+  color: var(--teal-light);
+  font-size: .65rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 50px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.near-pill svg { width: 9px; height: 9px; }
+
+.btn-search-main {
+  width: 100%;
+  padding: 15px;
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  color: #fff;
+  font-size: .92rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(13,148,136,.38);
+  transition: all .3s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-search-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  transform: translateX(-100%);
+  transition: .5s;
+}
+.btn-search-main:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(13,148,136,.5); }
+.btn-search-main:hover::after { transform: translateX(100%); }
+.btn-search-main svg { width: 16px; height: 16px; }
+
+.popular-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pop-label { font-size: .7rem; color: rgba(255,255,255,.28); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.pop-label svg { width: 11px; height: 11px; }
+.pop-tag {
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.55);
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.pop-tag:hover {
+  background: rgba(13,148,136,.14);
+  border-color: rgba(13,148,136,.35);
+  color: var(--teal-light);
+}
+
+/* Social proof */
+.proof-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.avatars { display: flex; }
+.av {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  border: 2px solid rgba(255,255,255,.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .55rem; font-weight: 800; color: #fff;
+  margin-left: -7px;
+}
+.av:first-child { margin-left: 0; }
+.proof-text { font-size: .72rem; color: rgba(255,255,255,.38); line-height: 1.5; }
+.proof-text strong { color: rgba(255,255,255,.68); font-weight: 600; }
+.proof-stars { color: #fbbf24; font-size: .75rem; letter-spacing: 1px; display: block; margin-bottom: 1px; }
+
+/* Wave */
+.hero-wave {
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  line-height: 0;
+  z-index: 11;
+}
+.hero-wave svg { display: block; width: 100%; }
+
+
+/* ════════════════════════════════════════════
+   TRUST BAR
+════════════════════════════════════════════ */
+.trust-section {
+  background: var(--off-white);
+  padding: 0;
+}
+.trust-wrap {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  position: relative;
+}
+.trust-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal-light), var(--teal-glow), var(--teal-light));
+  background-size: 200%;
+  animation: shimmer 3s linear infinite;
+}
+.trust-row { display: flex; }
+.trust-item {
+  flex: 1;
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  transition: background .25s var(--ease);
+}
+.trust-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 20%; bottom: 20%;
+  width: 1px;
+  background: var(--slate-200);
+}
+.trust-item:hover { background: var(--off-white); }
+.trust-icon {
+  width: 46px; height: 46px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #ccfbf1, #e0f2fe);
+  color: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .3s var(--ease-spring);
+}
+.trust-icon svg { width: 20px; height: 20px; }
+.trust-item:hover .trust-icon {
+  background: var(--teal);
+  color: #fff;
+  transform: rotate(-6deg) scale(1.1);
+}
+.trust-label { font-weight: 700; font-size: .9rem; color: var(--slate-900); margin-bottom: 2px; }
+.trust-sub { font-size: .76rem; color: var(--slate-400); font-weight: 500; }
+
+
+/* ════════════════════════════════════════════
+   SECTION COMMONS
+════════════════════════════════════════════ */
+.section { padding: 80px 0; }
+.section-alt { background: var(--off-white); }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+.section-kicker {
+  display: inline-block;
+  background: #ccfbf1;
+  color: var(--teal);
+  padding: 4px 14px;
+  border-radius: 50px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.section-title-main {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+.section-sub { font-size: .95rem; color: var(--slate-500); }
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 36px;
+}
+.view-all-link {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap .2s var(--ease);
+}
+.view-all-link:hover { gap: 8px; }
+.view-all-link svg { width: 15px; height: 15px; }
+
+
+/* ════════════════════════════════════════════
+   CATEGORY CARDS
+════════════════════════════════════════════ */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.cat-card {
+  position: relative;
+  height: 230px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.cat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,22,40,.85) 0%, rgba(10,22,40,.15) 55%, transparent 100%);
+  transition: opacity .4s var(--ease);
+  z-index: 1;
+}
+.cat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,148,136,.85) 0%, rgba(10,22,40,.3) 100%);
+  opacity: 0;
+  transition: opacity .4s var(--ease);
+  z-index: 1;
+}
+.cat-card:hover::before { opacity: 0; }
+.cat-card:hover::after  { opacity: 1; }
+.cat-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.2); }
+
+.cat-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 22px 20px;
+  z-index: 2;
+  transition: transform .35s var(--ease);
+}
+.cat-card:hover .cat-content { transform: translateY(-3px); }
+.cat-kicker {
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  display: block;
+  margin-bottom: 3px;
+}
+.cat-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  display: block;
+  margin-bottom: 0;
+}
+.cat-count { font-size: .72rem; color: rgba(255,255,255,.6); margin-top: 3px; display: block; }
+
+.cat-arrow {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.9);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--slate-900);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all .3s var(--ease-spring);
+  z-index: 3;
+}
+.cat-arrow svg { width: 15px; height: 15px; }
+.cat-card:hover .cat-arrow { opacity: 1; transform: translateY(0); }
+
+
+/* ════════════════════════════════════════════
+   LISTING CARDS
+════════════════════════════════════════════ */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.listing-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: all .4s var(--ease);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+.listing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--teal-light);
+}
+.card-media {
+  position: relative;
+  height: 195px;
+  overflow: hidden;
+  margin: 8px 8px 0;
+  border-radius: var(--r-md);
+}
+.card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .6s var(--ease);
+}
+.listing-card:hover .card-img { transform: scale(1.07); }
+
+.card-badges {
+  position: absolute;
+  top: 10px; left: 10px; right: 10px;
+  display: flex;
+  gap: 5px;
+  z-index: 2;
+}
+.badge-verified {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(8px);
+  color: var(--teal);
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: .62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.badge-verified svg { width: 11px; height: 11px; }
+.badge-no-deposit {
+  background: rgba(16,185,129,.1);
+  backdrop-filter: blur(8px);
+  color: #059669;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: .62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* Hover overlay on image */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(13,148,136,.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .3s var(--ease);
+  border-radius: inherit;
+}
+.card-overlay span {
+  color: #fff;
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .5px;
+  background: rgba(0,0,0,.2);
+  padding: 8px 18px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,.3);
+}
+.listing-card:hover .card-overlay { opacity: 1; }
+
+.card-body { padding: 14px 16px 16px; }
+.card-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.card-cat {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+.card-rating {
+  background: #fffbeb;
+  color: #b45309;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: .7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-rating svg { width: 11px; height: 11px; }
+.card-name {
+  font-family: 'Sora', sans-serif;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-loc {
+  font-size: .73rem;
+  color: var(--slate-500);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.card-loc svg { width: 12px; height: 12px; color: #ef4444; }
+.dot-sep { width: 3px; height: 3px; background: var(--slate-300); border-radius: 50%; }
+.card-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--slate-100);
+  padding-top: 12px;
+}
+.price-label { font-size: .6rem; text-transform: uppercase; color: var(--slate-400); font-weight: 700; }
+.price-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--slate-900);
+  line-height: 1;
+}
+.price-cur { font-size: .85rem; margin-right: 1px; }
+.card-action-btn {
+  width: 34px; height: 34px;
+  background: var(--slate-100);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--slate-700);
+  transition: all .25s var(--ease);
+}
+.card-action-btn svg { width: 15px; height: 15px; }
+.listing-card:hover .card-action-btn {
+  background: var(--teal);
+  color: #fff;
+}
+
+
+/* ════════════════════════════════════════════
+   EARN / DARK CTA SECTION
+════════════════════════════════════════════ */
+.earn-canvas {
+  background: #020918;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: relative;
+  min-height: 480px;
+  border: 1px solid rgba(255,255,255,.04);
+  box-shadow: 0 40px 80px rgba(0,0,0,.2);
+}
+.earn-mesh-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 50%, rgba(13,148,136,.2), transparent 55%),
+    radial-gradient(ellipse 40% 40% at 90% 20%, rgba(13,148,136,.1), transparent 50%);
+}
+.earn-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13,148,136,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.earn-content {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: center;
+}
+.earn-left { padding: 60px 48px; }
+.earn-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.earn-pulse { width: 7px; height: 7px; background: var(--teal-light); border-radius: 50%; box-shadow: 0 0 10px var(--teal-light); animation: blink 2s ease infinite; }
+.earn-status-text { font-size: .7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.earn-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 18px;
+}
+.earn-title .grad {
+  background: linear-gradient(100deg, var(--teal-glow), #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.earn-desc { font-size: .95rem; color: rgba(255,255,255,.45); line-height: 1.75; margin-bottom: 36px; max-width: 380px; }
+.earn-desc strong { color: rgba(255,255,255,.75); font-weight: 700; }
+
+.btn-earn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal));
+  color: #fff;
+  padding: 15px 32px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: .93rem;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(13,148,136,.35);
+  transition: all .3s var(--ease);
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-earn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(13,148,136,.55); color: #fff; }
+.btn-earn svg { width: 17px; height: 17px; }
+
+.earn-right { padding: 40px 48px 40px 0; }
+.glass-calc {
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.3);
+  position: relative;
+  overflow: hidden;
+}
+.glass-calc::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 12%; right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal-light), transparent);
+}
+.calc-title { font-family: 'Sora', sans-serif; font-size: .95rem; font-weight: 800; color: #fff; margin-bottom: 28px; }
+.calc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.calc-key { font-size: .65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.calc-val {
+  background: rgba(13,148,136,.12);
+  border: 1px solid rgba(13,148,136,.2);
+  color: var(--teal-light);
+  padding: 2px 12px;
+  border-radius: 8px;
+  font-size: .8rem;
+  font-weight: 800;
+}
+.calc-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  background: rgba(255,255,255,.08);
+  border-radius: 10px;
+  margin-bottom: 28px;
+  cursor: pointer;
+}
+.calc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 14px rgba(20,184,166,.6);
+  border: 3px solid #fff;
+}
+.calc-result-label { font-size: .62rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,.35); display: block; margin-bottom: 6px; }
+.calc-result-value {
+  font-family: 'Sora', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(13,148,136,.3);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.calc-result-note { font-size: .68rem; color: rgba(255,255,255,.28); text-align: center; margin-top: 20px; }
+
+
+/* ════════════════════════════════════════════
+   HOW IT WORKS
+════════════════════════════════════════════ */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.how-steps { display: flex; flex-direction: column; gap: 28px; }
+.how-step {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 20px;
+  transition: all .3s var(--ease);
+  cursor: default;
+  border: 1px solid transparent;
+}
+.how-step:hover {
+  background: #fff;
+  border-color: var(--slate-200);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(4px);
+}
+.how-step-icon {
+  width: 50px; height: 50px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ccfbf1, #e0f2fe);
+  color: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .3s var(--ease-spring);
+}
+.how-step-icon svg { width: 22px; height: 22px; }
+.how-step:hover .how-step-icon {
+  background: var(--teal);
+  color: #fff;
+  transform: rotate(-8deg) scale(1.1);
+}
+.how-step-title { font-weight: 700; font-size: .95rem; margin-bottom: 4px; color: var(--slate-900); }
+.how-step-desc { font-size: .82rem; color: var(--slate-500); line-height: 1.6; }
+
+.how-visual { position: relative; }
+.how-img {
+  width: 100%;
+  border-radius: 28px;
+  object-fit: cover;
+  height: 480px;
+  box-shadow: var(--shadow-lg);
+  display: block;
+}
+.how-testimonial-card {
+  position: absolute;
+  bottom: 24px; left: -30px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.14);
+  max-width: 260px;
+  border: 1px solid var(--slate-100);
+}
+.how-t-top { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.how-t-avatar { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
+.how-t-name { font-weight: 700; font-size: .88rem; color: var(--slate-900); margin-bottom: 1px; }
+.how-t-role { font-size: .7rem; color: var(--slate-400); font-weight: 500; }
+.how-t-quote { font-size: .78rem; color: var(--slate-500); line-height: 1.55; }
+.how-badge {
+  position: absolute;
+  top: 24px; right: -16px;
+  background: var(--teal);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(13,148,136,.35);
+}
+.how-badge-val { font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 900; line-height: 1; }
+.how-badge-lbl { font-size: .65rem; font-weight: 700; opacity: .75; margin-top: 1px; }
+
+
+/* ════════════════════════════════════════════
+   TESTIMONIALS
+════════════════════════════════════════════ */
+.testimonial-section { background: var(--off-white); }
+.toggle-pill {
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: 50px;
+  display: inline-flex;
+  padding: 5px;
+  gap: 4px;
+  box-shadow: var(--shadow-sm);
+}
+.tgl-btn {
+  padding: 8px 22px;
+  border-radius: 50px;
+  font-size: .82rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--slate-400);
+  transition: all .25s var(--ease);
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.tgl-btn svg { width: 14px; height: 14px; }
+.tgl-btn.active {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13,148,136,.3);
+}
+.tcard {
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  height: 100%;
+  transition: all .3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.tcard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal-light), var(--teal-glow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s var(--ease);
+}
+.tcard:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: transparent; }
+.tcard:hover::before { transform: scaleX(1); }
+.tcard-quote {
+  position: absolute;
+  top: 20px; right: 22px;
+  color: var(--teal-light);
+  opacity: .08;
+}
+.tcard-quote svg { width: 40px; height: 40px; }
+.tcard-top { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+.tcard-avatar { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; border: 2px solid var(--slate-100); }
+.tcard-name { font-weight: 700; font-size: .9rem; color: var(--slate-900); margin-bottom: 1px; }
+.tcard-loc { font-size: .72rem; color: var(--slate-400); font-weight: 500; }
+.tcard-stars { color: var(--gold); font-size: .8rem; letter-spacing: 1.5px; margin-bottom: 10px; }
+.tcard-text { font-size: .83rem; color: var(--slate-500); line-height: 1.7; }
+.tcard-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: .67rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.tcard-badge svg { width: 11px; height: 11px; }
+.tcard-badge-earn { background: #d1fae5; color: #059669; }
+.tcard-badge-verified { background: #ccfbf1; color: var(--teal); }
+
+.hidden-t { display: none; }
+
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤1100px)
+════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+  .listings-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-inner { gap: 48px; }
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤960px)
+════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  /* Hero */
+  .hero { padding: 80px 0 110px; }
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 20px;
+  }
+  .hero-title { font-size: clamp(2.4rem, 6vw, 3.2rem); }
+  .hero-sub { max-width: 100%; }
+  .hero-stats { gap: 0; }
+  .stat-item { padding-right: 20px; }
+  .stat-item + .stat-item { padding-left: 20px; }
+
+  /* Earn Section */
+  .earn-content { grid-template-columns: 1fr; }
+  .earn-left { padding: 48px 36px 32px; }
+  .earn-right { padding: 0 36px 48px; }
+  .earn-title { font-size: clamp(1.7rem, 4vw, 2.2rem); }
+
+  /* How It Works */
+  .how-grid { grid-template-columns: 1fr; gap: 48px; }
+  .how-testimonial-card { display: none; }
+  .how-badge { top: 16px; right: 16px; }
+  .how-img { height: 380px; }
+
+  /* Testimonials grid */
+  #t-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤768px)
+════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Global */
+  .container { padding: 0 16px; }
+  .section { padding: 56px 0; }
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .view-all-link { font-size: .8rem; }
+  .section-title-main { font-size: 1.6rem; }
+
+  /* Hero */
+  .hero { padding: 72px 0 100px; text-align: center; }
+  .hero-inner { gap: 36px; }
+  .hero-badge { font-size: .65rem; padding: 6px 14px 6px 10px; }
+  .hero-title {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    letter-spacing: -1.5px;
+  }
+  .hero-sub { font-size: .95rem; margin: 0 auto 28px; }
+  .hero-stats {
+    justify-content: center;
+    gap: 0;
+  }
+  .stat-item { padding: 0 16px; }
+  .stat-item:first-child { padding-left: 0; }
+  .stat-item:last-child { padding-right: 0; }
+  .stat-val { font-size: 1.3rem; }
+  .hero-ctas {
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-primary, .btn-ghost {
+    padding: 13px 22px;
+    font-size: .88rem;
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-steps {
+    justify-content: center;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+  .hstep { font-size: .68rem; gap: 5px; }
+  .hstep-icon { width: 26px; height: 26px; border-radius: 7px; }
+  .hstep-icon svg { width: 12px; height: 12px; }
+  .hstep-arrow { margin: 0 6px; }
+  .hstep-arrow svg { width: 11px; height: 11px; }
+
+  /* Hero Card */
+  .hero-card {
+    padding: 24px 20px;
+    border-radius: 28px;
+  }
+  .card-heading { font-size: .95rem; }
+  .btn-search-main { padding: 13px; font-size: .88rem; }
+  .pop-tag { font-size: .68rem; padding: 4px 10px; }
+  .proof-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+  /* Trust Bar */
+  .trust-row { flex-wrap: wrap; }
+  .trust-item {
+    flex: 0 0 50%;
+    padding: 20px 16px;
+  }
+  .trust-item::after { display: none; }
+  .trust-item:nth-child(odd) { border-right: 1px solid var(--slate-200); }
+  .trust-item:nth-child(1),
+  .trust-item:nth-child(2) { border-bottom: 1px solid var(--slate-200); }
+  .trust-icon { width: 40px; height: 40px; border-radius: 11px; }
+  .trust-icon svg { width: 17px; height: 17px; }
+  .trust-label { font-size: .83rem; }
+  .trust-sub { font-size: .7rem; }
+
+  /* Category Grid */
+  .cat-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .cat-card { height: 185px; }
+  .cat-name { font-size: 1rem; }
+
+  /* Listings Grid */
+  .listings-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .card-media { height: 160px; }
+  .card-name { font-size: .83rem; }
+  .price-val { font-size: 1.05rem; }
+  .card-body { padding: 10px 12px 12px; }
+
+  /* Earn Section */
+  .earn-canvas { border-radius: 24px; }
+  .earn-left { padding: 36px 24px 24px; }
+  .earn-right { padding: 0 24px 36px; }
+  .earn-title { letter-spacing: -1px; }
+  .earn-desc { font-size: .88rem; }
+  .btn-earn { padding: 13px 26px; font-size: .88rem; width: 100%; justify-content: center; }
+  .glass-calc { padding: 28px 22px; }
+  .calc-result-value { font-size: 2.2rem; }
+
+  /* How It Works */
+  .how-img { height: 280px; border-radius: 20px; }
+  .how-step { padding: 16px 18px; gap: 14px; }
+  .how-step-icon { width: 42px; height: 42px; border-radius: 12px; }
+  .how-step-icon svg { width: 18px; height: 18px; }
+  .how-badge {
+    top: 14px; right: 14px;
+    padding: 8px 14px;
+    border-radius: 12px;
+  }
+  .how-badge-val { font-size: 1rem; }
+
+  /* Testimonials */
+  #t-grid { grid-template-columns: 1fr !important; gap: 14px; }
+  .tcard { padding: 22px 20px; }
+  .toggle-pill { width: 100%; justify-content: center; }
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE (≤480px)
+════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* Hero */
+  .hero { padding: 64px 0 96px; }
+  .hero-title { font-size: 2rem; letter-spacing: -1.2px; }
+  .hero-stats { flex-wrap: wrap; justify-content: center; gap: 12px 0; }
+  .stat-item { flex: 0 0 33.33%; text-align: center; padding: 0 8px; }
+  .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,.08); }
+  .stat-val { font-size: 1.2rem; }
+  .stat-lbl { justify-content: center; font-size: .62rem; }
+  .hero-ctas { flex-direction: column; }
+
+  /* Hero Steps — stack vertically on tiny screens */
+  .hero-steps {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .hstep-arrow { transform: rotate(90deg); margin: 0; }
+
+  /* Hero Card */
+  .hero-card { padding: 20px 16px; border-radius: 24px; }
+  .card-top { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+  /* Trust — full width each */
+  .trust-item { flex: 0 0 100%; border-right: none !important; }
+  .trust-item:nth-child(1),
+  .trust-item:nth-child(2),
+  .trust-item:nth-child(3) { border-bottom: 1px solid var(--slate-200); }
+
+  /* Categories */
+  .cat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cat-card { height: 155px; }
+  .cat-name { font-size: .9rem; }
+  .cat-count { display: none; }
+
+  /* Listings — single column */
+  .listings-grid { grid-template-columns: 1fr; gap: 16px; }
+  .card-media { height: 220px; }
+
+  /* Earn */
+  .earn-canvas { border-radius: 20px; }
+  .earn-left { padding: 28px 20px 20px; }
+  .earn-right { padding: 0 20px 28px; }
+  .glass-calc { padding: 22px 18px; border-radius: 20px; }
+  .calc-result-value { font-size: 2rem; }
+
+  /* How */
+  .how-img { height: 240px; }
+  .how-steps { gap: 12px; }
+  .how-step { padding: 14px 16px; }
+
+  /* Sections */
+  .section { padding: 44px 0; }
+  .section-title-main { font-size: 1.45rem; }
+  .section-kicker { font-size: .65rem; }
+
+  /* Testimonial toggle — stacked pills */
+  .tgl-btn { padding: 8px 16px; font-size: .78rem; }
+
+  /* Section head view-all becomes visible on mobile too */
+  .section-head { margin-bottom: 20px; }
+  .view-all-link { display: flex !important; }
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — EXTRA SMALL (≤360px)
+════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .hero-title { font-size: 1.8rem; }
+  .hero-badge { font-size: .6rem; }
+  .cat-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cat-card { height: 140px; }
+  .btn-primary, .btn-ghost, .btn-earn { padding: 12px 18px; font-size: .83rem; }
+  .earn-title { font-size: 1.5rem; }
+  .calc-result-value { font-size: 1.75rem; }
+  .section-title-main { font-size: 1.3rem; }
+}
+</style>
+
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="particles">
+    <div class="particle" style="left:7%;--s:3px;--d:7s;--dl:0s"></div>
+    <div class="particle" style="left:19%;--s:2px;--d:9s;--dl:1.3s"></div>
+    <div class="particle" style="left:36%;--s:4px;--d:6s;--dl:2.7s"></div>
+    <div class="particle" style="left:52%;--s:3px;--d:8s;--dl:.4s"></div>
+    <div class="particle" style="left:67%;--s:2px;--d:11s;--dl:3.2s"></div>
+    <div class="particle" style="left:80%;--s:3px;--d:7s;--dl:1.9s"></div>
+    <div class="particle" style="left:92%;--s:3px;--d:9s;--dl:4.1s"></div>
+  </div>
+
+  <div class="hero-inner">
+    <!-- LEFT -->
+    <div>
+      <div class="hero-badge">
+        <div class="badge-pulse"></div>
+        <i data-lucide="shield-check" style="width:13px;height:13px"></i>
+        India's Trusted Rental Community
+      </div>
+
+      <h1 class="hero-title font-display">
+        Borrow Smart.<br>
+        <span class="title-gradient">Earn Easy.</span>
+      </h1>
+
+      <p class="hero-sub">
+        India's first sharing marketplace. Rent high-quality gear from verified neighbors — or list your idle assets and turn them into real income.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-val">35+</div>
+          <div class="stat-lbl"><i data-lucide="package" style="width:12px;height:12px;color:#14b8a6"></i> Active Listings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">12+</div>
+          <div class="stat-lbl"><i data-lucide="users" style="width:12px;height:12px;color:#14b8a6"></i> Happy Borrowers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">₹100T+</div>
+          <div class="stat-lbl"><i data-lucide="indian-rupee" style="width:12px;height:12px;color:#14b8a6"></i> Earned by Lenders</div>
+        </div>
+      </div>
+
+      <div class="hero-ctas">
+        <a href="#marketplace" class="btn-primary">
+          <i data-lucide="shopping-bag"></i>
+          Explore Marketplace
+        </a>
+        <a href="{% url 'add_item' %}" class="btn-ghost">
+          <i data-lucide="banknote"></i>
+          Start Earning
+        </a>
+      </div>
+
+      <div class="hero-steps">
+        <div class="hstep">
+          <div class="hstep-icon"><i data-lucide="search"></i></div>
+          Find local gear
+        </div>
+        <div class="hstep-arrow"><i data-lucide="chevron-right"></i></div>
+        <div class="hstep">
+          <div class="hstep-icon"><i data-lucide="calendar-check"></i></div>
+          Book dates
+        </div>
+        <div class="hstep-arrow"><i data-lucide="chevron-right"></i></div>
+        <div class="hstep">
+          <div class="hstep-icon"><i data-lucide="refresh-cw"></i></div>
+          Use &amp; Return
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CARD -->
+    <div class="hero-card">
+      <div class="card-top">
+        <div class="card-heading">
+          <i data-lucide="zap"></i>
+          Start Looping
+        </div>
+        <div class="instant-pill">
+          <i data-lucide="bolt"></i> Instant Book
+        </div>
+      </div>
+
+      <form method="GET" action="{% url 'browse_items' %}">
+        <div class="field-group">
+          <div class="field-label">
+            <i data-lucide="sparkles"></i> What do you need?
+          </div>
+          <div class="input-row">
+            <i data-lucide="search"></i>
+            <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Projector, DSLR, Camping Tent…">
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom:20px">
+          <div class="field-label">
+            <i data-lucide="map-pin"></i> Location
+          </div>
+          <div class="input-row">
+            <i data-lucide="navigation"></i>
+            <input type="text" name="city" value="{{ selected_city|default:'Mehsana, GJ' }}" readonly>
+            <span class="near-pill"><i data-lucide="radio"></i> Near You</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-search-main">
+          <i data-lucide="search"></i>
+          Browse Marketplace
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="popular-row">
+        <span class="pop-label"><i data-lucide="trending-up"></i> Popular:</span>
+        <span class="pop-tag">DSLR</span>
+        <span class="pop-tag">Power Drill</span>
+        <span class="pop-tag">Tent</span>
+      </div>
+
+      <div class="proof-row">
+        <div class="avatars">
+          <div class="av">RK</div>
+          <div class="av">MP</div>
+          <div class="av">SA</div>
+          <div class="av" style="font-size:.5rem">+99</div>
+        </div>
+        <div>
+          <span class="proof-stars">★★★★★</span>
+          <div class="proof-text"><strong>24+ reviews</strong> · Avg ₹180/day saved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-wave">
+    <svg viewBox="0 0 1200 100" preserveAspectRatio="none" style="height:64px;fill:#f8fafc">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V100H0V0C49.49,23.11,101.18,44.57,155.13,54.66,209.08,64.75,265,67.23,321.39,56.44Z"/>
+    </svg>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TRUST BAR
+══════════════════════════════════════════ -->
+<section class="trust-section">
+  <div class="container" style="padding-top:40px;padding-bottom:56px">
+    <div class="trust-wrap">
+      <div class="trust-row">
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="user-check"></i></div>
+          <div>
+            <div class="trust-label">Verified Users</div>
+            <div class="trust-sub">100% ID-checked lenders</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="shield"></i></div>
+          <div>
+            <div class="trust-label">Damage Cover</div>
+            <div class="trust-sub">Protection built in</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="credit-card"></i></div>
+          <div>
+            <div class="trust-label">Secure Pay</div>
+            <div class="trust-sub">Escrow-protected</div>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon"><i data-lucide="heart"></i></div>
+          <div>
+            <div class="trust-label">Top Rated</div>
+            <div class="trust-sub">Peer-reviewed listings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     CATEGORIES
+══════════════════════════════════════════ -->
+<section class="section section-alt" id="marketplace">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-kicker">Categories</span>
+        <h2 class="section-title-main font-display">Browse by <span style="color:var(--teal-light)">Category</span></h2>
+        <p class="section-sub">Quality assets, verified lenders, one simple loop</p>
+      </div>
+      <a href="{% url 'category_items' 1 %}" class="view-all-link d-none d-md-flex">
+        View All <i data-lucide="arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="cat-grid">
+      {% for category in categories %}
+      <a href="{% url 'category_items' category.id %}" class="cat-card"
+         style="background-image:url('{% if category.image %}{{ category.image.url }}{% else %}{% static 'images/default-category.jpg' %}{% endif %}')">
+        <div class="cat-content">
+          <span class="cat-kicker">Explore</span>
+          <span class="cat-name">{{ category.name }}</span>
+          {% if category.items.count %}
+          <span class="cat-count">{{ category.items.count }} items</span>
+          {% endif %}
+        </div>
+        <div class="cat-arrow"><i data-lucide="arrow-up-right"></i></div>
+      </a>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--slate-400)">
+        No categories available yet.
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TRENDING LISTINGS
+══════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-kicker">Trending</span>
+        <h2 class="section-title-main font-display">Popular in <span style="color:var(--teal-light)">{{ selected_city }}</span></h2>
+        <p class="section-sub">Curated gear from your community</p>
+      </div>
+      <a href="{% url 'browse_items' %}" class="view-all-link d-none d-md-flex">
+        Browse All <i data-lucide="arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="listings-grid">
+      {% for item in items %}
+      <a href="{% url 'item_detail' item.id %}" class="listing-card">
+        <div class="card-media">
+          <div class="card-badges">
+            <span class="badge-verified"><i data-lucide="patch-check" style="width:11px;height:11px"></i> Verified</span>
+            {% if item.deposit_amount == 0 %}<span class="badge-no-deposit">No Deposit</span>{% endif %}
+          </div>
+          {% with item.images.all|first as fi %}
+          <img src="{% if fi %}{{ fi.image.url }}{% else %}/static/images/default.jpg{% endif %}"
+               class="card-img" alt="{{ item.name }}">
+          {% endwith %}
+          <div class="card-overlay"><span>Check Availability</span></div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta-row">
+            <span class="card-cat">{{ item.category|default:"Rental" }}</span>
+            <div class="card-rating">
+              <i data-lucide="star" style="width:11px;height:11px;fill:#b45309;color:#b45309"></i>
+              {% if item.avg_rating %}{{ item.avg_rating|floatformat:1 }}{% else %}New{% endif %}
+            </div>
+          </div>
+          <div class="card-name">{{ item.name }}</div>
+          <div class="card-loc">
+            <i data-lucide="map-pin"></i>
+            {{ item.city }}
+            <span class="dot-sep"></span>
+            Instant Loop
+          </div>
+          <div class="card-footer-row">
+            <div>
+              <div class="price-label">Per Day</div>
+              <div class="price-val"><span class="price-cur">₹</span>{{ item.rent_per_day }}</div>
+            </div>
+            <div class="card-action-btn"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--slate-400)">
+        No listings in {{ selected_city }} yet. <a href="{% url 'add_item' %}" style="color:var(--teal)">Be the first to list!</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     EARN DARK SECTION
+══════════════════════════════════════════ -->
+<section class="section section-alt" id="earn">
+  <div class="container">
+    <div class="earn-canvas">
+      <div class="earn-mesh-bg"></div>
+      <div class="earn-grid"></div>
+
+      <div class="earn-content">
+        <div class="earn-left">
+          <div class="earn-status-pill">
+            <span class="earn-pulse"></span>
+            <span class="earn-status-text">Lender Marketplace is Live</span>
+          </div>
+          <h2 class="earn-title font-display">
+            Turn Idle Assets<br>into <span class="grad">Passive Wealth</span>
+          </h2>
+          <p class="earn-desc">
+            Lenders in <strong>{{ selected_city|default:"your area" }}</strong> are making up to ₹15,000/mo renting gear they already own. Join 1,000+ verified partners on Loop.
+          </p>
+          <a href="{% url 'add_item' %}" class="btn-earn">
+            <i data-lucide="plus-circle"></i>
+            Start Listing Free
+          </a>
+        </div>
+
+        <div class="earn-right">
+          <div class="glass-calc">
+            <div class="calc-title font-display">Earnings Estimator</div>
+            <div class="calc-row">
+              <span class="calc-key">Item Value</span>
+              <span class="calc-val" id="val-display">₹15,000</span>
+            </div>
+            <input type="range" class="calc-range" id="earn-range" min="2000" max="200000" step="1000" value="15000">
+            <span class="calc-result-label">Potential Monthly Earnings</span>
+            <div class="calc-result-value" id="income-display">₹2,250</div>
+            <p class="calc-result-note">*Based on 10 rental days/month at 1.5% daily rate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="how-grid">
+      <div>
+        <span class="section-kicker">How It Works</span>
+        <h2 class="section-title-main font-display" style="margin-bottom:8px">
+          Sharing made<br><span style="color:var(--teal-light)">effortless.</span>
+        </h2>
+        <p class="section-sub" style="margin-bottom:40px">We've built a secure environment where neighbors support neighbors.</p>
+
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-icon"><i data-lucide="search"></i></div>
+            <div>
+              <div class="how-step-title">Search &amp; Book</div>
+              <div class="how-step-desc">Browse verified listings and book dates instantly with secure, escrow-protected payments.</div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon"><i data-lucide="handshake"></i></div>
+            <div>
+              <div class="how-step-title">Meet &amp; Collect</div>
+              <div class="how-step-desc">Meet your neighbor at a convenient spot and pick up the item. No hidden hassles.</div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-icon"><i data-lucide="refresh-ccw"></i></div>
+            <div>
+              <div class="how-step-title">Use &amp; Return</div>
+              <div class="how-step-desc">Finish your project and return the item. Rate your experience and help the community.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-visual">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80"
+             class="how-img" alt="Community sharing">
+        <div class="how-badge">
+          <div class="how-badge-val">₹12K</div>
+          <div class="how-badge-lbl">earned last month</div>
+        </div>
+        <div class="how-testimonial-card">
+          <div class="how-t-top">
+            <img src="https://i.pravatar.cc/150?u=9" class="how-t-avatar" alt="Tony Shark">
+            <div>
+              <div class="how-t-name">Tony Shark</div>
+              <div class="how-t-role">Lender since 2026</div>
+            </div>
+          </div>
+          <div class="how-t-quote">"Loop helped me earn ₹12k last month just from my drill and camera!"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════════ -->
+<section class="section testimonial-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:40px">
+      <span class="section-kicker">Community</span>
+      <h2 class="section-title-main font-display" style="margin-bottom:8px">Community Voice</h2>
+      <p class="section-sub" style="margin-bottom:24px">Join thousands of happy Loopers across India</p>
+      <div class="toggle-pill">
+        <button class="tgl-btn active" onclick="filterT('borrower',this)">
+          <i data-lucide="shopping-bag"></i> Borrowers
+        </button>
+        <button class="tgl-btn" onclick="filterT('lender',this)">
+          <i data-lucide="banknote"></i> Lenders
+        </button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px" id="t-grid">
+
+      <div class="t-item" data-type="borrower">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=1" class="tcard-avatar" alt="Arjun">
+            <div>
+              <div class="tcard-name">Arjun Mehta</div>
+              <div class="tcard-loc">Ahmedabad</div>
+            </div>
+          </div>
+          <div class="tcard-stars">★★★★★</div>
+          <p class="tcard-text">"Needed a Sony A7III for a weekend wedding shoot. Found one 2km away at a fraction of a rental store. Super smooth!"</p>
+        </div>
+      </div>
+
+      <div class="t-item" data-type="borrower">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=2" class="tcard-avatar" alt="Rahul">
+            <div>
+              <div class="tcard-name">Rahul V.</div>
+              <div class="tcard-loc">Surat</div>
+            </div>
+          </div>
+          <div class="tcard-stars">★★★★★</div>
+          <p class="tcard-text">"Rented a high-end projector for a home movie night. Lender helped set it up. Definitely doing this again!"</p>
+        </div>
+      </div>
+
+      <div class="t-item" data-type="borrower">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=3" class="tcard-avatar" alt="Ananya">
+            <div>
+              <div class="tcard-name">Ananya R.</div>
+              <div class="tcard-loc">Vadodara</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-verified"><i data-lucide="check-circle"></i> Verified Borrower</div>
+          <p class="tcard-text">"Better for the planet and my wallet. Why buy a pressure washer once? Loop is a game changer for urban living."</p>
+        </div>
+      </div>
+
+      <div class="t-item hidden-t" data-type="lender">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=4" class="tcard-avatar" alt="Priya">
+            <div>
+              <div class="tcard-name">Priya Sharma</div>
+              <div class="tcard-loc">Mehsana</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-earn"><i data-lucide="trending-up"></i> Earned ₹8,400 last month</div>
+          <p class="tcard-text">"My camping gear used to collect dust. Now it pays for my weekend trips! Damage protection gives me peace of mind."</p>
+        </div>
+      </div>
+
+      <div class="t-item hidden-t" data-type="lender">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=5" class="tcard-avatar" alt="Suresh">
+            <div>
+              <div class="tcard-name">Suresh K.</div>
+              <div class="tcard-loc">Gandhinagar</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-earn"><i data-lucide="award"></i> Power User</div>
+          <p class="tcard-text">"Listing my drills and saws took 5 minutes. The escrow payment system makes everything feel professional."</p>
+        </div>
+      </div>
+
+      <div class="t-item hidden-t" data-type="lender">
+        <div class="tcard">
+          <div class="tcard-quote"><i data-lucide="quote"></i></div>
+          <div class="tcard-top">
+            <img src="https://i.pravatar.cc/150?u=7" class="tcard-avatar" alt="Neha">
+            <div>
+              <div class="tcard-name">Neha Patel</div>
+              <div class="tcard-loc">Rajkot</div>
+            </div>
+          </div>
+          <div class="tcard-badge tcard-badge-earn"><i data-lucide="trending-up"></i> Earned ₹6,200/mo</div>
+          <p class="tcard-text">"Starting was dead simple. My projector alone brings in 6k a month. Loop is genuinely changing how I think about my stuff."</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+// ─── Init Icons ───
+lucide.createIcons();
+
+// ─── Earnings Calc ───
+(function(){
+  const range = document.getElementById('earn-range');
+  const valD  = document.getElementById('val-display');
+  const incD  = document.getElementById('income-display');
+  if(!range) return;
+  function calc(){
+    const v = parseInt(range.value);
+    valD.textContent = '₹' + v.toLocaleString('en-IN');
+    const est = Math.round(v * 0.015 * 10);
+    incD.textContent = '₹' + est.toLocaleString('en-IN');
+  }
+  range.addEventListener('input', calc);
+  calc();
+})();
+
+// ─── Testimonial toggle ───
+function filterT(type, btn){
+  document.querySelectorAll('.tgl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.t-item').forEach(el => {
+    if(el.dataset.type === type){
+      el.classList.remove('hidden-t');
+      el.style.opacity = '0';
+      requestAnimationFrame(()=>{
+        el.style.transition = 'opacity .35s ease';
+        el.style.opacity = '1';
+      });
+    } else {
+      el.style.opacity = '0';
+      setTimeout(()=> el.classList.add('hidden-t'), 280);
+    }
+  });
+  setTimeout(()=> lucide.createIcons(), 120);
+}
+
+// ─── Scroll reveal ───
+const reveal = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+},{threshold:.1});
+
+document.querySelectorAll('.listing-card, .cat-card, .how-step, .tcard').forEach(el=>{
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .55s ease, transform .55s ease';
+  reveal.observe(el);
+});
+
+// ─── Smooth anchor scroll ───
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
 });
 </script>
 
