@@ -224,6 +224,15 @@ ALLOWED_CITIES = [
     "Mumbai"
 ]
 
+# 1. Set the Time Zone to India (UTC +5:30)
+TIME_ZONE = 'Asia/Kolkata'
+
+# 2. Keep this True so Django handles timezones internally
+USE_I18N = True
+
+# 3. Setting this to True stores time in UTC in the DB 
+# but displays it in 'Asia/Kolkata' in Admin and Templates.
+USE_TZ = True
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "profile"
