@@ -489,41 +489,33 @@
                                 </td>
                             
                                 <td class="text-center">
-    <span class="fw-bold text-dark">₹{{ log.payment.payment_amt|default:"0.00" }}</span>
-</td>
-<td class="text-center">
-    {% if log.payment.deposit_locked %}
-        <span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle">
-            <i class="bi bi-lock-fill me-1"></i> ₹{{ log.payment.deposit }}
-        </span>
-    {% else %}
-        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">
-            <i class="bi bi-unlock-fill me-1"></i> ₹{{ log.payment.deposit }}
-        </span>
-    {% endif %}
-</td>
+                                    <span class="fw-bold text-dark">₹{{ log.payment.payment_amt|default:"0.00" }}</span>
+                                </td>
+                                <td class="text-center">
+                                    {% if log.payment.deposit_locked %}
+                                        <span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle">
+                                            <i class="bi bi-lock-fill me-1"></i> ₹{{ log.payment.deposit }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">
+                                            <i class="bi bi-unlock-fill me-1"></i> ₹{{ log.payment.deposit }}
+                                        </span>
+                                    {% endif %}
+                                </td>
                             
                                 <td class="text-center">
+                                    {% with pay=log.payment %} 
                                         {% if pay.deposit_state == "returned_full" %}
                                             <span class="badge bg-success">Full Refund</span>
-
                                         {% elif pay.deposit_state == "returned_half" %}
-                                            <span class="badge bg-warning text-dark">
-                                                50% Deducted
-                                            </span>
-                                        
+                                            <span class="badge bg-warning text-dark">50% Deducted</span>
                                         {% elif pay.deposit_state == "dispute" %}
-                                            <span class="badge bg-danger">
-                                                Dispute Under Review
-                                            </span>
-                                        
+                                            <span class="badge bg-danger">Dispute Under Review</span>
                                         {% else %}
-                                            <span class="badge bg-info">
-                                                Deposit Held
-                                            </span>
+                                            <span class="badge bg-info">Deposit Held</span>
                                         {% endif %}
-                                    </td>
-                                {% endwith %}
+                                    {% endwith %}
+                                </td>
                             
                                 <td class="pe-4 text-end">
                                     <a href="{% url 'item_detail' log.item.id %}#reviews-section"
