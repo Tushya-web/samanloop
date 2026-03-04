@@ -488,14 +488,20 @@
                                     </span>
                                 </td>
                             
-                                {% with log.payments.first as pay %}
                                 <td class="text-center">
-                                    ₹{{ pay.payment_amt }}
-                                </td>
-                            
-                                <td class="text-center">
-                                    ₹{{ pay.deposit }}
-                                </td>
+    <span class="fw-bold text-dark">₹{{ log.payment.payment_amt|default:"0.00" }}</span>
+</td>
+<td class="text-center">
+    {% if log.payment.deposit_locked %}
+        <span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle">
+            <i class="bi bi-lock-fill me-1"></i> ₹{{ log.payment.deposit }}
+        </span>
+    {% else %}
+        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">
+            <i class="bi bi-unlock-fill me-1"></i> ₹{{ log.payment.deposit }}
+        </span>
+    {% endif %}
+</td>
                             
                                 <td class="text-center">
                                         {% if pay.deposit_state == "returned_full" %}
