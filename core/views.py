@@ -38,6 +38,7 @@ def index(request):
             pass
         
     selected_city = request.session.get("selected_city")
+    
 
     # If no city selected, fallback to first available city
     if not selected_city:
@@ -666,8 +667,11 @@ def profile(request):
         return redirect("/login/?next=/profile/")
     email = request.session.get("user")
     user = User.objects.get(email=email)
+    wallet, _ = Wallet.objects.get_or_create(user=user)
+    
     return render(request, "usera/profile.html", {
-        "user": user
+        "user": user,
+        "wallet" : wallet
     })
     
 def edit_profile(request):
