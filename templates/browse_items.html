@@ -7,530 +7,940 @@
     <title>Browse Marketplace | SamanLoop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        :root { 
-            --primary-teal: #0d9488; 
-            --primary-gradient: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
-            --glass-bg: rgba(255, 255, 255, 0.8);
-            --navy-dark: #0f172a; 
-            --bg-body: #f8fafc; 
-            --accent-soft: #f0fdfa;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        /* ═══════════════════════════════════════════
+           SAMANLOOP — DESIGN SYSTEM
+           Font: Sora | Theme: Premium Dark × Teal
+        ═══════════════════════════════════════════ */
+        :root {
+            --mk-teal:        #0d9488;
+            --mk-teal-bright: #2dd4bf;
+            --mk-teal-dim:    #0f766e;
+            --mk-ink:         #0c1a17;
+            --mk-dark:        #111827;
+            --mk-slate:       #1f2d2b;
+            --mk-mist:        #f0faf8;
+            --mk-cloud:       #f8fffe;
+            --mk-stone:       #5f7c77;
+            --mk-border:      #d4e9e4;
+            --mk-gold:        #d97706;
+            --mk-red:         #f43f5e;
+            --mk-white:       #ffffff;
+
+            --r-pill:  999px;
+            --r-card:  22px;
+            --r-hero:  40px;
+            --r-lg:    28px;
+
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-out:    cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --sh-card:  0 2px 16px rgba(13,148,136,0.07), 0 1px 4px rgba(0,0,0,0.04);
+            --sh-hover: 0 16px 40px rgba(13,148,136,0.14), 0 4px 12px rgba(0,0,0,0.07);
+            --sh-float: 0 20px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--navy-dark);
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--mk-cloud);
+            color: var(--mk-ink);
+            min-height: 100vh;
         }
 
-        /* --- UI ENHANCEMENT: AI Hero Section --- */
-        .ai-assistant-box { 
-            background: linear-gradient(110deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 40px; 
-            padding: 60px 40px; 
-            color: white; 
-            margin-top: 20px;
-            margin-bottom: 60px;
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--mk-border); border-radius: var(--r-pill); }
+
+
+        /* ════════════════════════════════════════
+           HERO SECTION
+        ════════════════════════════════════════ */
+        .mk-hero {
+            background: var(--mk-dark);
+            border-radius: var(--r-hero);
+            padding: 60px 52px 100px;
+            margin-top: 24px;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
-        .ai-assistant-box::after {
-            content: "";
+        /* Ambient orbs */
+        .mk-orb {
             position: absolute;
-            top: -20%; right: -10%;
-            width: 400px; height: 400px;
-            background: var(--primary-teal);
-            filter: blur(150px);
-            opacity: 0.15;
-            z-index: 0;
-        }
-
-        .hero-illustration {
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 300px;
-            opacity: 0.8;
+            border-radius: 50%;
             pointer-events: none;
-            z-index: 1;
+            filter: blur(100px);
+        }
+        .mk-orb-1 {
+            width: 480px; height: 480px;
+            background: var(--mk-teal);
+            opacity: 0.11;
+            top: -120px; right: -80px;
+            animation: mkPulse 8s ease-in-out infinite alternate;
+        }
+        .mk-orb-2 {
+            width: 280px; height: 280px;
+            background: #38bdf8;
+            opacity: 0.07;
+            bottom: -60px; left: 25%;
+            animation: mkPulse 6s ease-in-out infinite alternate-reverse;
         }
 
-        /* --- UI ENHANCEMENT: Floating Search --- */
-        .search-container {
-            max-width: 700px;
-            margin: -85px auto 50px auto;
-            position: relative;
-            z-index: 100;
+        @keyframes mkPulse {
+            from { transform: scale(1);   opacity: 0.08; }
+            to   { transform: scale(1.3); opacity: 0.15; }
         }
 
-        .search-wrapper {
-            background: white;
-            padding: 8px;
-            border-radius: 100px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        /* Grain overlay */
+        .mk-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .mk-hero-inner { position: relative; z-index: 1; }
+
+        .mk-hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(45, 212, 191, 0.12);
+            border: 1px solid rgba(45, 212, 191, 0.28);
+            color: var(--mk-teal-bright);
+            padding: 6px 16px;
+            border-radius: var(--r-pill);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .mk-hero-title {
+            font-size: clamp(1.9rem, 4.5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.15;
+            color: #fff;
+            margin-bottom: 14px;
+            letter-spacing: -0.02em;
+        }
+
+        .mk-hero-title span {
+            background: linear-gradient(90deg, var(--mk-teal-bright), #7dd3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .mk-hero-sub {
+            color: rgba(255,255,255,0.5);
+            font-size: 1rem;
+            font-weight: 300;
+            max-width: 400px;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        /* AI Input */
+        .mk-ai-bar {
             display: flex;
             align-items: center;
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            gap: 8px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(16px);
+            border-radius: 18px;
+            padding: 8px;
+            max-width: 540px;
+            transition: border-color 0.3s;
+        }
+        .mk-ai-bar:focus-within {
+            border-color: rgba(45,212,191,0.45);
+            background: rgba(255,255,255,0.09);
         }
 
-        .search-wrapper:focus-within {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+        .mk-ai-icon {
+            color: var(--mk-teal-bright);
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            margin-left: 6px;
         }
 
-        .search-field-lg { 
+        .mk-ai-input {
             flex: 1;
+            background: transparent;
             border: none;
-            padding: 15px 25px;
-            font-size: 1.1rem;
             outline: none;
-            border-radius: 100px;
+            color: #fff;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            padding: 8px 10px;
         }
+        .mk-ai-input::placeholder { color: rgba(255,255,255,0.3); }
 
-        /* --- UI ENHANCEMENT: Category Pills --- */
-        .category-scroll {
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE and Edge */
-        }
-        .category-scroll::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
-
-        .category-pill { 
-            padding: 10px 24px; 
-            border-radius: 100px; 
-            border: 1px solid #e2e8f0; 
-            background: white; 
-            color: #64748b; 
-            font-weight: 600; 
-            text-decoration: none; 
-            transition: 0.3s all;
+        .mk-ai-btn {
+            background: linear-gradient(135deg, var(--mk-teal), var(--mk-teal-dim));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 22px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: 0.3s var(--ease-spring);
             white-space: nowrap;
         }
-
-        .category-pill:hover {
-            background: var(--accent-soft);
-            color: var(--primary-teal);
-            border-color: var(--primary-teal);
+        .mk-ai-btn:hover {
+            box-shadow: 0 8px 22px rgba(13,148,136,0.45);
+            transform: scale(1.04);
         }
 
-        .category-pill.active { 
-            background: var(--navy-dark); 
-            color: white; 
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-        }
-
-        /* --- UI ENHANCEMENT: Product Cards --- */
-        .card-custom { 
-            background: white; 
-            border-radius: 24px;
-            padding: 12px;
-            transition: all 0.4s ease; 
-            text-decoration: none; 
-            color: inherit; 
-            display: block;
-            border: 1px solid transparent;
-        }
-
-        .card-custom:hover {
-            transform: translateY(-10px);
-            background: white;
-            border-color: #e2e8f0;
-            box-shadow: var(--card-shadow);
-        }
-
-        .card-img-container { 
-            aspect-ratio: 1 / 1.1;
-            border-radius: 20px;
-            overflow: hidden; 
-            position: relative; 
-        }
-
-        .card-img { 
-            width: 100%; height: 100%; object-fit: cover; 
-            transition: 0.8s cubic-bezier(0.2, 1, 0.2, 1); 
-        }
-
-        .card-custom:hover .card-img { transform: scale(1.1); }
-
-        .badge-premium {
+        /* Hero visual */
+        .mk-hero-img {
             position: absolute;
-            top: 15px; left: 15px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(5px);
-            color: var(--navy-dark);
-            padding: 5px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 2;
+            right: 44px; top: 50%;
+            transform: translateY(-50%);
+            width: 260px;
+            opacity: 0.7;
+            z-index: 1;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+            animation: mkFloat 5s ease-in-out infinite;
+        }
+        @keyframes mkFloat {
+            0%, 100% { transform: translateY(-50%); }
+            50%       { transform: translateY(-54%); }
         }
 
-        .price-tag {
-            background: var(--accent-soft);
-            color: var(--primary-teal);
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 1.1rem;
+
+        /* ════════════════════════════════════════
+           FLOATING SEARCH
+        ════════════════════════════════════════ */
+        .mk-search-lift {
+            max-width: 640px;
+            margin: -52px auto 48px;
+            padding: 0 16px;
+            position: relative;
+            z-index: 50;
         }
 
-        .btn-suggest {
-            background: var(--primary-gradient);
+        .mk-search-shell {
+            background: var(--mk-white);
+            border-radius: var(--r-pill);
+            box-shadow: var(--sh-float);
+            display: flex;
+            align-items: center;
+            padding: 6px 6px 6px 18px;
+            border: 1.5px solid transparent;
+            transition: 0.35s var(--ease-out);
+        }
+        .mk-search-shell:focus-within {
+            border-color: var(--mk-teal);
+            box-shadow: 0 20px 44px rgba(13,148,136,0.13), 0 0 0 4px rgba(13,148,136,0.07);
+            transform: translateY(-3px);
+        }
+
+        .mk-search-ico {
+            color: var(--mk-stone);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .mk-search-field {
+            flex: 1;
             border: none;
-            padding: 12px 30px;
-            border-radius: 100px;
-            transition: 0.3s;
+            outline: none;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem;
+            color: var(--mk-ink);
+            padding: 10px 14px;
+            background: transparent;
         }
-        
-        .btn-suggest:hover {
-            box-shadow: 0 10px 20px rgba(13, 148, 136, 0.3);
-            transform: scale(1.02);
+        .mk-search-field::placeholder { color: #adb5bd; }
+
+        .mk-search-go {
+            background: var(--mk-ink);
+            color: #fff;
+            border: none;
+            border-radius: var(--r-pill);
+            padding: 11px 26px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: 0.3s var(--ease-spring);
+        }
+        .mk-search-go:hover { background: var(--mk-teal); transform: scale(1.03); }
+
+
+        /* ════════════════════════════════════════
+           TOOLBAR
+        ════════════════════════════════════════ */
+        .mk-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
         }
 
-        /* --- MEDIA QUERIES FOR MOBILE --- */
+        .mk-cats {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex: 1;
+            min-width: 0;
+            padding-bottom: 2px;
+        }
+        .mk-cats::-webkit-scrollbar { display: none; }
+
+        .mk-cat {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 9px 20px;
+            border-radius: var(--r-pill);
+            border: 1.5px solid var(--mk-border);
+            background: var(--mk-white);
+            color: var(--mk-stone);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: 0.25s var(--ease-spring);
+        }
+        .mk-cat:hover {
+            background: var(--mk-mist);
+            color: var(--mk-teal);
+            border-color: var(--mk-teal);
+            transform: translateY(-2px);
+        }
+        .mk-cat.mk-cat--on {
+            background: var(--mk-ink);
+            color: #fff;
+            border-color: var(--mk-ink);
+            box-shadow: 0 6px 18px rgba(12,26,23,0.22);
+        }
+
+        .mk-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .mk-filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 20px;
+            background: var(--mk-white);
+            border: 1.5px solid var(--mk-border);
+            border-radius: var(--r-pill);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--mk-ink);
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .mk-filter-btn:hover {
+            border-color: var(--mk-teal);
+            color: var(--mk-teal);
+            background: var(--mk-mist);
+        }
+
+        .mk-sort {
+            padding: 10px 36px 10px 16px;
+            background: var(--mk-white);
+            border: 1.5px solid var(--mk-border);
+            border-radius: var(--r-pill);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--mk-ink);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235f7c77'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 13px center;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .mk-sort:hover, .mk-sort:focus { border-color: var(--mk-teal); outline: none; }
+
+
+        /* ════════════════════════════════════════
+           PRODUCT GRID
+        ════════════════════════════════════════ */
+        .mk-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* ── CARD ─────────────────────── */
+        .mk-card {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            background: var(--mk-white);
+            border-radius: var(--r-card);
+            overflow: hidden;
+            border: 1.5px solid transparent;
+            box-shadow: var(--sh-card);
+            transition: 0.38s var(--ease-out);
+            animation: mkUp 0.5s both;
+        }
+
+        @keyframes mkUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* stagger */
+        .mk-card:nth-child(1)  { animation-delay: 0.04s; }
+        .mk-card:nth-child(2)  { animation-delay: 0.09s; }
+        .mk-card:nth-child(3)  { animation-delay: 0.14s; }
+        .mk-card:nth-child(4)  { animation-delay: 0.19s; }
+        .mk-card:nth-child(5)  { animation-delay: 0.24s; }
+        .mk-card:nth-child(6)  { animation-delay: 0.29s; }
+        .mk-card:nth-child(7)  { animation-delay: 0.34s; }
+        .mk-card:nth-child(8)  { animation-delay: 0.39s; }
+        .mk-card:nth-child(n+9){ animation-delay: 0.44s; }
+
+        .mk-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--sh-hover);
+            border-color: rgba(13,148,136,0.22);
+        }
+
+        /* Image zone */
+        .mk-img-zone {
+            position: relative;
+            aspect-ratio: 4/3.4;
+            overflow: hidden;
+            background: var(--mk-mist);
+        }
+
+        .mk-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.2, 1, 0.2, 1);
+            display: block;
+        }
+        .mk-card:hover .mk-img { transform: scale(1.08); }
+
+        /* Top bar inside image */
+        .mk-img-bar {
+            position: absolute;
+            top: 10px; left: 10px; right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 3;
+        }
+
+        .mk-verified {
+            background: rgba(255,255,255,0.93);
+            backdrop-filter: blur(8px);
+            color: var(--mk-teal);
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.58rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mk-heart {
+            width: 30px; height: 30px;
+            background: rgba(255,255,255,0.93);
+            backdrop-filter: blur(8px);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c8d5d3;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: 0.3s var(--ease-spring);
+            font-size: 0.72rem;
+        }
+        .mk-heart:hover { color: var(--mk-red); transform: scale(1.2); }
+
+        /* Hover scrim + label */
+        .mk-scrim {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10,24,21,0.6) 0%, transparent 55%);
+            opacity: 0;
+            transition: opacity 0.35s;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .mk-card:hover .mk-scrim { opacity: 1; }
+
+        .mk-view-label {
+            position: absolute;
+            bottom: 12px; left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: rgba(255,255,255,0.96);
+            color: var(--mk-ink);
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 7px 16px;
+            border-radius: var(--r-pill);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s var(--ease-spring);
+            z-index: 4;
+        }
+        .mk-card:hover .mk-view-label {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Card body */
+        .mk-body {
+            padding: 14px 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .mk-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--mk-ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: -0.01em;
+        }
+
+        .mk-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mk-loc {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--mk-stone);
+            font-size: 0.72rem;
+            font-weight: 400;
+        }
+
+        .mk-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: var(--mk-gold);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .mk-sep {
+            height: 1px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--mk-border) 0, var(--mk-border) 5px,
+                transparent 5px, transparent 10px
+            );
+        }
+
+        .mk-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mk-price {
+            display: flex;
+            align-items: baseline;
+            gap: 1px;
+        }
+        .mk-price-sym {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--mk-teal);
+        }
+        .mk-price-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--mk-teal);
+            letter-spacing: -0.02em;
+        }
+        .mk-price-unit {
+            font-size: 0.65rem;
+            color: var(--mk-stone);
+            margin-left: 2px;
+        }
+
+        .mk-arrow {
+            width: 30px; height: 30px;
+            background: var(--mk-mist);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mk-teal);
+            font-size: 1.1rem;
+            transition: 0.3s var(--ease-spring);
+        }
+        .mk-card:hover .mk-arrow {
+            background: var(--mk-teal);
+            color: #fff;
+            transform: rotate(-45deg);
+        }
+
+
+        /* ════════════════════════════════════════
+           EMPTY STATE
+        ════════════════════════════════════════ */
+        .mk-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .mk-empty img { width: 160px; opacity: 0.55; margin-bottom: 20px; }
+        .mk-empty-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--mk-ink);
+            margin-bottom: 8px;
+        }
+        .mk-empty-sub { color: var(--mk-stone); font-size: 0.88rem; margin-bottom: 24px; }
+        .mk-empty-btn {
+            display: inline-block;
+            background: var(--mk-ink);
+            color: #fff;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 12px 26px;
+            border-radius: var(--r-pill);
+            text-decoration: none;
+            transition: 0.3s var(--ease-spring);
+        }
+        .mk-empty-btn:hover { background: var(--mk-teal); color: #fff; transform: scale(1.04); }
+
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — TABLET
+        ════════════════════════════════════════ */
+        @media (max-width: 1199px) {
+            .mk-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
         @media (max-width: 991px) {
-            .ai-assistant-box { padding: 40px 30px; }
-            .hero-illustration { width: 200px; right: 2%; opacity: 0.5; }
+            .mk-hero { padding: 44px 32px 88px; border-radius: 32px; }
+            .mk-hero-img { width: 210px; right: 20px; opacity: 0.5; }
+            .mk-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
         }
 
-        @media (max-width: 768px) {
-            .ai-assistant-box {
-                padding: 30px 20px;
-                border-radius: 30px;
+        /* ════════════════════════════════════════
+           RESPONSIVE — MOBILE
+        ════════════════════════════════════════ */
+        @media (max-width: 767px) {
+            .mk-hero {
+                padding: 32px 20px 84px;
+                border-radius: 28px;
                 text-align: center;
-                margin-bottom: 40px;
+                margin-top: 16px;
             }
-            .ai-assistant-box h1 { font-size: 1.8rem; }
-            .ai-assistant-box p { font-size: 1rem !important; }
-            .ai-input-group { flex-direction: column; border-radius: 20px; gap: 10px; }
-            .ai-input-group .btn-suggest { width: 100%; }
-            
-            .search-container { margin: -60px auto 30px auto; padding: 0 15px; }
-            .search-field-lg { font-size: 0.95rem; padding: 12px 15px; }
-            
-            .category-scroll {
-                overflow-x: auto;
-                padding-bottom: 10px;
-                margin-right: -15px;
-                margin-left: -15px;
-                padding-left: 15px;
+            .mk-hero-chip { justify-content: center; }
+            .mk-hero-sub { max-width: 100%; margin-left: auto; margin-right: auto; }
+            .mk-hero-img { display: none; }
+
+            .mk-ai-bar {
+                max-width: 100%;
+                flex-direction: column;
+                border-radius: 20px;
+                gap: 4px;
             }
+            .mk-ai-input { width: 100%; text-align: center; }
+            .mk-ai-btn { width: 100%; justify-content: center; padding: 12px; border-radius: 12px; }
+            .mk-ai-icon { display: none; }
+
+            .mk-search-lift {
+                margin-top: -44px;
+                margin-bottom: 32px;
+                padding: 0 12px;
+            }
+            .mk-search-go { display: none; }
+
+            .mk-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+            .mk-cats {
+                width: 100%;
+                margin-left: -16px;
+                padding-left: 16px;
+                padding-right: 16px;
+                width: calc(100% + 32px);
+            }
+            .mk-actions { width: 100%; }
+            .mk-filter-btn { flex: 1; justify-content: center; }
+            .mk-sort { flex: 1; }
+
+            .mk-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+            .mk-price-num { font-size: 1.05rem; }
+            .mk-name { font-size: 0.82rem; }
+            .mk-body { padding: 10px 10px 12px; gap: 6px; }
+            .mk-verified { font-size: 0.52rem; }
+            .mk-view-label { display: none; }
+            .mk-scrim { display: none; }
         }
 
-        @media (max-width: 576px) {
-            .card-custom { padding: 8px; border-radius: 18px; }
-            .price-tag { font-size: 0.95rem; padding: 4px 8px; }
-            .fw-700 { font-size: 0.9rem; }
+        @media (max-width: 400px) {
+            .mk-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
         }
-
-        :root {
-    --sl-primary: #14b8a6; /* Teal */
-    --sl-dark: #1e293b;
-    --sl-gray: #64748b;
-    --sl-card-bg: #ffffff;
-    --sl-radius: 18px;
-    --sl-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-}
-
-.sl-card-wrapper {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    height: 100%;
-}
-
-.sl-product-card {
-    background: var(--sl-card-bg);
-    border-radius: var(--sl-radius);
-    overflow: hidden;
-    text-decoration: none !important;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    border: 1px solid #f1f5f9;
-    box-shadow: var(--sl-shadow);
-    transition: all 0.3s ease;
-}
-
-/* Hover Effects */
-.sl-card-wrapper:hover {
-    transform: translateY(-8px);
-}
-.sl-card-wrapper:hover .sl-product-card {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    border-color: var(--sl-primary);
-}
-
-/* Image Section */
-.sl-image-box {
-    position: relative;
-    padding-top: 100%; /* 1:1 Aspect Ratio */
-    overflow: hidden;
-    background: #f8fafc;
-}
-
-.sl-main-img {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-}
-
-.sl-card-wrapper:hover .sl-main-img {
-    transform: scale(1.1);
-}
-
-/* Badges */
-.sl-badge-container {
-    position: absolute;
-    top: 10px; left: 10px; right: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 2;
-}
-
-.sl-badge-verified {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px);
-    color: var(--sl-primary);
-    padding: 4px 10px;
-    border-radius: 10px;
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.sl-wishlist-btn {
-    background: white;
-    border: none;
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center; justify-content: center;
-    color: #cbd5e1;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.sl-wishlist-btn:hover { color: #f43f5e; transform: scale(1.1); }
-
-/* Content Styling */
-.sl-content {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.sl-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 4px;
-}
-
-.sl-title {
-    color: var(--sl-dark);
-    font-weight: 700;
-    font-size: 0.9rem;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.sl-rating {
-    background: #fffbeb;
-    color: #d97706;
-    padding: 2px 6px;
-    border-radius: 6px;
-    font-size: 0.7rem;
-    font-weight: 700;
-}
-
-.sl-location {
-    color: var(--sl-gray);
-    font-size: 0.75rem;
-    margin-bottom: 12px;
-}
-
-.sl-footer {
-    margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 10px;
-    border-top: 1px dashed #e2e8f0;
-}
-
-.sl-price-block { color: var(--sl-dark); }
-.sl-currency { font-weight: 800; font-size: 0.8rem; }
-.sl-amount { font-weight: 800; font-size: 1.1rem; color: var(--sl-primary); }
-.sl-unit { font-size: 0.7rem; color: var(--sl-gray); }
-
-.sl-action-arrow {
-    width: 28px; height: 28px;
-    background: #f1f5f9;
-    border-radius: 50%;
-    display: flex;
-    align-items: center; justify-content: center;
-    color: var(--sl-dark);
-    transition: all 0.3s ease;
-}
-
-.sl-card-wrapper:hover .sl-action-arrow {
-    background: var(--sl-primary);
-    color: white;
-    transform: rotate(-45deg);
-}
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-    .sl-radius { var(--sl-radius): 14px; }
-    .sl-amount { font-size: 1rem; }
-    .sl-title { font-size: 0.85rem; }
-    .sl-badge-verified { font-size: 0.55rem; padding: 3px 8px; }
-    .sl-img-overlay { display: none; } /* Hide overlay on mobile */
-}
     </style>
 </head>
 <body>
 
-    {% include 'base/navbar1.html' %}
-<br><br><br>
+    {% include 'base/navbar.html' %}
+    <br><br><br>
+
     <div class="container mb-5">
-        <div class="ai-assistant-box shadow-lg">
-            <div class="row align-items-center position-relative" style="z-index: 1;">
+
+        <!-- ══ HERO ══════════════════════════════ -->
+        <div class="mk-hero">
+            <div class="mk-orb mk-orb-1"></div>
+            <div class="mk-orb mk-orb-2"></div>
+
+            <div class="mk-hero-inner row align-items-center">
                 <div class="col-lg-6">
-                    <span class="badge bg-info mb-3 px-3 py-2 rounded-pill">AI Powered</span>
-                    <h1 class="fw-800 mb-3 display-5 text-white">Gear up for your <br><span style="color: #2dd4bf">next adventure.</span></h1>
-                    <p class="opacity-75 mb-4 fs-5 text-white">Don't know what you need? Just tell us your plan and we'll suggest the best gear.</p>
-                    
-                    <form action="{% url 'browse_items' %}" method="GET">
-                        <div class="ai-input-group d-flex p-2 bg-white rounded-4 align-items-center">
-                            <i class="ph ph-sparkle ms-3 text-primary d-none d-md-block"></i>
-                            <input type="text" name="q" class="form-control border-0 shadow-none text-dark" placeholder="Going for a high-altitude trek in Spiti...">
-                            <button type="submit" class="btn btn-teal btn-suggest text-white">Suggest</button>
+                    <div class="mk-hero-chip">
+                        <i class="ph ph-sparkle"></i> AI-Powered Discovery
+                    </div>
+                    <h1 class="mk-hero-title">
+                        Gear up for your<br>
+                        <span>next adventure.</span>
+                    </h1>
+                    <p class="mk-hero-sub">
+                        Don't know what you need? Describe your trip and we'll find the best gear for you.
+                    </p>
+
+                    <!-- AI Suggestion form — extracts key noun then submits -->
+                    <form id="mkAiForm" action="{% url 'browse_items' %}" method="GET">
+                        <input type="hidden" name="q" id="mkAiHidden">
+                        <div class="mk-ai-bar">
+                            <i class="ph ph-sparkle mk-ai-icon"></i>
+                            <input
+                                type="text"
+                                id="mkAiInput"
+                                class="mk-ai-input"
+                                placeholder="e.g. I want a BMW for 2 days…"
+                                autocomplete="off"
+                            >
+                            <button type="submit" class="mk-ai-btn">
+                                <i class="ph ph-magic-wand me-1"></i> Suggest
+                            </button>
                         </div>
                     </form>
                 </div>
+
                 <div class="col-lg-6 d-none d-lg-block text-center">
-                   <img src="{% static 'images/undraw_searching-everywhere_tffi.png' %}" alt="Illustration" class="hero-illustration">
+                    <img src="{% static 'images/undraw_searching-everywhere_tffi.png' %}" alt="Illustration" class="mk-hero-img">
                 </div>
             </div>
         </div>
 
-        <div class="search-container">
+
+        <!-- ══ FLOATING SEARCH ═══════════════════ -->
+        <div class="mk-search-lift">
             <form action="{% url 'browse_items' %}" method="GET">
-                <div class="search-wrapper">
-                    <i class="ph ph-magnifying-glass fs-4 ms-3 ms-md-4 text-muted"></i>
-                    <input type="text" name="q" value="{{ request.GET.q|default:'' }}" class="search-field-lg" placeholder="Search projectors, tents, cameras...">
-                    <button class="btn btn-dark rounded-pill px-4 me-1 d-none d-md-block">Search</button>
+                <div class="mk-search-shell">
+                    <i class="ph ph-magnifying-glass mk-search-ico"></i>
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ request.GET.q|default:'' }}"
+                        class="mk-search-field"
+                        placeholder="Search tents, cameras, projectors…"
+                    >
+                    <button type="submit" class="mk-search-go d-none d-sm-block">Search</button>
                 </div>
             </form>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-4">
-            <div class="category-scroll d-flex gap-2">
-                <a href="{% url 'browse_items' %}" class="category-pill {% if not request.GET.category %}active{% endif %}">
-                    <i class="ph ph-squares-four me-1"></i> All Gear
+
+        <!-- ══ TOOLBAR ═══════════════════════════ -->
+        <div class="mk-toolbar">
+            <div class="mk-cats">
+                <a href="{% url 'browse_items' %}" class="mk-cat {% if not request.GET.category %}mk-cat--on{% endif %}">
+                    <i class="ph ph-squares-four"></i> All Gear
                 </a>
                 {% for cat in categories %}
-                <a href="?category={{ cat.name }}" class="category-pill {% if request.GET.category == cat.name %}active{% endif %}">
+                <a href="?category={{ cat.name }}" class="mk-cat {% if request.GET.category == cat.name %}mk-cat--on{% endif %}">
                     {{ cat.name }}
                 </a>
                 {% endfor %}
             </div>
-            
-            <div class="d-flex gap-3 w-100 w-md-auto">
-                <button class="btn border-0 bg-white shadow-sm rounded-pill px-4 py-2 fw-600 flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#filterModal">
-                    <i class="ph ph-sliders-horizontal me-2"></i> Filters
+
+            <div class="mk-actions">
+                <button class="mk-filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    <i class="ph ph-sliders-horizontal"></i> Filters
                 </button>
-                <select class="form-select border-0 shadow-sm rounded-pill px-4 flex-grow-1 flex-md-grow-0" style="width: auto;" onchange="location.href='?sort='+this.value">
+                <select class="mk-sort" onchange="location.href='?sort='+this.value">
                     <option value="newest">Latest</option>
-                    <option value="low">Price: Low</option>
-                    <option value="high">Price: High</option>
+                    <option value="low">Price ↑</option>
+                    <option value="high">Price ↓</option>
                 </select>
             </div>
         </div>
 
-        <div class="row g-3 g-md-4">
+
+        <!-- ══ PRODUCT GRID ═══════════════════════ -->
+        <div class="mk-grid">
             {% for item in items %}
-<div class="col-6 col-md-4 col-lg-3 mb-4">
-    <div class="sl-card-wrapper">
-        <a href="{% url 'item_detail' item.id %}" class="sl-product-card">
-            <div class="sl-image-box">
-                <div class="sl-badge-container">
-                    <span class="sl-badge-verified">
-                        <i class="bi bi-patch-check-fill"></i> Verified
-                    </span>
+            <a href="{% url 'item_detail' item.id %}" class="mk-card">
 
-                </div>
-                
-                {% if item.images.all %}
-                    <img src="{{ item.images.first.image.url }}" class="sl-main-img" loading="lazy" alt="{{ item.name }}">
-                {% else %}
-                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" class="sl-main-img" alt="Placeholder">
-                {% endif %}
-                
-                <div class="sl-img-overlay">
-                    <span class="sl-view-btn">View Details</span>
-                </div>
-            </div>
+                <div class="mk-img-zone">
+                    <div class="mk-img-bar">
+                        <span class="mk-verified">
+                            <i class="bi bi-patch-check-fill"></i> Verified
+                        </span>
+                    </div>
 
-            <div class="sl-content">
-                <div class="sl-header">
-                    <h6 class="sl-title" title="{{ item.name }}">{{ item.name }}</h6>
-                    <div class="sl-rating">
-                    {% if item.avg_rating %}
-                        <i class="bi bi-star-fill text-warning"></i>
-                        <span>{{ item.avg_rating|floatformat:1 }}</span>
-                        <small class="text-muted" style="font-size: 0.6rem;">({{ item.reviews.count }})</small>
+                    {% if item.images.all %}
+                        <img src="{{ item.images.first.image.url }}" class="mk-img" loading="lazy" alt="{{ item.name }}">
                     {% else %}
-                        <span class="text-muted" style="font-size: 0.7rem;">New Gear</span>
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" class="mk-img" alt="Placeholder">
                     {% endif %}
-                </div>
+
+                    <div class="mk-scrim"></div>
+                    <span class="mk-view-label">Quick View →</span>
                 </div>
 
-                <div class="sl-location">
-                    <i class="bi bi-geo-alt"></i>
-                    <span>{{ item.city|default:"Mehsana" }}</span>
+                <div class="mk-body">
+                    <p class="mk-name" title="{{ item.name }}">{{ item.name }}</p>
+
+                    <div class="mk-meta-row">
+                        <span class="mk-loc">
+                            <i class="bi bi-geo-alt"></i>
+                            {{ item.city|default:"Mehsana" }}
+                        </span>
+                        <span class="mk-rating">
+                            {% if item.avg_rating %}
+                                <i class="bi bi-star-fill"></i>
+                                {{ item.avg_rating|floatformat:1 }}
+                                <span style="color:#94a3b8; font-weight:400;">({{ item.reviews.count }})</span>
+                            {% else %}
+                                <i class="bi bi-stars"></i> New
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="mk-sep"></div>
+
+                    <div class="mk-foot">
+                        <div class="mk-price">
+                            <span class="mk-price-sym">₹</span>
+                            <span class="mk-price-num">{{ item.rent_per_day }}</span>
+                            <span class="mk-price-unit">/day</span>
+                        </div>
+                        <div class="mk-arrow">
+                            <i class="bi bi-arrow-right-short"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="sl-footer">
-                    <div class="sl-price-block">
-                        <span class="sl-currency">₹</span>
-                        <span class="sl-amount">{{ item.rent_per_day }}</span>
-                        <span class="sl-unit">/day</span>
-                    </div>
-                    <div class="sl-action-arrow">
-                        <i class="bi bi-arrow-right-short"></i>
-                    </div>
-                </div>
+            </a>
+            {% empty %}
+            <div class="mk-empty">
+                <img src="https://illustrations.popsy.co/white/falling.svg" alt="Empty">
+                <p class="mk-empty-title">No gear found</p>
+                <p class="mk-empty-sub">Try a different search term or clear the filters.</p>
+                <a href="{% url 'browse_items' %}" class="mk-empty-btn">Browse All Gear</a>
             </div>
-        </a>
-    </div>
-</div>
-{% empty %}
-<div class="sl-empty-state text-center py-5 col-12">
-    <img src="https://illustrations.popsy.co/white/falling.svg" height="40px" width="40px" class="sl-empty-img" alt="Not found">
-    <h4 class="mt-4 fw-bold">No gear found</h4>
-    <p class="text-muted">Maybe try a different search term?</p>
-    <a href="{% url 'browse_items' %}" class="sl-browse-btn">Browse All Gear</a>
-</div>
-{% endfor %}
+            {% endfor %}
         </div>
+
     </div>
 
     {% include 'base/footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    /* ──────────────────────────────────────────
+       AI SUGGEST — Smart keyword extractor
+       Strips filler words & pulls search term
+    ────────────────────────────────────────── */
+    (function () {
+        const stopWords = new Set([
+            'i','want','need','a','an','the','for','to','of','in','on','at','with',
+            'my','me','some','any','please','give','show','find','get','looking',
+            'days','day','hours','hour','week','weeks','month','rent','hire','book',
+            'am','is','are','was','were','be','been','being','have','has','had',
+            'do','does','did','will','would','could','should','shall','may','might',
+            'just','also','very','really','like','around','about','from','by','up',
+            'trip','adventure','plan','going','planning','its','this','that','it',
+            'good','great','best','nice','cheap','affordable','available','near',
+            '1','2','3','4','5','6','7','8','9','10',
+        ]);
+
+        document.getElementById('mkAiForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const raw   = document.getElementById('mkAiInput').value.trim();
+            const hidden = document.getElementById('mkAiHidden');
+
+            if (!raw) return;
+
+            /* tokenise → remove stop words → pick first meaningful token */
+            const tokens = raw
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/g, ' ')
+                .split(/\s+/)
+                .filter(t => t.length > 1 && !stopWords.has(t));
+
+            /* use the longest remaining token as the search query (usually product name) */
+            const keyword = tokens.sort((a, b) => b.length - a.length)[0] || raw;
+
+            hidden.value = keyword;
+            this.submit();
+        });
+    })();
+    </script>
+
 </body>
 </html>

@@ -6,319 +6,961 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ item.name }} | SamanLoop</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <style>
+        /* ═══════════════════════════════════════════
+           SAMANLOOP — ITEM DETAIL
+           Font: Sora | Theme: Clean Light × Deep Teal
+        ═══════════════════════════════════════════ */
         :root {
-            --brand-teal: #0d9488;
-            --brand-teal-dark: #0f766e;
-            --navy-dark: #0f172a;
-            --bg-light: #f8fafc;
+            --dt-teal:        #0d9488;
+            --dt-teal-dark:   #0f766e;
+            --dt-teal-bright: #2dd4bf;
+            --dt-ink:         #0c1a17;
+            --dt-dark:        #111827;
+            --dt-mist:        #f0faf8;
+            --dt-cloud:       #f8fffe;
+            --dt-stone:       #5f7c77;
+            --dt-border:      #e2edeb;
+            --dt-gold:        #f59e0b;
+            --dt-green:       #10b981;
+            --dt-white:       #ffffff;
+
+            --r-pill: 999px;
+            --r-card: 20px;
+            --r-xl:   28px;
+
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-out:    cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --sh-sm:    0 2px 10px rgba(0,0,0,0.05);
+            --sh-card:  0 4px 24px rgba(13,148,136,0.07), 0 1px 4px rgba(0,0,0,0.04);
+            --sh-float: 0 20px 50px rgba(13,148,136,0.12), 0 4px 16px rgba(0,0,0,0.06);
         }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fff; color: var(--navy-dark); }
+        *, *::before, *::after { box-sizing: border-box; }
 
-        /* ========== NAVBAR SCROLL LOGIC ========== */
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--dt-cloud);
+            color: var(--dt-ink);
+        }
+
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--dt-border); border-radius: var(--r-pill); }
+
+        /* ── navbar scroll ── */
         .navbar { transition: all 0.4s ease; padding: 20px 0; }
-        .navbar.scrolled { 
-            background: rgba(255, 255, 255, 0.95) !important; 
-            backdrop-filter: blur(10px); 
-            padding: 12px 0; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        .navbar.scrolled {
+            background: rgba(255,255,255,0.96) !important;
+            backdrop-filter: blur(12px);
+            padding: 12px 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
         }
 
-        /* ========== IMAGE GALLERY ========== */
-        .main-img-container {
-            height: 500px; border-radius: 24px; overflow: hidden; 
-            background: var(--bg-light); border: 1px solid #f1f5f9;
+
+        /* ════════════════════════════════════════
+           PAGE WRAPPER
+        ════════════════════════════════════════ */
+        .dt-page { padding-top: 96px; padding-bottom: 80px; }
+
+
+        /* ════════════════════════════════════════
+           BREADCRUMB
+        ════════════════════════════════════════ */
+        .dt-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--dt-stone);
+            margin-bottom: 28px;
         }
-        .main-img-container img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; }
-        
-        .thumb-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-        .thumb-card {
-            width: 80px; height: 80px; border-radius: 12px; overflow: hidden;
-            flex-shrink: 0; cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        .dt-breadcrumb a {
+            color: var(--dt-stone);
+            text-decoration: none;
+            transition: color 0.2s;
         }
-        .thumb-card.active { border-color: var(--brand-teal); transform: scale(1.05); }
-        .thumb-card img { width: 100%; height: 100%; object-fit: cover; }
+        .dt-breadcrumb a:hover { color: var(--dt-teal); }
+        .dt-breadcrumb .dt-bc-sep { font-size: 0.6rem; opacity: 0.5; }
+        .dt-breadcrumb .dt-bc-current { color: var(--dt-ink); font-weight: 700; }
 
-        /* ========== STICKY BOOKING CARD ========== */
-        .booking-card {
-            position: sticky; top: 110px; border: 1px solid #e2e8f0;
-            border-radius: 24px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            background: #fff; z-index: 10;
+
+        /* ════════════════════════════════════════
+           IMAGE GALLERY
+        ════════════════════════════════════════ */
+        .dt-gallery-main {
+            height: 480px;
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            background: var(--dt-mist);
+            border: 1.5px solid var(--dt-border);
+            position: relative;
         }
-        .price-text { font-size: 1.8rem; font-weight: 800; color: var(--brand-teal); }
 
-        /* ========== REVIEWS & RATING ========== */
-        .star-rating-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
-        .star-rating-input input { display: none; }
-        .star-rating-input label { font-size: 1.8rem; color: #cbd5e1; cursor: pointer; }
-        .star-rating-input label:hover, .star-rating-input label:hover ~ label,
-        .star-rating-input input:checked ~ label { color: #fbbf24; }
-        
-        .review-card { border-bottom: 1px solid #f1f5f9; padding: 20px 0; }
-        .star-fill { color: #fbbf24; }
+        .dt-gallery-main img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s var(--ease-out);
+        }
+        .dt-gallery-main:hover img { transform: scale(1.03); }
 
-        /* ========== UI COMPONENTS ========== */
-        .badge-custom { padding: 6px 14px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
-        #map { height: 250px; border-radius: 20px; border: 1px solid #e2e8f0; }
-        .lender-box { display: flex; align-items: center; gap: 12px; background: var(--bg-light); padding: 12px; border-radius: 16px; }
-        .review-card {
-    transition: transform 0.2s ease;
-    border: 1px solid #f1f5f9 !important;
-}
-/* New Call Button Style */
-.btn-call {
-    background: var(--navy-dark);
-    color: white;
-    border: none;
-    transition: all 0.3s ease;
-}
-.btn-call:hover {
-    background: var(--brand-teal);
-    color: white;
-    transform: translateY(-2px);
-}
+        /* Image counter badge */
+        .dt-img-counter {
+            position: absolute;
+            bottom: 14px; right: 14px;
+            background: rgba(12,26,23,0.65);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: var(--r-pill);
+            letter-spacing: 0.05em;
+        }
 
-/* Map Navigation Overlay */
-#map-container {
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-}
+        /* Thumbnails */
+        .dt-thumbs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 12px 0 4px;
+            scrollbar-width: none;
+        }
+        .dt-thumbs::-webkit-scrollbar { display: none; }
 
-.map-navigate-btn {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    z-index: 1000;
-    background: white;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--navy-dark);
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: 0.3s;
-}
+        .dt-thumb {
+            width: 72px; height: 72px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.3s var(--ease-spring);
+        }
+        .dt-thumb.dt-thumb--on {
+            border-color: var(--dt-teal);
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(13,148,136,0.25);
+        }
+        .dt-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.map-navigate-btn:hover {
-    background: var(--brand-teal);
-    color: white;
-}
 
-.review-card:hover {
-    transform: translateX(5px);
-    border-color: var(--brand-teal) !important;
-}
+        /* ════════════════════════════════════════
+           ITEM INFO SECTION
+        ════════════════════════════════════════ */
+        .dt-item-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--dt-ink);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
 
-.text-warning {
-    color: #ffb800 !important; /* Premium Gold color */
-}
+        .dt-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 14px;
+            border-radius: var(--r-pill);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        .dt-chip--teal  { background: rgba(13,148,136,0.1);  color: var(--dt-teal); }
+        .dt-chip--blue  { background: rgba(56,189,248,0.1);  color: #0284c7; }
+        .dt-chip--green { background: rgba(16,185,129,0.1);  color: var(--dt-green); }
 
-.text-light {
-    color: #e2e8f0 !important; /* Soft gray for empty stars */
-}
+        .dt-section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--dt-stone);
+            margin-bottom: 12px;
+        }
 
-.border-dashed {
-    border-style: dashed !important;
-}
+        .dt-desc {
+            color: var(--dt-stone);
+            font-size: 0.9rem;
+            font-weight: 400;
+            line-height: 1.85;
+        }
+
+        .dt-divider {
+            height: 1px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--dt-border) 0, var(--dt-border) 6px,
+                transparent 6px, transparent 12px
+            );
+            margin: 40px 0;
+        }
+
+
+        /* ════════════════════════════════════════
+           LOCATION & LOGISTICS
+        ════════════════════════════════════════ */
+        .dt-logistics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dt-logi-card {
+            background: var(--dt-white);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.25s;
+        }
+        .dt-logi-card:hover {
+            border-color: var(--dt-teal);
+            background: var(--dt-mist);
+        }
+
+        .dt-logi-icon {
+            width: 40px; height: 40px;
+            background: rgba(13,148,136,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dt-teal);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .dt-logi-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--dt-stone);
+            margin-bottom: 2px;
+        }
+
+        .dt-logi-val {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--dt-ink);
+        }
+
+
+        /* ════════════════════════════════════════
+           MAP
+        ════════════════════════════════════════ */
+        #map-container {
+            position: relative;
+            border-radius: var(--r-card);
+            overflow: hidden;
+            border: 1.5px solid var(--dt-border);
+        }
+
+        #map { height: 240px; }
+
+        .dt-nav-btn {
+            position: absolute;
+            bottom: 12px; right: 12px;
+            z-index: 1000;
+            background: var(--dt-white);
+            padding: 8px 16px;
+            border-radius: var(--r-pill);
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--dt-ink);
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.25s var(--ease-spring);
+        }
+        .dt-nav-btn:hover {
+            background: var(--dt-teal);
+            color: #fff;
+            transform: scale(1.04);
+        }
+
+
+        /* ════════════════════════════════════════
+           REVIEWS
+        ════════════════════════════════════════ */
+        .dt-reviews-head {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: var(--dt-ink);
+            margin-bottom: 24px;
+        }
+
+        /* Write review box */
+        .dt-write-box {
+            background: var(--dt-mist);
+            border: 1.5px solid var(--dt-border);
+            border-radius: var(--r-xl);
+            padding: 24px;
+        }
+
+        .dt-write-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--dt-ink);
+            margin-bottom: 14px;
+        }
+
+        .dt-star-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; }
+        .dt-star-input input { display: none; }
+        .dt-star-input label { font-size: 1.6rem; color: #d1d5db; cursor: pointer; transition: 0.2s; }
+        .dt-star-input label:hover,
+        .dt-star-input label:hover ~ label,
+        .dt-star-input input:checked ~ label { color: var(--dt-gold); }
+
+        .dt-review-textarea {
+            width: 100%;
+            background: var(--dt-white);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.82rem;
+            color: var(--dt-ink);
+            resize: none;
+            outline: none;
+            transition: border-color 0.25s;
+            margin-bottom: 12px;
+        }
+        .dt-review-textarea:focus { border-color: var(--dt-teal); }
+        .dt-review-textarea::placeholder { color: #adb5bd; }
+
+        .dt-submit-btn {
+            width: 100%;
+            background: var(--dt-ink);
+            color: #fff;
+            border: none;
+            border-radius: var(--r-pill);
+            padding: 11px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s var(--ease-spring);
+        }
+        .dt-submit-btn:hover { background: var(--dt-teal); transform: scale(1.02); }
+
+        /* Review cards */
+        .dt-review-card {
+            background: var(--dt-white);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: 0.25s var(--ease-out);
+        }
+        .dt-review-card:hover {
+            border-color: var(--dt-teal);
+            transform: translateX(4px);
+            box-shadow: var(--sh-card);
+        }
+
+        .dt-reviewer-avatar {
+            width: 30px; height: 30px;
+            background: var(--dt-mist);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--dt-stone);
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .dt-reviewer-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--dt-ink);
+        }
+
+        .dt-star-display { display: flex; gap: 2px; }
+        .dt-star-display i { font-size: 0.65rem; }
+        .dt-star-on  { color: var(--dt-gold); }
+        .dt-star-off { color: #d1d5db; }
+
+        .dt-review-text {
+            font-size: 0.8rem;
+            color: var(--dt-stone);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Empty reviews */
+        .dt-no-reviews {
+            background: var(--dt-mist);
+            border: 1.5px dashed var(--dt-border);
+            border-radius: 16px;
+            text-align: center;
+            padding: 32px 20px;
+        }
+        .dt-no-reviews i { font-size: 1.8rem; color: var(--dt-stone); opacity: 0.4; display: block; margin-bottom: 10px; }
+        .dt-no-reviews p { font-size: 0.8rem; color: var(--dt-stone); margin: 0; }
+
+
+        /* ════════════════════════════════════════
+           STICKY BOOKING CARD
+        ════════════════════════════════════════ */
+        .dt-book-card {
+            position: sticky;
+            top: 108px;
+            background: var(--dt-white);
+            border: 1.5px solid var(--dt-border);
+            border-radius: var(--r-xl);
+            padding: 28px;
+            box-shadow: var(--sh-float);
+            z-index: 10;
+        }
+
+        .dt-book-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dt-teal);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+        .dt-book-unit {
+            font-size: 0.82rem;
+            color: var(--dt-stone);
+            font-weight: 400;
+        }
+
+        .dt-avail-badge {
+            background: rgba(16,185,129,0.1);
+            color: var(--dt-green);
+            border: 1px solid rgba(16,185,129,0.2);
+            padding: 6px 14px;
+            border-radius: var(--r-pill);
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Date picker row */
+        .dt-date-box {
+            background: var(--dt-mist);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .dt-date-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--dt-stone);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .dt-date-input {
+            width: 100%;
+            background: var(--dt-white);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.82rem;
+            color: var(--dt-ink);
+            outline: none;
+            transition: border-color 0.25s;
+        }
+        .dt-date-input:focus { border-color: var(--dt-teal); }
+
+        /* Calc summary */
+        .dt-calc-box {
+            background: rgba(13,148,136,0.06);
+            border: 1.5px solid rgba(13,148,136,0.18);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .dt-calc-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--dt-stone);
+            margin-bottom: 6px;
+        }
+        .dt-calc-row span:last-child { font-weight: 700; color: var(--dt-ink); }
+
+        .dt-calc-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1.5px solid rgba(13,148,136,0.15);
+            padding-top: 10px;
+            margin-top: 4px;
+        }
+        .dt-calc-total-label { font-size: 0.82rem; font-weight: 700; color: var(--dt-ink); }
+        .dt-calc-total-val   { font-size: 1.2rem; font-weight: 800; color: var(--dt-teal); letter-spacing: -0.02em; }
+
+        /* Rent CTA */
+        .dt-rent-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--dt-teal), var(--dt-teal-dark));
+            color: #fff;
+            border: none;
+            border-radius: var(--r-pill);
+            padding: 16px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s var(--ease-spring);
+            letter-spacing: 0.02em;
+            margin-bottom: 16px;
+        }
+        .dt-rent-btn:hover {
+            box-shadow: 0 10px 28px rgba(13,148,136,0.4);
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        /* Lender row */
+        .dt-lender-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--dt-mist);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 16px;
+            padding: 14px;
+            margin-top: 16px;
+        }
+
+        .dt-lender-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--dt-ink);
+        }
+        .dt-lender-sub {
+            font-size: 0.68rem;
+            color: var(--dt-stone);
+        }
+
+        .dt-call-btn {
+            margin-left: auto;
+            background: var(--dt-ink);
+            color: #fff;
+            border: none;
+            border-radius: var(--r-pill);
+            padding: 8px 18px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s var(--ease-spring);
+            white-space: nowrap;
+        }
+        .dt-call-btn:hover {
+            background: var(--dt-teal);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Trust box */
+        .dt-trust-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--dt-mist);
+            border: 1.5px solid var(--dt-border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-top: 12px;
+        }
+        .dt-trust-icon {
+            font-size: 1.6rem;
+            color: var(--dt-teal);
+            flex-shrink: 0;
+        }
+        .dt-trust-text {
+            font-size: 0.75rem;
+            color: var(--dt-stone);
+            line-height: 1.5;
+        }
+        .dt-trust-text strong { color: var(--dt-ink); font-weight: 700; }
+
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — TABLET
+        ════════════════════════════════════════ */
+        @media (max-width: 991px) {
+            .dt-gallery-main { height: 380px; }
+            .dt-book-card { position: relative; top: 0; margin-top: 40px; }
+        }
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — MOBILE
+        ════════════════════════════════════════ */
+        @media (max-width: 767px) {
+            .dt-page { padding-top: 76px; padding-bottom: 60px; }
+
+            .dt-gallery-main { height: 260px; border-radius: 18px; }
+            .dt-thumb { width: 58px; height: 58px; border-radius: 10px; }
+            .dt-thumbs { gap: 8px; }
+
+            .dt-item-title { font-size: 1.3rem; }
+
+            .dt-logistics-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .dt-logi-card { padding: 12px; }
+            .dt-logi-icon { width: 34px; height: 34px; font-size: 0.95rem; }
+            .dt-logi-val { font-size: 0.75rem; }
+
+            #map { height: 200px; }
+
+            .dt-write-box { padding: 18px; }
+            .dt-star-input label { font-size: 1.4rem; }
+
+            .dt-book-card {
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                top: auto;
+                border-radius: 24px 24px 0 0;
+                padding: 20px 20px 28px;
+                box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
+                z-index: 100;
+            }
+
+            /* Collapsed booking card toggle on mobile */
+            .dt-book-preview {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+            }
+            .dt-book-expanded { display: none; }
+            .dt-book-card.dt-open .dt-book-expanded { display: block; }
+            .dt-book-card.dt-open .dt-book-preview .dt-toggle-icon { transform: rotate(180deg); }
+
+            .dt-toggle-icon { transition: transform 0.3s; }
+
+            /* Spacer so content isn't hidden behind fixed card */
+            .dt-mobile-spacer { height: 90px; }
+        }
+
+        @media (min-width: 768px) {
+            .dt-book-preview { display: none !important; }
+            .dt-book-expanded { display: block !important; }
+            .dt-mobile-spacer { display: none; }
+        }
     </style>
 </head>
 <body>
 
 {% include 'base/navbar1.html' %}
 
-<div class="container mt-5 pt-5">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted small">Home</a></li>
-            <li class="breadcrumb-item active fw-bold small">{{ item.name }}</li>
-        </ol>
-    </nav>
+<div class="container dt-page">
 
-    <div class="row g-5">
+    <!-- Breadcrumb -->
+    <div class="dt-breadcrumb">
+        <a href="/">Home</a>
+        <i class="bi bi-chevron-right dt-bc-sep"></i>
+        <a href="{% url 'browse_items' %}">Browse</a>
+        <i class="bi bi-chevron-right dt-bc-sep"></i>
+        <span class="dt-bc-current">{{ item.name }}</span>
+    </div>
+
+    <div class="row g-4 g-lg-5">
+
+        <!-- ══ LEFT COLUMN ══════════════════════ -->
         <div class="col-lg-7">
-            <div class="main-img-container shadow-sm">
+
+            <!-- Gallery -->
+            <div class="dt-gallery-main" id="dtMainImg">
                 {% if images %}
                     <img id="mainImage" src="{{ images.0.image.url }}" alt="{{ item.name }}">
                 {% else %}
                     <img id="mainImage" src="{% static 'images/default-item.jpg' %}" alt="No Image">
                 {% endif %}
+                <span class="dt-img-counter" id="imgCounter">
+                    1 / {{ images|length|default:"1" }}
+                </span>
             </div>
-            
-            <div class="thumb-scroll mt-3">
+
+            <div class="dt-thumbs">
                 {% for img in images %}
-                <div class="thumb-card {% if forloop.first %}active{% endif %}" onclick="updateMainImage(this, '{{ img.image.url }}')">
-                    <img src="{{ img.image.url }}">
+                <div class="dt-thumb {% if forloop.first %}dt-thumb--on{% endif %}"
+                     onclick="dtUpdateImg(this, '{{ img.image.url }}', {{ forloop.counter }}, {{ images|length }})">
+                    <img src="{{ img.image.url }}" loading="lazy">
                 </div>
                 {% endfor %}
             </div>
 
-            <div class="mt-5">
-                <h1 class="fw-bold display-6">{{ item.name }}</h1>
-                <div class="d-flex gap-2 my-4">
-                    <span class="badge-custom bg-teal bg-opacity-10 text-teal">{{ item.brand }}</span>
-                    <span class="badge-custom bg-info bg-opacity-10 text-info">{{ item.get_quality_display }}</span>
+            <!-- Item Info -->
+            <div class="mt-4">
+                <h1 class="dt-item-title">{{ item.name }}</h1>
+
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="dt-chip dt-chip--teal">
+                        <i class="bi bi-tag-fill"></i> {{ item.brand }}
+                    </span>
+                    <span class="dt-chip dt-chip--blue">
+                        <i class="bi bi-stars"></i> {{ item.get_quality_display }}
+                    </span>
+                    {% if item.avg_rating %}
+                    <span class="dt-chip dt-chip--green">
+                        <i class="bi bi-star-fill"></i> {{ item.avg_rating|floatformat:1 }} Rating
+                    </span>
+                    {% endif %}
                 </div>
 
-                <h5 class="fw-bold mb-3">Item Description</h5>
-                <p class="text-muted" style="line-height: 1.8;">{{ item.description }}</p>
-
-                <hr class="my-5">
-
-                <h5 class="fw-bold mb-4">Location & Logistics</h5>
-                <div class="row g-4 mb-4">
-                    <div class="col-6">
-                        <div class="d-flex gap-3 align-items-center">
-                            <i class="bi bi-truck fs-3 text-teal"></i>
-                            <div>
-                                <h6 class="mb-0 fw-bold">Delivery</h6>
-                                <small class="text-muted">{% if item.allow_delivery %}Available{% else %}Pickup Only{% endif %}</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="d-flex gap-3 align-items-center">
-                            <i class="bi bi-geo-alt fs-3 text-teal"></i>
-                            <div>
-                                <h6 class="mb-0 fw-bold">Hub</h6>
-                                <small class="text-muted">{{ item.city|default:"Mehsana" }}</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="map-container">
-    <div id="map"></div>
-    <a href="https://www.google.com/maps/dir/?api=1&destination={{ item.latitude }},{{ item.longitude }}" 
-       target="_blank" 
-       class="map-navigate-btn">
-        <i class="bi bi-cursor-fill"></i> Navigate
-    </a>
-</div>
-                
+                <p class="dt-section-label">About this item</p>
+                <p class="dt-desc">{{ item.description }}</p>
             </div>
 
-            <div class="mt-5 pt-5 border-top">
-                <h4 class="fw-bold mb-4">Lender Feedback</h4>
-                <div class="row">
+            <div class="dt-divider"></div>
+
+            <!-- Location & Logistics -->
+            <div>
+                <p class="dt-section-label">Location &amp; Logistics</p>
+                <div class="dt-logistics-grid">
+                    <div class="dt-logi-card">
+                        <div class="dt-logi-icon"><i class="bi bi-truck"></i></div>
+                        <div>
+                            <div class="dt-logi-label">Delivery</div>
+                            <div class="dt-logi-val">
+                                {% if item.allow_delivery %}Available{% else %}Pickup Only{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dt-logi-card">
+                        <div class="dt-logi-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div>
+                            <div class="dt-logi-label">Hub</div>
+                            <div class="dt-logi-val">{{ item.city|default:"Mehsana" }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="map-container">
+                    <div id="map"></div>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ item.latitude }},{{ item.longitude }}"
+                       target="_blank"
+                       class="dt-nav-btn">
+                        <i class="bi bi-cursor-fill"></i> Navigate
+                    </a>
+                </div>
+            </div>
+
+            <div class="dt-divider"></div>
+
+            <!-- Reviews -->
+            <div>
+                <h4 class="dt-reviews-head">
+                    Lender Feedback
+                    {% if reviews %}
+                    <span class="dt-chip dt-chip--teal ms-2" style="font-size:0.7rem; vertical-align:middle;">
+                        {{ reviews|length }} review{{ reviews|length|pluralize }}
+                    </span>
+                    {% endif %}
+                </h4>
+
+                <div class="row g-3">
+                    <!-- Write review -->
                     <div class="col-md-5">
-                        <div class="card border-0 bg-light rounded-4 p-4 mb-4">
-                            <h6 class="fw-bold mb-3">Write a Review</h6>
+                        <div class="dt-write-box">
+                            <p class="dt-write-title">
+                                <i class="bi bi-pencil-square me-2" style="color:var(--dt-teal);"></i>
+                                Write a Review
+                            </p>
                             <form method="POST" action="{% url 'submit_review' item.id %}">
                                 {% csrf_token %}
-                                <div class="star-rating-input mb-2">
+                                <div class="dt-star-input mb-3">
                                     <input type="radio" name="rating" value="5" id="s5"><label for="s5">☆</label>
                                     <input type="radio" name="rating" value="4" id="s4"><label for="s4">☆</label>
                                     <input type="radio" name="rating" value="3" id="s3"><label for="s3">☆</label>
                                     <input type="radio" name="rating" value="2" id="s2"><label for="s2">☆</label>
                                     <input type="radio" name="rating" value="1" id="s1"><label for="s1">☆</label>
                                 </div>
-                                <textarea name="comment" class="form-control border-0 rounded-3 mb-3" rows="2" placeholder="Tell us about the item quality..." required></textarea>
-                                <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold btn-sm">Submit Review</button>
+                                <textarea name="comment" class="dt-review-textarea" rows="3"
+                                          placeholder="Share your experience with this item…" required></textarea>
+                                <button type="submit" class="dt-submit-btn">
+                                    <i class="bi bi-send me-1"></i> Submit Review
+                                </button>
                             </form>
                         </div>
                     </div>
+
+                    <!-- Review list -->
                     <div class="col-md-7">
                         {% if reviews %}
                             {% for review in reviews %}
-                            <div class="review-card p-3 mb-3 rounded-4 border-0 shadow-sm bg-white">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="dt-review-card">
+                                <div class="d-flex align-items-center justify-content-between mb-10" style="margin-bottom:10px;">
                                     <div class="d-flex align-items-center gap-2">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
-                                            <i class="bi bi-person text-secondary" style="font-size: 14px;"></i>
+                                        <div class="dt-reviewer-avatar">
+                                            <i class="bi bi-person"></i>
                                         </div>
-                                        <span class="fw-bold small text-dark">{{ review.reviewer.name }}</span>
+                                        <span class="dt-reviewer-name">{{ review.reviewer.name }}</span>
                                     </div>
-
-                                    <div class="small">
-                                        {% for i in "12345" %}
-                                            {% if forloop.counter <= review.rating %}
-                                                <i class="bi bi-star-fill text-warning"></i>
-                                            {% else %}
-                                                <i class="bi bi-star-fill text-light"></i>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <span class="ms-1 text-muted fw-bold" style="font-size: 11px;">{{ review.rating }}.0</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="dt-star-display">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= review.rating %}
+                                                    <i class="bi bi-star-fill dt-star-on"></i>
+                                                {% else %}
+                                                    <i class="bi bi-star-fill dt-star-off"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <span style="font-size:0.68rem; font-weight:700; color:var(--dt-stone);">
+                                            {{ review.rating }}.0
+                                        </span>
                                     </div>
                                 </div>
-                                <p class="text-muted small mb-0 px-1" style="line-height: 1.5;">
-                                    <i class="bi bi-quote opacity-25 me-1"></i>{{ review.comment }}
+                                <p class="dt-review-text">
+                                    <i class="bi bi-quote me-1" style="opacity:0.2;"></i>
+                                    {{ review.comment }}
                                 </p>
                             </div>
                             {% endfor %}
                         {% else %}
-                            <div class="text-center py-4 px-3 bg-light rounded-4 border border-dashed">
-                                <i class="bi bi-chat-left-dots text-muted opacity-50 fs-4 d-block mb-2"></i>
-                                <p class="text-muted small mb-0">No reviews yet for this listing.</p>
+                            <div class="dt-no-reviews">
+                                <i class="bi bi-chat-left-dots"></i>
+                                <p>No reviews yet for this listing.</p>
                             </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div><!-- /left col -->
+
+
+        <!-- ══ RIGHT COLUMN — BOOKING CARD ══════ -->
         <div class="col-lg-5">
-            <div class="booking-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="dt-book-card" id="dtBookCard">
+
+                <!-- Mobile toggle preview -->
+                <div class="dt-book-preview" onclick="dtToggleBook()">
                     <div>
-                        <span class="price-text">₹{{ item.rent_per_day }}</span>
-                        <span class="text-muted">/ day</span>
+                        <span class="dt-book-price">₹{{ item.rent_per_day }}</span>
+                        <span class="dt-book-unit"> / day</span>
                     </div>
-                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold small">Available</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="dt-avail-badge">
+                            <i class="bi bi-circle-fill" style="font-size:0.45rem;"></i> Available
+                        </span>
+                        <i class="bi bi-chevron-up dt-toggle-icon" style="font-size:0.85rem; color:var(--dt-stone);"></i>
+                    </div>
                 </div>
 
-                <form action="{% url 'request_item' item.id %}" method="POST">
-                    {% csrf_token %}
-                    <div class="bg-light p-3 rounded-4 mb-3">
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <label class="small text-muted fw-bold mb-1">START DATE</label>
-                                <input type="date" name="start_date" id="startDate" class="form-control form-control-sm border-0" required min="{{ today_date|date:'Y-m-d' }}">
-                            </div>
-                            <div class="col-6">
-                                <label class="small text-muted fw-bold mb-1">END DATE</label>
-                                <input type="date" name="end_date" id="endDate" class="form-control form-control-sm border-0" required>
+                <!-- Full booking form -->
+                <div class="dt-book-expanded">
+                    <!-- Price header (desktop) -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 d-none d-md-flex">
+                        <div>
+                            <span class="dt-book-price">₹{{ item.rent_per_day }}</span>
+                            <span class="dt-book-unit"> / day</span>
+                        </div>
+                        <span class="dt-avail-badge">
+                            <i class="bi bi-circle-fill" style="font-size:0.45rem;"></i> Available
+                        </span>
+                    </div>
+
+                    <form action="{% url 'request_item' item.id %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="dt-date-box">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="dt-date-label">Start Date</label>
+                                    <input type="date" name="start_date" id="startDate"
+                                           class="dt-date-input" required
+                                           min="{{ today_date|date:'Y-m-d' }}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="dt-date-label">End Date</label>
+                                    <input type="date" name="end_date" id="endDate"
+                                           class="dt-date-input" required>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Cost breakdown -->
+                        <div class="dt-calc-box" id="calcBox">
+                            <div class="dt-calc-row">
+                                <span>Rental Duration</span>
+                                <span id="resDays">0 Days</span>
+                            </div>
+                            <div class="dt-calc-row">
+                                <span>Base Rent</span>
+                                <span id="resRent">₹0</span>
+                            </div>
+                            <div class="dt-calc-row">
+                                <span>Security Deposit</span>
+                                <span>₹{{ item.deposit_amount }}</span>
+                            </div>
+                            <div class="dt-calc-total">
+                                <span class="dt-calc-total-label">Total Estimated</span>
+                                <span class="dt-calc-total-val" id="resTotal">₹0</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="dt-rent-btn">
+                            <i class="bi bi-bag-check me-2"></i> Request to Rent
+                        </button>
+                    </form>
+
+                    <!-- Lender -->
+                    <div class="dt-lender-row">
+                        <img src="https://ui-avatars.com/api/?name={{ item.owner.name }}&background=0d9488&color=fff&size=80"
+                             class="rounded-circle" width="38" height="38" alt="{{ item.owner.name }}">
+                        <div>
+                            <div class="dt-lender-name">{{ item.owner.name }}</div>
+                            <div class="dt-lender-sub">Listed by owner</div>
+                        </div>
+                        <a href="tel:{{ item.owner.phone_number }}" class="dt-call-btn">
+                            <i class="bi bi-telephone-fill"></i> Call
+                        </a>
                     </div>
 
-                    <div id="calcBox" class="bg-teal bg-opacity-10 p-3 rounded-4 mb-4 border border-teal border-opacity-20" style="display:none;">
-                        <div class="d-flex justify-content-between small mb-1"><span>Rental Duration</span><span id="resDays" class="fw-bold">0 Days</span></div>
-                        <div class="d-flex justify-content-between small mb-1"><span>Base Rent</span><span id="resRent" class="fw-bold">₹0</span></div>
-                        <div class="d-flex justify-content-between small mb-3"><span>Security Deposit</span><span class="fw-bold">₹{{ item.deposit_amount }}</span></div>
-                        <div class="d-flex justify-content-between border-top pt-2"><span class="fw-bold">Total Estimated</span><span id="resTotal" class="fw-bold text-teal fs-5">₹0</span></div>
+                    <!-- Trust badge -->
+                    <div class="dt-trust-box">
+                        <i class="bi bi-shield-check dt-trust-icon"></i>
+                        <p class="dt-trust-text mb-0">
+                            <strong>Loop Protection</strong><br>
+                            Funds are held in escrow until you receive the gear.
+                        </p>
                     </div>
-
-                    <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill fw-bold py-3 mb-3 shadow-sm" style="background:var(--brand-teal); border:none;">Request to Rent</button>
-                </form>
-
-                <div class="lender-box mt-4">
-                    <img src="https://ui-avatars.com/api/?name={{ item.owner.name }}&background=0d9488&color=fff" class="rounded-circle" width="40">
-                    <div>
-                        <small class="text-muted d-block">Listed by</small>
-                        <h6 class="mb-0 fw-bold">{{ item.owner.name }}</h6>
-                    </div>
-                    <a href="tel:{{ item.owner.phone_number }}" class="btn btn-sm btn-call rounded-pill ms-auto px-3">
-                        <i class="bi bi-telephone-fill me-1"></i> Call
-                    </a>
                 </div>
 
-                <div class="mt-4 p-3 border rounded-4 d-flex gap-3 align-items-center">
-                    <i class="bi bi-shield-check fs-2 text-teal"></i>
-                    <div class="small"><strong>Loop Protection</strong><br>We hold funds in escrow until you get the gear.</div>
-                </div>
             </div>
         </div>
-    </div>
+
+    </div><!-- /row -->
+
+    <!-- Mobile spacer so content isn't hidden behind sticky card -->
+    <div class="dt-mobile-spacer"></div>
+
 </div>
 
 {% include 'base/footer.html' %}
@@ -326,43 +968,61 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. Navbar Scroll
+    /* ── Navbar scroll ── */
     window.addEventListener('scroll', () => {
-        const nav = document.querySelector('.navbar');
-        window.scrollY > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+        document.querySelector('.navbar')
+            .classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    // 2. Gallery
-    function updateMainImage(thumb, url) {
+    /* ── Gallery ── */
+    function dtUpdateImg(thumb, url, idx, total) {
         document.getElementById('mainImage').src = url;
-        document.querySelectorAll('.thumb-card').forEach(c => c.classList.remove('active'));
-        thumb.classList.add('active');
+        document.getElementById('imgCounter').textContent = idx + ' / ' + total;
+        document.querySelectorAll('.dt-thumb').forEach(t => t.classList.remove('dt-thumb--on'));
+        thumb.classList.add('dt-thumb--on');
     }
 
-    // 3. Calculator
+    /* ── Date calculator ── */
     const startIn = document.getElementById('startDate');
-    const endIn = document.getElementById('endDate');
-    const rate = parseFloat("{{ item.rent_per_day }}");
-    const dep = parseFloat("{{ item.deposit_amount }}");
+    const endIn   = document.getElementById('endDate');
+    const rate    = parseFloat("{{ item.rent_per_day }}");
+    const dep     = parseFloat("{{ item.deposit_amount }}");
 
-    function calc() {
+    function dtCalc() {
         const s = new Date(startIn.value), e = new Date(endIn.value);
         if (startIn.value && endIn.value && e >= s) {
-            const days = Math.ceil((e - s) / (1000 * 60 * 60 * 24)) + 1;
-            document.getElementById('resDays').innerText = days + " Days";
-            document.getElementById('resRent').innerText = "₹" + (days * rate).toLocaleString();
-            document.getElementById('resTotal').innerText = "₹" + (days * rate + dep).toLocaleString();
+            const days = Math.ceil((e - s) / 86400000) + 1;
+            document.getElementById('resDays').textContent  = days + ' Day' + (days > 1 ? 's' : '');
+            document.getElementById('resRent').textContent  = '₹' + (days * rate).toLocaleString('en-IN');
+            document.getElementById('resTotal').textContent = '₹' + (days * rate + dep).toLocaleString('en-IN');
             document.getElementById('calcBox').style.display = 'block';
         }
     }
-    startIn.addEventListener('change', () => { endIn.min = startIn.value; calc(); });
-    endIn.addEventListener('change', calc);
 
-    // 4. Map
-    const lat = parseFloat("{{ item.latitude }}") || 23.588, lng = parseFloat("{{ item.longitude }}") || 72.369;
-    const map = L.map('map', { center: [lat, lng], zoom: 14, dragging: false, zoomControl: false, scrollWheelZoom: false });
+    startIn.addEventListener('change', () => { endIn.min = startIn.value; dtCalc(); });
+    endIn.addEventListener('change', dtCalc);
+
+    /* ── Map ── */
+    const lat = parseFloat("{{ item.latitude }}")  || 23.588;
+    const lng = parseFloat("{{ item.longitude }}") || 72.369;
+    const map = L.map('map', {
+        center: [lat, lng], zoom: 14,
+        dragging: false, zoomControl: false, scrollWheelZoom: false
+    });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    L.circle([lat, lng], { color: '#0d9488', fillColor: '#0d9488', fillOpacity: 0.2, radius: 400 }).addTo(map);
+    L.circle([lat, lng], {
+        color: '#0d9488', fillColor: '#0d9488', fillOpacity: 0.18, radius: 400
+    }).addTo(map);
+
+    /* ── Mobile booking card toggle ── */
+    function dtToggleBook() {
+        document.getElementById('dtBookCard').classList.toggle('dt-open');
+    }
+
+    /* Auto-open booking card on mobile if it fits */
+    if (window.innerWidth < 768) {
+        document.getElementById('dtBookCard').classList.add('dt-open');
+    }
 </script>
 
 </body>

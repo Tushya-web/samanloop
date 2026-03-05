@@ -1113,18 +1113,23 @@ def finalize_request(request, item_id):
         messages.success(request, f"Request for {item.name} sent successfully!")
 
         return redirect("item_detail", item_id=item.id)
-
+    
 def submit_review(request, item_id):
+    # 1. Check if the 'user' key exists in the session
+    if "user" not in request.session:
+        # Optional: Add a message to tell the user why they were redirected
+        messages.info(request, "Please log in to submit a review.")
+        return redirect('login') 
+
+    # 2. If it exists, proceed with your logic
     email = request.session["user"]
     user = User.objects.get(email=email)
-
 
     if request.method == "POST":
         item = get_object_or_404(Item, id=item_id)
         rating = request.POST.get('rating')
         comment = request.POST.get('comment')
         
-        # Create the review
         Review.objects.create(
             item=item,
             reviewer=user,
@@ -1132,6 +1137,9 @@ def submit_review(request, item_id):
             comment=comment
         )
         return redirect('item_detail', item_id=item_id)
+    
+    # Handle GET requests if necessary
+    return redirect('item_detail', item_id=item_id)
 
 def respond_to_request(request, request_id, action):
     email = request.session.get("user")
