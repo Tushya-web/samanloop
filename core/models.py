@@ -222,6 +222,7 @@ class item_usage(models.Model):
     lender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="lent_items")
     renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rented_items")
     image = models.ImageField(upload_to="usage/", null=True, blank=True, default= None)
+    return_damage_image = models.ImageField(upload_to="damage_reports/", null=True, blank=True)
 
     IMAGE_TYPE = [
         ("pickup", "Pickup"),
@@ -330,6 +331,7 @@ class Wallet(models.Model):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     held_deposit = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     pending_earnings = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
 
     def __str__(self):
         return f"{self.user} Wallet"

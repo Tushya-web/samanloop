@@ -6,33 +6,531 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Your Request | SamanLoop</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
+        /* ═══════════════════════════════════════════
+           SAMANLOOP — CONFIRM REQUEST PAGE
+           Font: Sora | Theme: Clean Light × Teal
+        ═══════════════════════════════════════════ */
         :root {
-            --brand-teal: #1ba87e;
-            --navy-dark: #0a192f;
-            --soft-blue: #f8fafc;
+            --cr-teal:        #0d9488;
+            --cr-teal-dark:   #0f766e;
+            --cr-teal-bright: #2dd4bf;
+            --cr-ink:         #0c1a17;
+            --cr-dark:        #111827;
+            --cr-mist:        #f0faf8;
+            --cr-cloud:       #f8fffe;
+            --cr-stone:       #5f7c77;
+            --cr-border:      #e2edeb;
+            --cr-green:       #10b981;
+            --cr-white:       #ffffff;
+
+            --r-pill: 999px;
+            --r-card: 24px;
+            --r-xl:   32px;
+
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-out:    cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --sh-card:  0 4px 24px rgba(13,148,136,0.07), 0 1px 6px rgba(0,0,0,0.04);
+            --sh-float: 0 20px 52px rgba(13,148,136,0.12), 0 4px 16px rgba(0,0,0,0.06);
         }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--soft-blue); color: var(--navy-dark); }
-        
-        .confirmation-card {
-            background: #fff; border-radius: 24px; border: 1px solid #e2e8f0;
-            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--cr-cloud);
+            color: var(--cr-ink);
+            min-height: 100vh;
         }
 
-        .item-preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 16px; }
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--cr-border); border-radius: var(--r-pill); }
 
-        .summary-box { background: #f1f5f9; border-radius: 16px; padding: 20px; }
-
-        .btn-confirm {
-            background: var(--brand-teal); border: none; padding: 15px;
-            border-radius: 50px; font-weight: 800; color: white; transition: 0.3s;
+        /* ── navbar scroll ── */
+        .navbar { transition: all 0.4s ease; padding: 20px 0; }
+        .navbar.scrolled {
+            background: rgba(255,255,255,0.96) !important;
+            backdrop-filter: blur(12px);
+            padding: 12px 0;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
         }
-        .btn-confirm:hover { background: #148a67; transform: translateY(-2px); }
+
+        /* ════════════════════════════════════════
+           PAGE WRAPPER
+        ════════════════════════════════════════ */
+        .cr-page {
+            padding-top: 100px;
+            padding-bottom: 80px;
+        }
+
+        /* ════════════════════════════════════════
+           ALERT / MESSAGES
+        ════════════════════════════════════════ */
+        .cr-alert {
+            background: #fff1f2;
+            border: 1.5px solid #fecdd3;
+            color: #e11d48;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            animation: crFadeIn 0.4s both;
+        }
+
+        /* ════════════════════════════════════════
+           PAGE HEADER
+        ════════════════════════════════════════ */
+        .cr-page-head {
+            text-align: center;
+            margin-bottom: 36px;
+            animation: crFadeUp 0.5s both;
+        }
+
+        .cr-step-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(13,148,136,0.1);
+            border: 1px solid rgba(13,148,136,0.2);
+            color: var(--cr-teal);
+            padding: 5px 16px;
+            border-radius: var(--r-pill);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .cr-page-title {
+            font-size: clamp(1.5rem, 4vw, 2.1rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--cr-ink);
+            margin-bottom: 8px;
+        }
+
+        .cr-page-sub {
+            font-size: 0.88rem;
+            color: var(--cr-stone);
+            font-weight: 400;
+        }
+
+        /* ════════════════════════════════════════
+           PROGRESS STEPS
+        ════════════════════════════════════════ */
+        .cr-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 36px;
+            animation: crFadeUp 0.55s both;
+        }
+
+        .cr-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cr-step-dot {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .cr-step--done .cr-step-dot {
+            background: var(--cr-teal);
+            color: #fff;
+        }
+
+        .cr-step--active .cr-step-dot {
+            background: var(--cr-ink);
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(13,148,136,0.15);
+        }
+
+        .cr-step--pending .cr-step-dot {
+            background: var(--cr-border);
+            color: var(--cr-stone);
+        }
+
+        .cr-step-name {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--cr-stone);
+            white-space: nowrap;
+        }
+        .cr-step--active .cr-step-name { color: var(--cr-ink); }
+        .cr-step--done   .cr-step-name { color: var(--cr-teal); }
+
+        .cr-step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--cr-border);
+            max-width: 60px;
+            margin: 0 6px;
+            margin-bottom: 18px;
+        }
+        .cr-step-line--done { background: var(--cr-teal); }
+
+
+        /* ════════════════════════════════════════
+           MAIN CARD
+        ════════════════════════════════════════ */
+        .cr-card {
+            background: var(--cr-white);
+            border-radius: var(--r-xl);
+            border: 1.5px solid var(--cr-border);
+            box-shadow: var(--sh-card);
+            overflow: hidden;
+            animation: crFadeUp 0.6s both;
+        }
+
+        @keyframes crFadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes crFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+
+        /* ════════════════════════════════════════
+           ITEM PREVIEW HEADER
+        ════════════════════════════════════════ */
+        .cr-item-header {
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 1.5px solid var(--cr-border);
+            background: var(--cr-mist);
+        }
+
+        .cr-item-img {
+            width: 88px; height: 88px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid var(--cr-border);
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .cr-item-cat {
+            display: inline-block;
+            background: rgba(13,148,136,0.1);
+            color: var(--cr-teal);
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 3px 10px;
+            border-radius: var(--r-pill);
+            margin-bottom: 6px;
+        }
+
+        .cr-item-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--cr-ink);
+            letter-spacing: -0.015em;
+            margin-bottom: 3px;
+        }
+
+        .cr-item-by {
+            font-size: 0.75rem;
+            color: var(--cr-stone);
+            font-weight: 400;
+        }
+
+        /* ════════════════════════════════════════
+           CARD BODY
+        ════════════════════════════════════════ */
+        .cr-card-body { padding: 28px; }
+
+        /* Date pills */
+        .cr-dates-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .cr-date-box {
+            background: var(--cr-cloud);
+            border: 1.5px solid var(--cr-border);
+            border-radius: 16px;
+            padding: 14px 16px;
+            text-align: center;
+            transition: 0.25s;
+        }
+        .cr-date-box:hover { border-color: var(--cr-teal); background: var(--cr-mist); }
+
+        .cr-date-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--cr-stone);
+            margin-bottom: 4px;
+        }
+
+        .cr-date-val {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--cr-ink);
+        }
+
+        .cr-date-arrow {
+            width: 32px; height: 32px;
+            background: var(--cr-mist);
+            border: 1.5px solid var(--cr-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cr-teal);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Fare breakdown */
+        .cr-fare-box {
+            background: var(--cr-mist);
+            border: 1.5px solid var(--cr-border);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .cr-fare-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--cr-stone);
+            margin-bottom: 16px;
+        }
+
+        .cr-fare-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .cr-fare-label {
+            font-size: 0.8rem;
+            color: var(--cr-stone);
+            font-weight: 400;
+        }
+
+        .cr-fare-val {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--cr-ink);
+        }
+
+        .cr-fare-free {
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.2);
+            color: var(--cr-green);
+            padding: 3px 10px;
+            border-radius: var(--r-pill);
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .cr-fare-sep {
+            height: 1px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--cr-border) 0, var(--cr-border) 5px,
+                transparent 5px, transparent 10px
+            );
+            margin: 12px 0;
+        }
+
+        .cr-fare-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cr-total-label {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--cr-ink);
+        }
+
+        .cr-total-val {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--cr-teal);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .cr-total-sym {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--cr-teal);
+            vertical-align: super;
+            margin-right: 1px;
+        }
+
+        /* Confirm button */
+        .cr-confirm-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--cr-teal), var(--cr-teal-dark));
+            color: #fff;
+            border: none;
+            border-radius: var(--r-pill);
+            padding: 17px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 0.92rem;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: 0.35s var(--ease-spring);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cr-confirm-btn::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(255,255,255,0.12);
+            transform: translateX(-100%);
+            transition: transform 0.4s var(--ease-out);
+        }
+
+        .cr-confirm-btn:hover {
+            box-shadow: 0 12px 30px rgba(13,148,136,0.4);
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .cr-confirm-btn:hover::after {
+            transform: translateX(0);
+        }
+
+        .cr-confirm-btn:active { transform: scale(0.99); }
+
+        /* Escrow note */
+        .cr-escrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            color: var(--cr-stone);
+            font-weight: 500;
+            margin-top: 14px;
+        }
+
+        /* Trust pills */
+        .cr-trust-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .cr-trust-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--cr-mist);
+            border: 1px solid var(--cr-border);
+            padding: 5px 12px;
+            border-radius: var(--r-pill);
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--cr-stone);
+        }
+
+        .cr-trust-pill i { color: var(--cr-teal); }
+
+        /* Back link */
+        .cr-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--cr-stone);
+            text-decoration: none;
+            transition: 0.25s var(--ease-spring);
+            margin-top: 20px;
+        }
+
+        .cr-back:hover {
+            color: var(--cr-teal);
+            transform: translateX(-3px);
+        }
+
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — MOBILE
+        ════════════════════════════════════════ */
+        @media (max-width: 767px) {
+            .cr-page { padding-top: 80px; padding-bottom: 48px; }
+
+            .cr-page-title { font-size: 1.35rem; }
+
+            .cr-steps { gap: 0; }
+            .cr-step-line { max-width: 36px; }
+            .cr-step-dot  { width: 28px; height: 28px; font-size: 0.65rem; }
+            .cr-step-name { font-size: 0.56rem; }
+
+            .cr-item-header { padding: 18px; gap: 14px; flex-wrap: wrap; }
+            .cr-item-img { width: 72px; height: 72px; border-radius: 12px; }
+            .cr-item-name { font-size: 0.95rem; }
+
+            .cr-card-body { padding: 18px; }
+
+            .cr-dates-row {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                gap: 8px;
+            }
+            .cr-date-arrow { display: none; }
+
+            .cr-total-val { font-size: 1.6rem; }
+
+            .cr-fare-box { padding: 16px; }
+
+            .cr-trust-row { gap: 6px; }
+            .cr-trust-pill { font-size: 0.62rem; padding: 4px 10px; }
+        }
+
+        @media (max-width: 400px) {
+            .cr-item-header { flex-direction: column; text-align: center; }
+            .cr-item-img { width: 80px; height: 80px; margin: 0 auto; }
+        }
     </style>
 </head>
 <body>
@@ -41,94 +539,172 @@
 
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-danger rounded-4 shadow-sm">
-            {{ message }}
+    <div class="container" style="padding-top: 90px;">
+        <div class="cr-alert">
+            <i class="bi bi-exclamation-circle-fill"></i> {{ message }}
         </div>
+    </div>
     {% endfor %}
 {% endif %}
 
-<div class="container mt-5 pt-5 mb-5">
+<div class="container cr-page">
     <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="text-center mb-4">
-                <h2 class="fw-extrabold">Confirm Rental Request</h2>
-                <p class="text-muted">The lender will review your request shortly.</p>
+        <div class="col-lg-5 col-md-8">
+
+            <!-- Page header -->
+            <div class="cr-page-head">
+                <div class="cr-step-chip">
+                    <i class="bi bi-bag-check"></i> Almost There
+                </div>
+                <h2 class="cr-page-title">Confirm Rental Request</h2>
+                <p class="cr-page-sub">The lender will review your request shortly.</p>
             </div>
 
-            <div class="confirmation-card p-4 p-md-5">
-                <div class="d-flex align-items-center gap-4 mb-4 pb-4 border-bottom">
+            <!-- Progress steps -->
+            <div class="cr-steps">
+                <div class="cr-step cr-step--done">
+                    <div class="cr-step-dot"><i class="bi bi-check2" style="font-size:0.8rem;"></i></div>
+                    <span class="cr-step-name">Dates</span>
+                </div>
+                <div class="cr-step-line cr-step-line--done"></div>
+                <div class="cr-step cr-step--active">
+                    <div class="cr-step-dot">2</div>
+                    <span class="cr-step-name">Confirm</span>
+                </div>
+                <div class="cr-step-line"></div>
+                <div class="cr-step cr-step--pending">
+                    <div class="cr-step-dot">3</div>
+                    <span class="cr-step-name">Request Sent</span>
+                </div>
+            </div>
+
+            <!-- Main card -->
+            <div class="cr-card">
+
+                <!-- Item preview -->
+                <div class="cr-item-header">
                     {% with item.images.all|first as img %}
-                    <img src="{{ img.image.url }}" class="item-preview-img shadow-sm">
+                    <img src="{{ img.image.url }}" class="cr-item-img" alt="{{ item.name }}">
                     {% endwith %}
                     <div>
-                        <span class="badge bg-teal bg-opacity-10 text-teal mb-1 uppercase" style="font-size: 10px;">{{ item.category.name }}</span>
-                        <h5 class="fw-bold mb-0">{{ item.name }}</h5>
-                        <small class="text-muted">Listed by {{ item.owner.name }}</small>
+                        <span class="cr-item-cat">{{ item.category.name }}</span>
+                        <p class="cr-item-name">{{ item.name }}</p>
+                        <p class="cr-item-by">
+                            <i class="bi bi-person-circle me-1"></i>
+                            Listed by {{ item.owner.name }}
+                        </p>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                    <div class="col-6">
-                        <div class="p-3 border rounded-4 text-center">
-                            <small class="text-muted fw-bold d-block uppercase" style="font-size: 10px;">Pickup</small>
-                            <span class="fw-bold">{{ start_date }}</span>
+                <!-- Booking body -->
+                <div class="cr-card-body">
+
+                    <!-- Dates -->
+                    <div class="cr-dates-row">
+                        <div class="cr-date-box">
+                            <div class="cr-date-label">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Pickup
+                            </div>
+                            <div class="cr-date-val">{{ start_date }}</div>
+                        </div>
+                        <div class="cr-date-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                        <div class="cr-date-box">
+                            <div class="cr-date-label">
+                                <i class="bi bi-box-arrow-left me-1"></i> Return
+                            </div>
+                            <div class="cr-date-val">{{ end_date }}</div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="p-3 border rounded-4 text-center">
-                            <small class="text-muted fw-bold d-block uppercase" style="font-size: 10px;">Return</small>
-                            <span class="fw-bold">{{ end_date }}</span>
+
+                    <!-- Fare breakdown -->
+                    <div class="cr-fare-box">
+                        <div class="cr-fare-title">
+                            <i class="bi bi-receipt me-1"></i> Fare Breakdown
+                        </div>
+
+                        <div class="cr-fare-row">
+                            <span class="cr-fare-label">
+                                Rent (₹{{ item.rent_per_day }} × {{ total_days }} days)
+                            </span>
+                            <span class="cr-fare-val">₹{{ total_rent }}</span>
+                        </div>
+
+                        <div class="cr-fare-row">
+                            <span class="cr-fare-label">Refundable Deposit</span>
+                            <span class="cr-fare-val">₹{{ item.deposit_amount }}</span>
+                        </div>
+
+                        <div class="cr-fare-row">
+                            <span class="cr-fare-label">Platform Fee</span>
+                            <span class="cr-fare-free">FREE · Beta</span>
+                        </div>
+
+                        <div class="cr-fare-sep"></div>
+
+                        <div class="cr-fare-total">
+                            <span class="cr-total-label">Grand Total</span>
+                            <span class="cr-total-val">
+                                <span class="cr-total-sym">₹</span>{{ grand_total }}
+                            </span>
                         </div>
                     </div>
+
+                    <!-- Confirm form -->
+                    <form action="{% url 'finalize_request' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="start_date"  value="{{ start_date }}">
+                        <input type="hidden" name="end_date"    value="{{ end_date }}">
+                        <input type="hidden" name="total_rent"  value="{{ total_rent }}">
+
+                        <button type="submit" class="cr-confirm-btn">
+                            <i class="bi bi-bag-check me-2"></i> Confirm &amp; Send Request
+                        </button>
+                    </form>
+
+                    <!-- Escrow note -->
+                    <p class="cr-escrow">
+                        <i class="bi bi-shield-lock-fill" style="color:var(--cr-teal);"></i>
+                        Secure Escrow Payment via SamanLoop
+                    </p>
+
+                    <!-- Trust pills -->
+                    <div class="cr-trust-row">
+                        <span class="cr-trust-pill">
+                            <i class="bi bi-arrow-counterclockwise"></i> Deposit Refundable
+                        </span>
+                        <span class="cr-trust-pill">
+                            <i class="bi bi-patch-check-fill"></i> Verified Lender
+                        </span>
+                        <span class="cr-trust-pill">
+                            <i class="bi bi-headset"></i> 24/7 Support
+                        </span>
+                    </div>
+
                 </div>
-
-                <div class="summary-box">
-                    <h6 class="fw-bold mb-3">Fare Breakdown</h6>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted small">Rent (₹{{ item.rent_per_day }} × {{ total_days }} days)</span>
-                        <span class="fw-bold">₹{{ total_rent }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted small">Refundable Deposit</span>
-                        <span class="fw-bold">₹{{ item.deposit_amount }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="text-muted small">Platform Fee</span>
-                        <span class="text-success fw-bold small">FREE (Beta)</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="fw-extrabold">Grand Total</span>
-                        <span class="display-6 fw-extrabold text-teal">₹{{ grand_total }}</span>
-                    </div>
-                </div>
-
-                <form action="{% url 'finalize_request' item.id %}" method="POST" class="mt-4">
-                    {% csrf_token %}
-                    <input type="hidden" name="start_date" value="{{ start_date }}">
-                    <input type="hidden" name="end_date" value="{{ end_date }}">
-                    <input type="hidden" name="total_rent" value="{{ total_rent }}">
-                                
-                    <button type="submit" class="btn btn-confirm w-100 shadow-lg py-3" onclick="this.innerHTML='Processing...'; this.classList.add('opacity-50');">
-                        Confirm & Send Request
-                    </button>
-                </form>
-
-                <p class="text-center small text-muted mt-3 mb-0">
-                    <i class="bi bi-shield-lock-fill"></i> Secure Escrow Payment via SamanLoop
-                </p>
             </div>
 
-            <div class="text-center mt-4">
-                <a href="{% url 'item_detail' item.id %}" class="text-muted text-decoration-none small fw-bold">
+            <!-- Back link -->
+            <div class="text-center">
+                <a href="{% url 'item_detail' item.id %}" class="cr-back">
                     <i class="bi bi-arrow-left"></i> Change dates
                 </a>
             </div>
+
         </div>
     </div>
 </div>
 
 {% include 'base/footer.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.addEventListener('scroll', () => {
+        document.querySelector('.navbar')
+            .classList.toggle('scrolled', window.scrollY > 50);
+    });
+</script>
 
 </body>
 </html>

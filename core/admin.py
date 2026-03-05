@@ -304,11 +304,20 @@ class PaymentAdmin(admin.ModelAdmin):
                 continue
 
             with transaction.atomic():
+
                 borrower_wallet = Wallet.objects.get(user=payment.borrower)
                 deposit = Decimal(payment.deposit)
 
                 borrower_wallet.balance += deposit
                 borrower_wallet.save()
+
+                # Wallet history entry
+                WalletTransaction.objects.create(
+                    user=payment.borrower,
+                    amount=deposit,
+                    transaction_type="release",
+                    description=f"Deposit returned for {payment.item_usage.item.name}"
+                )
 
                 payment.deposit_state = "returned_full"
                 payment.dispute_open = False
@@ -326,11 +335,20 @@ class PaymentAdmin(admin.ModelAdmin):
                 continue
 
             with transaction.atomic():
+
                 lender_wallet = Wallet.objects.get(user=payment.lender)
                 deposit = Decimal(payment.deposit)
 
                 lender_wallet.balance += deposit
                 lender_wallet.save()
+
+                # Wallet history entry
+                WalletTransaction.objects.create(
+                    user=payment.lender,
+                    amount=deposit,
+                    transaction_type="credit",
+                    description=f"Deposit forfeited for {payment.item_usage.item.name}"
+                )
 
                 payment.deposit_state = "forfeited"
                 payment.dispute_open = False
@@ -361,6 +379,22 @@ class PaymentAdmin(admin.ModelAdmin):
                 borrower_wallet.save()
                 lender_wallet.save()
 
+                # Wallet history for borrower
+                WalletTransaction.objects.create(
+                    user=payment.borrower,
+                    amount=half,
+                    transaction_type="release",
+                    description=f"50% deposit returned for {payment.item_usage.item.name}"
+                )
+
+                # Wallet history for lender
+                WalletTransaction.objects.create(
+                    user=payment.lender,
+                    amount=half,
+                    transaction_type="credit",
+                    description=f"50% deposit compensation for {payment.item_usage.item.name}"
+                )
+
                 payment.deposit_state = "returned_half"
                 payment.dispute_open = False
                 payment.dispute_resolved = True
@@ -377,6 +411,7 @@ class WalletAdmin(admin.ModelAdmin):
         "held_deposit",
         "pending_earnings",
     )
+    
 
     def balance_card(self, obj):
         return format_html(
@@ -398,6 +433,8 @@ class ItemUsageAdmin(admin.ModelAdmin):
         "end_date",
         "status",
         "created_at",
+        "pickup_preview",
+        "damage_preview",
     )
 
     list_filter = (
@@ -421,6 +458,16 @@ class ItemUsageAdmin(admin.ModelAdmin):
 
     list_per_page = 20
     
+    def pickup_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="60"/>', obj.image.url)
+        return "-"
+
+    def damage_preview(self, obj):
+        if obj.return_damage_image:
+            return format_html('<img src="{}" width="60"/>', obj.return_damage_image.url)
+        return "-"
+    
 # @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ("item", "reviewer", "rating", "created_at")
@@ -438,9 +485,12 @@ class QueryAdmin(admin.ModelAdmin):
     readonly_fields = ("user", "item", "subject", "message", "created_at")
     # Allows admin to resolve it directly from the list
     actions = ['mark_as_resolved']
+    date_hierarchy = "created_at"
+    
     def get_item_name(self, obj):
         return obj.item.name if obj.item else "General Query"
     get_item_name.short_description = 'Related Item'
+    
     @admin.action(description='Mark selected reports as Resolved')
     def mark_as_resolved(self, request, queryset):
         queryset.update(status='resolved')
@@ -455,8 +505,20 @@ class WalletTransactionAdmin(admin.ModelAdmin):
         "description",
         "created_at"
     )
+    
+    TRANSACTION_TYPES = [
+    ("credit", "Credit"),
+    ("debit", "Debit"),
+    ("hold", "Deposit Hold"),
+    ("release", "Deposit Returned"),
+    ]
 
-    list_filter = ("transaction_type",)
+    list_filter = (
+    "transaction_type",
+    "created_at",
+    )
+    
+    date_hierarchy = "created_at"
     search_fields = ("user__email",)
 
 

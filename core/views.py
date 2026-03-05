@@ -289,8 +289,8 @@ def borrower_dashboard(request):
     # active_usage should include both 'active' and 'returning' so the borrower sees the status
     active_usage = item_usage.objects.filter(
     renter=user,
-    status__in=['pending_pickup', 'active', 'returning']
-    ).order_by('-start_date')
+    status__in=['pending_pickup','active','returning','inspection']
+).order_by('-start_date')
     
     rental_history = item_usage.objects.filter(renter=user, status='completed').order_by('-end_date')
     
@@ -424,13 +424,43 @@ def confirm_return(request, usage_id):
                 transaction_type="credit",
                 description="50% deposit compensation"
             )
+            
+        elif action == "major_defect":
 
-        elif action == "high_defect":
-            # 0% to Borrower, 100% to Lender
-            borrower_wallet.held_deposit -= deposit_amount
-            lender_wallet.balance += deposit_amount
-            payment.deposit_state = "forfeited"
-
+            damage_img = request.FILES.get("damage_image")
+        
+            if damage_img:
+                usage.return_damage_image = damage_img
+        
+            # Lock the deposit
+            payment.deposit_state = "dispute"
+            payment.dispute_open = True
+            payment.deposit_locked = True
+        
+            # Create admin query
+            Query.objects.create(
+                user=usage.lender,
+                item=usage.item,
+                subject="100% Defective Item Report",
+                message=f"Lender reported item '{usage.item.name}' as completely defective. Admin review required.",
+                status="open"
+            )
+        
+            # Mark rental completed but deposit unresolved
+            usage.status = "completed"
+            usage.item.availability_status = "available"
+        
+            payment.save()
+            usage.save()
+            usage.item.save()
+        
+            messages.warning(
+                request,
+                "Damage reported. Deposit locked until admin review."
+            )
+        
+            return redirect("lender_dashboard")
+        
         # Update Final Statuses
         usage.status = "completed"
         usage.item.availability_status = "available"

@@ -121,22 +121,52 @@
         }
 
         .hub-link-card {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 24px;
-            padding: 30px 20px;
-            text-align: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            color: var(--navy-dark);
-        }
+    background: white;
+    /* Remove all borders except the left one */
+    border: 1px solid var(--border-color);
+    border-left: 6px solid var(--border-color); /* The "One Side" accent */
+    border-radius: 16px; /* Slightly tighter radius looks better with flat edges */
+    padding: 30px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    color: var(--navy-dark);
+    
+    /* Transition specific properties for a "snappy" feel */
+    transition: 
+        border-color 0.3s ease,
+        background-color 0.3s ease,
+        box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        color 0.3s ease;
+    
+    position: relative;
+}
 
-        .hub-link-card:hover {
-            border-color: var(--brand-teal);
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
-            color: var(--brand-teal-dark);
-        }
+.hub-link-card:hover {
+    /* Change only the accent border color */
+    border-left-color: var(--brand-teal);
+    border-right-color: transparent; /* Keeps size static if original was 1px */
+    
+    color: var(--brand-teal-dark);
+    
+    /* "Soft Lift" shadow instead of scaling */
+    box-shadow: 
+        8px 12px 24px rgba(0, 0, 0, 0.06), 
+        0 4px 8px rgba(0, 0, 0, 0.02);
+    
+    /* Very subtle tint to the background */
+    background-color: #fafdfd; 
+}
+
+/* UX Polish: Move the text slightly to the right to match the "push" from the left border */
+.hub-link-card span, .hub-link-card h3 {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.hub-link-card:hover span, .hub-link-card:hover h3 {
+    transform: translateX(4px);
+}
 
         .hub-link-card i { font-size: 2.5rem; display: block; margin-bottom: 15px; color: var(--brand-teal); }
         .hub-link-card span { font-weight: 800; font-size: 1.1rem; display: block; }
@@ -346,7 +376,7 @@
         </a>
     </div>
     <div class="col-12 col-md-2 d-none d-md-block">
-        <a href="" class="action-card py-3">
+        <a href="{% url 'browse_items' %}" class="action-card py-3">
             <i class="bi bi-search"></i>
             <span class="fw-bold small">Find Gear</span>
         </a>
