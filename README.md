@@ -1,4 +1,4 @@
-<img width="511" height="88" alt="LOGINLOGO" src="https://github.com/user-attachments/assets/8c0fdf99-0b07-4b17-9a07-baa0088660e5" />
+<img width="480" height="88" alt="LOGINLOGO" src="https://github.com/user-attachments/assets/8c0fdf99-0b07-4b17-9a07-baa0088660e5" />
 
 # SamanLoop
 
