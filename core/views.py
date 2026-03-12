@@ -274,7 +274,7 @@ def lender_dashboard(request):
     })
 
 from django.utils import timezone
-from .models import User, item_Request, item_usage
+from .models import LenderRating, User, item_Request, item_usage
 
 
 def borrower_dashboard(request):
@@ -1370,9 +1370,6 @@ def payment_page(request, request_id):
             messages.error(request, "Invalid payment method.")
             return redirect("payment_page", request_id=req.id)
 
-        # =========================
-        # CREATE ACTIVE USAGE
-        # =========================
         if not item_usage.objects.filter(
             item=req.item,
             renter=req.renter,
@@ -1409,6 +1406,63 @@ def payment_page(request, request_id):
         "wallet": wallet,
         "total_amount": total_amount
     })
+    
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Avg
+from .models import User, Item, LenderRating, item_usage
+
+
+def lender_profile(request, user_id):
+
+    lender = get_object_or_404(User, id=user_id)
+
+    # All items listed by lender
+    items = Item.objects.filter(owner=lender)
+
+    # Ratings for lender
+    ratings = LenderRating.objects.filter(lender=lender).order_by("-created_at")
+
+    # Average rating
+    avg_rating = ratings.aggregate(avg=Avg("rating"))["avg"]
+
+    # Trust metrics
+    total_items = Item.objects.filter(owner=lender).count()
+    total_rentals = item_usage.objects.filter(lender=lender).count()
+
+    context = {
+        "lender": lender,
+        "items": items,
+        "ratings": ratings,
+        "avg_rating": avg_rating,
+        "total_items": total_items,
+        "total_rentals": total_rentals
+    }
+
+    return render(request, "lender_profile.html", context)
+
+def submit_lender_rating(request, user_id):
+
+    if "user" not in request.session:
+        return redirect("login")
+
+    reviewer = User.objects.get(email=request.session["user"])
+    lender = get_object_or_404(User, id=user_id)
+
+    if request.method == "POST":
+
+        rating = request.POST.get("rating")
+        comment = request.POST.get("comment")
+
+        LenderRating.objects.update_or_create(
+            lender=lender,
+            reviewer=reviewer,
+            defaults={
+                "rating": rating,
+                "comment": comment
+            }
+        )
+
+    return redirect("lender_profile", user_id=lender.id)
     
 def confirm_external_payment(request, request_id):
 

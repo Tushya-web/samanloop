@@ -77,6 +77,8 @@ urlpatterns = [
     path('item/<int:item_id>/review/', views.submit_review, name='submit_review'),
     path('item/<int:item_id>/finalize_request/', views.finalize_request, name='finalize_request'),
 
+    path("lender/<int:user_id>/", views.lender_profile, name="lender_profile"),
+    path("lender/<int:user_id>/rate/", views.submit_lender_rating, name="submit_lender_rating"),
     
     path('wallet/', wallet, name='wallet'),
     path("wallet/add/", add_money, name="wallet_add_money"),

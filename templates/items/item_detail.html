@@ -935,7 +935,7 @@
                         <img src="https://ui-avatars.com/api/?name={{ item.owner.name }}&background=0d9488&color=fff&size=80"
                              class="rounded-circle" width="38" height="38" alt="{{ item.owner.name }}">
                         <div>
-                            <div class="dt-lender-name">{{ item.owner.name }}</div>
+                            <div class="dt-lender-name"><a href="{% url 'lender_profile' owner.id %}">{{ item.owner.name }}</a></div>
                             <div class="dt-lender-sub">Listed by owner</div>
                         </div>
                         <a href="tel:{{ item.owner.phone_number }}" class="dt-call-btn">
