@@ -130,12 +130,19 @@ Core solution features include:
 ### Borrowing Process
 
 1️⃣ User browses available items
+
 2️⃣ User sends borrow request
+
 3️⃣ Lender approves request
+
 4️⃣ Borrower pays deposit / rent
+
 5️⃣ Item is collected
+
 6️⃣ Borrower returns item
+
 7️⃣ Lender confirms return
+
 8️⃣ Deposit released
 
 ---
