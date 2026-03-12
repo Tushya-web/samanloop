@@ -6,6 +6,16 @@ SamanLoop is an **under-development peer-to-peer rental marketplace** that allow
 
 The platform focuses on **cost saving, sustainability, and smart resource sharing** by connecting borrowers and lenders in nearby locations.
 
+## 🌐 Live Demo
+
+You can access the deployed project here:
+
+🔗 **SamanLoop Live:**  
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-SamanLoop-green)](https://samanloop.up.railway.app/) 
+[🚀 Open SamanLoop](https://samanloop.up.railway.app/)
+
+
 ---
 
 ## 🚧 Project Status
