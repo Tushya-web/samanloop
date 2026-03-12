@@ -123,12 +123,12 @@ Core solution features include:
 * Dashboard management
 * Item availability tracking
 
-🔄 System Workflow
+# 🔄 System Workflow
 
 The SamanLoop platform operates through three main roles: Borrower, Lender, and Admin.
 Each role has specific responsibilities in the rental lifecycle.
 
-👤 Borrower Workflow
+### 👤 Borrower Workflow
 
 1️⃣ User registers or logs into the platform
 
@@ -148,7 +148,7 @@ Each role has specific responsibilities in the rental lifecycle.
 
 9️⃣ Deposit is released or refunded
 
-🏷️ Lender Workflow
+### 🏷️ Lender Workflow
 
 1️⃣ Lender registers and logs into the platform
 
@@ -168,7 +168,7 @@ Each role has specific responsibilities in the rental lifecycle.
 
 9️⃣ Platform completes the transaction
 
-🛠️ Admin Workflow
+### 🛠️ Admin Workflow
 
 1️⃣ Admin manages platform users
 
