@@ -131,36 +131,58 @@ Each role has specific responsibilities in the rental lifecycle.
 👤 Borrower Workflow
 
 1️⃣ User registers or logs into the platform
-→ 2️⃣ User browses available items
-→ 3️⃣ User selects an item and sends a borrow request
-→ 4️⃣ Borrower pays the required deposit / rental fee
-→ 5️⃣ Borrower collects the item from the lender
-→ 6️⃣ Borrower uses the item for the agreed rental duration
-→ 7️⃣ Borrower returns the item on or before the return date
-→ 8️⃣ Lender confirms the return
-→ 9️⃣ Deposit is released or refunded
+
+2️⃣ User browses available items
+
+3️⃣ User selects an item and sends a borrow request
+
+4️⃣ Borrower pays the required deposit / rental fee
+
+5️⃣ Borrower collects the item from the lender
+
+6️⃣ Borrower uses the item for the agreed rental duration
+
+7️⃣ Borrower returns the item on or before the return date
+
+8️⃣ Lender confirms the return
+
+9️⃣ Deposit is released or refunded
 
 🏷️ Lender Workflow
 
 1️⃣ Lender registers and logs into the platform
-→ 2️⃣ Lender lists an item with details (name, category, price, deposit, availability)
-→ 3️⃣ Lender receives borrow requests from users
-→ 4️⃣ Lender reviews and approves or rejects the request
-→ 5️⃣ Lender hands over the item to the borrower
-→ 6️⃣ Lender monitors the item usage period
-→ 7️⃣ Lender verifies item condition upon return
-→ 8️⃣ Lender confirms the return in the system
-→ 9️⃣ Platform completes the transaction
+
+2️⃣ Lender lists an item with details (name, category, price, deposit, availability)
+
+3️⃣ Lender receives borrow requests from users
+
+4️⃣ Lender reviews and approves or rejects the request
+
+5️⃣ Lender hands over the item to the borrower
+
+6️⃣ Lender monitors the item usage period
+
+7️⃣ Lender verifies item condition upon return
+
+8️⃣ Lender confirms the return in the system
+
+9️⃣ Platform completes the transaction
 
 🛠️ Admin Workflow
 
 1️⃣ Admin manages platform users
-→ 2️⃣ Admin monitors listed items and categories
-→ 3️⃣ Admin reviews reported issues or disputes
-→ 4️⃣ Admin manages system queries and support requests
-→ 5️⃣ Admin ensures platform security and data integrity
-→ 6️⃣ Admin monitors transactions and platform activity
-→ 7️⃣ Admin performs system updates and maintenance
+
+2️⃣ Admin monitors listed items and categories
+
+3️⃣ Admin reviews reported issues or disputes
+
+4️⃣ Admin manages system queries and support requests
+
+5️⃣ Admin ensures platform security and data integrity
+
+6️⃣ Admin monitors transactions and platform activity
+
+7️⃣ Admin performs system updates and maintenance
 
 # 🔁 Data Flow Architecture
 
