@@ -187,66 +187,6 @@ Main database tables used:
 
 ---
 
-# ⚙️ Installation Guide (Local Setup)
-
-Clone the repository:
-
-```
-git clone https://github.com/Tushya-web/samanloop.git
-```
-
-Navigate to the project folder:
-
-```
-cd samanloop
-```
-
-Create virtual environment:
-
-```
-python -m venv venv
-```
-
-Activate environment:
-
-Windows
-
-```
-venv\Scripts\activate
-```
-
-Mac/Linux
-
-```
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```
-pip install -r requirements.txt
-```
-
-Run migrations:
-
-```
-python manage.py migrate
-```
-
-Start the development server:
-
-```
-python manage.py runserver
-```
-
-Open in browser:
-
-```
-http://127.0.0.1:8000/
-```
-
----
-
 # 🚀 Deployment
 
 The project is deployed using **Railway cloud hosting.**
@@ -278,6 +218,7 @@ Documentation Link:
 
 ```
 (Add documentation link here)
+Soon...
 ```
 
 ---
@@ -290,6 +231,7 @@ Presentation Link:
 
 ```
 (Add Google Drive PPT link here)
+Soon...
 ```
 
 ---
