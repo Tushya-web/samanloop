@@ -11,6 +11,11 @@
 ![Platform](https://img.shields.io/badge/Platform-Web-blue)
 ![Deployment](https://img.shields.io/badge/Deployed-Railway-purple)
 
+![GitHub repo size](https://img.shields.io/github/repo-size/Tushya-web/samanloop)
+![GitHub stars](https://img.shields.io/github/stars/Tushya-web/samanloop)
+![GitHub forks](https://img.shields.io/github/forks/Tushya-web/samanloop)
+![GitHub last commit](https://img.shields.io/github/last-commit/Tushya-web/samanloop)
+
 A **peer-to-peer rental marketplace** that allows people to **borrow and lend everyday items locally** instead of buying them for short-term use.
 
 SamanLoop promotes **cost saving, sustainability, and smarter resource utilization** by enabling communities to share underused items.
@@ -29,20 +34,20 @@ SamanLoop promotes **cost saving, sustainability, and smarter resource utilizati
 
 # 📑 Table of Contents
 
-* About the Project
-* Problem Statement
-* Solution
-* Key Features
-* System Workflow
-* Data Flow Architecture
-* Technology Stack
-* Database Design
-* Installation Guide
-* Deployment
-* Documentation
-* Project Presentation
-* Future Enhancements
-* Author
+- [📖 About the Project](#-about-the-project)
+- [⚠️ Problem Statement](#️-problem-statement)
+- [💡 Proposed Solution](#-proposed-solution)
+- [✨ Key Features](#-key-features)
+- [🔄 System Workflow](#-system-workflow)
+- [🔁 Data Flow Architecture](#-data-flow-architecture)
+- [🧰 Technology Stack](#-technology-stack)
+- [🗄 Database Design](#-database-design)
+- [⚙️ Installation Guide](#️-installation-guide-local-setup)
+- [🚀 Deployment](#-deployment)
+- [📚 Documentation](#-documentation)
+- [📊 Project Presentation](#-project-presentation)
+- [🔮 Future Enhancements](#-future-enhancements)
+- [👨‍💻 Author](#-author)
 
 ---
 
@@ -155,15 +160,14 @@ Response to User
 
 # 🧰 Technology Stack
 
-| Layer           | Technology             |
-| --------------- | ---------------------- |
-| Frontend        | HTML5, CSS3, Bootstrap |
-| Backend         | Django (Python)        |
-| Database        | SQLite / PostgreSQL    |
-| Authentication  | Django Session Auth    |
-| Deployment      | Railway                |
-| Version Control | Git + GitHub           |
-
+| Layer | Technology |
+|------|-------------|
+| Frontend | ![HTML](https://img.shields.io/badge/HTML5-orange) ![CSS](https://img.shields.io/badge/CSS3-blue) ![Bootstrap](https://img.shields.io/badge/Bootstrap-purple) |
+| Backend | ![Django](https://img.shields.io/badge/Django-green) ![Python](https://img.shields.io/badge/Python-yellow) |
+| Database | ![SQLite](https://img.shields.io/badge/SQLite-lightblue) OR ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-blue) |
+| Authentication | ![Django Auth](https://img.shields.io/badge/Django-Authentication-green) |
+| Deployment | ![Railway](https://img.shields.io/badge/Railway-Cloud-purple) |
+| Version Control | ![Git](https://img.shields.io/badge/Git-orange) ![GitHub](https://img.shields.io/badge/GitHub-black) |
 ---
 
 # 🗄 Database Design
