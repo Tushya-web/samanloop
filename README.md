@@ -6,10 +6,12 @@
 
 ![Django](https://img.shields.io/badge/Backend-Django-green)
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange)
 ![Status](https://img.shields.io/badge/Project-Production-success)
 ![License](https://img.shields.io/badge/License-MIT-orange)
 ![Platform](https://img.shields.io/badge/Platform-Web-blue)
 ![Deployment](https://img.shields.io/badge/Deployed-Railway-purple)
+
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Tushya-web/samanloop)
 ![GitHub stars](https://img.shields.io/github/stars/Tushya-web/samanloop)
@@ -165,7 +167,7 @@ Response to User
 | Frontend | ![HTML](https://img.shields.io/badge/HTML5-orange) ![CSS](https://img.shields.io/badge/CSS3-blue) ![Bootstrap](https://img.shields.io/badge/Bootstrap-purple) |
 | Backend | ![Django](https://img.shields.io/badge/Django-green) ![Python](https://img.shields.io/badge/Python-yellow) |
 | Database | ![SQLite](https://img.shields.io/badge/SQLite-lightblue) OR ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-blue) |
-| Authentication | ![Django Auth](https://img.shields.io/badge/Django-Authentication-green) |
+| Authentication | ![Django Auth](https://img.shields.io/badge/Django-Authentication-green)  ![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange)|
 | Deployment | ![Railway](https://img.shields.io/badge/Railway-Cloud-purple) |
 | Version Control | ![Git](https://img.shields.io/badge/Git-orange) ![GitHub](https://img.shields.io/badge/GitHub-black) |
 ---
