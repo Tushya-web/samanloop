@@ -32,6 +32,9 @@ SamanLoop promotes **cost saving, sustainability, and smarter resource utilizati
 
 🔗 https://samanloop.up.railway.app/
 
+<img width="1903" height="939" alt="Screenshot 2026-03-13 000033" src="https://github.com/user-attachments/assets/b805a0e0-32e9-4ebb-8134-7f46197023b5" />
+
+
 ---
 
 # 📑 Table of Contents
